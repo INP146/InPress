@@ -10,7 +10,7 @@ importers:
 
   apps/preview:
     devDependencies:
-      '@your-scope/vitepress-theme':
+      '@inp146/vitepress-theme':
         specifier: workspace:*
         version: link:../../packages/theme
       vitepress:

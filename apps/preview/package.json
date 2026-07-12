@@ -1,5 +1,5 @@
 {
-  "name": "@your-scope/vitepress-theme-preview",
+  "name": "@inp146/vitepress-theme-preview",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,7 @@
     "preview": "vitepress preview ."
   },
   "devDependencies": {
-    "@your-scope/vitepress-theme": "workspace:*",
+    "@inp146/vitepress-theme": "workspace:*",
     "vitepress": "2.0.0-alpha.18"
   }
 }

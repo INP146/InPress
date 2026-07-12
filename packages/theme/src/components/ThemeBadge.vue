@@ -17,13 +17,14 @@ withDefaults(
 .theme-badge {
   display: inline-flex;
   align-items: center;
-  min-height: 24px;
-  padding: 2px 8px;
+  min-height: var(--theme-badge-min-height, 24px);
+  padding: var(--theme-badge-padding-block, 2px)
+    var(--theme-badge-padding-inline, 8px);
   border: 1px solid var(--vp-c-brand-2);
-  border-radius: 4px;
+  border-radius: var(--theme-badge-radius, 4px);
   color: var(--vp-c-brand-1);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: var(--theme-badge-font-size, 12px);
+  font-weight: var(--theme-badge-font-weight, 600);
   line-height: 1;
 }
 </style>

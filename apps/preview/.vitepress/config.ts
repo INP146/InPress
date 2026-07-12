@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'Theme Playground',
-  description: 'Development preview for @your-scope/vitepress-theme',
+  description: 'Development preview for @inp146/vitepress-theme',
   cleanUrls: true,
   themeConfig: {
     logo: '/logo.svg',
@@ -36,7 +36,7 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        '@your-scope/vitepress-theme': fileURLToPath(
+        '@inp146/vitepress-theme': fileURLToPath(
           new URL('../../../packages/theme/src/index.ts', import.meta.url)
         )
       }

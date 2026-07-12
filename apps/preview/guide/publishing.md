@@ -1,20 +1,26 @@
 # Publishing
 
-Before publishing, replace `@your-scope/vitepress-theme` in the workspace manifests with the npm scope you own.
+The package is configured for the `@inp146` npm scope.
 
 Build the package:
 
 ```sh
-pnpm --filter @your-scope/vitepress-theme build
+pnpm --filter @inp146/vitepress-theme build
 ```
 
-The published package contains only `dist`. It exports the theme entry point and `@your-scope/vitepress-theme/style.css`.
+The published package contains only `dist`. It exports the theme entry point and `@inp146/vitepress-theme/style.css`.
 
 Consumers install the package alongside VitePress 2:
 
 ```ts
 // .vitepress/theme/index.ts
-import theme from '@your-scope/vitepress-theme'
+import { createTheme } from '@inp146/vitepress-theme'
 
-export default theme
+export default createTheme({
+  cssVars: {
+    root: {
+      '--vp-c-brand-1': '#2563eb'
+    }
+  }
+})
 ```
