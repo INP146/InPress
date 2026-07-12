@@ -8,6 +8,7 @@
     "preview": "vitepress preview ."
   },
   "devDependencies": {
+    "@types/node": "^22.20.1",
     "@inp146/vitepress-theme": "workspace:*",
     "vitepress": "2.0.0-alpha.18"
   }

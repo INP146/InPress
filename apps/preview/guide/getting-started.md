@@ -1,6 +1,6 @@
 # Getting started
 
-The reusable implementation lives in `packages/theme`. This VitePress site is intentionally only a preview host.
+The reusable implementation lives in `packages/theme`. This VitePress site is both the theme's documentation and its source-linked development environment.
 
 ## Development
 
@@ -11,7 +11,7 @@ pnpm install
 pnpm dev
 ```
 
-The preview imports `@inp146/vitepress-theme`, but Vite aliases it to `packages/theme/src/index.ts` during development. Changes to theme source therefore update the preview without publishing or rebuilding the package.
+The documentation site imports `@inp146/vitepress-theme`, but Vite aliases it to `packages/theme/src/index.ts` during development. Changes to theme source therefore update the site without publishing or rebuilding the package.
 
 ## Theme entry
 

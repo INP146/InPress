@@ -1,6 +1,6 @@
 # VitePress theme workspace
 
-This repository treats the VitePress theme as the product and `apps/preview` as its development playground.
+This repository treats the VitePress theme as the product and `apps/preview` as both its documentation site and source-linked development environment.
 
 ## Commands
 
@@ -14,9 +14,9 @@ pnpm build
 ## Structure
 
 - `packages/theme`: independently publishable VitePress 2 theme package.
-- `apps/preview`: local VitePress site used to develop and validate the theme.
+- `apps/preview`: VitePress documentation site used to develop and validate the theme.
 
-The preview aliases the package name to `packages/theme/src/index.ts`; package consumers resolve the built `dist` entry instead. Brand colors and other CSS tokens are configured by each consumer through `createTheme()`, not embedded in the package.
+The documentation site aliases the package name to `packages/theme/src/index.ts`; package consumers resolve the built `dist` entry instead. Brand colors and other CSS tokens are configured by each consumer through `createTheme()`, not embedded in the package. Write guides, API notes, and design decisions in `apps/preview`.
 
 ## Theme Contract
 
