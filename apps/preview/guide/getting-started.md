@@ -19,20 +19,24 @@ The documentation site imports `@inp146/vitepress-theme`, but Vite aliases it to
 
 ## Brand tokens
 
-The package has no fixed brand colors. Configure VitePress variables in the consuming site's theme entry:
+The package has no fixed brand colors. Configure VitePress variables in the consuming site's `themeConfig.inp146`:
 
 ```ts
-import { createTheme } from '@inp146/vitepress-theme'
+import { defineConfig } from 'vitepress'
 
-export default createTheme({
-  cssVars: {
-    root: {
-      '--vp-c-brand-1': '#2563eb',
-      '--vp-c-brand-2': '#3b82f6',
-      '--vp-c-brand-3': '#60a5fa'
-    },
-    dark: {
-      '--vp-c-brand-1': '#60a5fa'
+export default defineConfig({
+  themeConfig: {
+    inp146: {
+      cssVars: {
+        root: {
+          '--vp-c-brand-1': '#2563eb',
+          '--vp-c-brand-2': '#3b82f6',
+          '--vp-c-brand-3': '#60a5fa'
+        },
+        dark: {
+          '--vp-c-brand-1': '#60a5fa'
+        }
+      }
     }
   }
 })

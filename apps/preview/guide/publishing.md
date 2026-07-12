@@ -13,13 +13,17 @@ The published package contains only `dist`. It exports the theme entry point and
 Consumers install the package alongside VitePress 2:
 
 ```ts
-// .vitepress/theme/index.ts
-import { createTheme } from '@inp146/vitepress-theme'
+// .vitepress/config.ts
+import { defineConfig } from 'vitepress'
 
-export default createTheme({
-  cssVars: {
-    root: {
-      '--vp-c-brand-1': '#2563eb'
+export default defineConfig({
+  themeConfig: {
+    inp146: {
+      cssVars: {
+        root: {
+          '--vp-c-brand-1': '#2563eb'
+        }
+      }
     }
   }
 })

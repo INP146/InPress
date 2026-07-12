@@ -13,13 +13,17 @@ pnpm --filter @inp146/vitepress-theme build
 消费方应与 VitePress 2 一同安装此包：
 
 ```ts
-// .vitepress/theme/index.ts
-import { createTheme } from '@inp146/vitepress-theme'
+// .vitepress/config.ts
+import { defineConfig } from 'vitepress'
 
-export default createTheme({
-  cssVars: {
-    root: {
-      '--vp-c-brand-1': '#2563eb'
+export default defineConfig({
+  themeConfig: {
+    inp146: {
+      cssVars: {
+        root: {
+          '--vp-c-brand-1': '#2563eb'
+        }
+      }
     }
   }
 })

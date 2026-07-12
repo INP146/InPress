@@ -19,20 +19,24 @@ pnpm dev
 
 ## 品牌 token
 
-主题包不包含固定品牌色。请在消费站点的主题入口中配置 VitePress 变量：
+主题包不包含固定品牌色。请在消费站点的 `themeConfig.inp146` 中配置 VitePress 变量：
 
 ```ts
-import { createTheme } from '@inp146/vitepress-theme'
+import { defineConfig } from 'vitepress'
 
-export default createTheme({
-  cssVars: {
-    root: {
-      '--vp-c-brand-1': '#2563eb',
-      '--vp-c-brand-2': '#3b82f6',
-      '--vp-c-brand-3': '#60a5fa'
-    },
-    dark: {
-      '--vp-c-brand-1': '#60a5fa'
+export default defineConfig({
+  themeConfig: {
+    inp146: {
+      cssVars: {
+        root: {
+          '--vp-c-brand-1': '#2563eb',
+          '--vp-c-brand-2': '#3b82f6',
+          '--vp-c-brand-3': '#60a5fa'
+        },
+        dark: {
+          '--vp-c-brand-1': '#60a5fa'
+        }
+      }
     }
   }
 })

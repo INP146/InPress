@@ -1,20 +1,34 @@
-import { Fragment, h } from 'vue'
-import type { Theme } from 'vitepress'
+import { defineComponent, Fragment, h } from 'vue'
+import { useData, type Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import ThemeBadge from './components/ThemeBadge.vue'
+import {
+  createLinkIconStyle,
+  linkIconProviders,
+  type LinkIconProvider
+} from './link-icons'
 
 export { ThemeBadge }
+export { linkIconProviders } from './link-icons'
+export type { LinkIconProvider } from './link-icons'
 
 export type ThemeCssVars = Record<`--${string}`, string | number>
 
-export interface ThemeOptions {
+export interface Inp146ThemeSettings {
   cssVars?: {
     root?: ThemeCssVars
     dark?: ThemeCssVars
   }
+  linkIcons?: boolean | readonly LinkIconProvider[]
 }
 
-function createTokenStyle(cssVars: ThemeOptions['cssVars']): string {
+export interface Inp146ThemeConfig {
+  inp146?: Inp146ThemeSettings
+}
+
+function createTokenStyle(
+  cssVars: Inp146ThemeSettings['cssVars']
+): string {
   const rules = [
     [':root', cssVars?.root],
     [':root.dark', cssVars?.dark]
@@ -32,18 +46,43 @@ function createTokenStyle(cssVars: ThemeOptions['cssVars']): string {
     .join('')
 }
 
-export function createTheme(options: ThemeOptions = {}): Theme {
-  const tokenStyle = createTokenStyle(options.cssVars)
+function resolveLinkIcons(
+  linkIcons: Inp146ThemeSettings['linkIcons']
+): readonly LinkIconProvider[] {
+  if (linkIcons === false) return []
+  if (Array.isArray(linkIcons)) return linkIcons
+  return linkIconProviders
+}
+
+export function createTheme(): Theme {
+  const Layout = defineComponent({
+    name: 'VitePressThemeLayout',
+    setup() {
+      const { theme } = useData<Inp146ThemeConfig>()
+
+      return () => {
+        const settings = theme.value.inp146
+        const themeStyle = [
+          createTokenStyle(settings?.cssVars),
+          createLinkIconStyle(resolveLinkIcons(settings?.linkIcons))
+        ].join('')
+
+        return h(Fragment, null, [
+          themeStyle
+            ? h('style', {
+                id: 'vitepress-theme-overrides',
+                innerHTML: themeStyle
+              })
+            : null,
+          h(DefaultTheme.Layout)
+        ])
+      }
+    }
+  })
 
   return {
     extends: DefaultTheme,
-    Layout: () =>
-      h(Fragment, null, [
-        tokenStyle
-          ? h('style', { id: 'vitepress-theme-tokens' }, tokenStyle)
-          : null,
-        h(DefaultTheme.Layout)
-      ]),
+    Layout,
     enhanceApp({ app }) {
       app.component('ThemeBadge', ThemeBadge)
     }

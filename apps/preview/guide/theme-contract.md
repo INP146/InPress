@@ -12,19 +12,23 @@ Keep documentation prose, demo data, and this site's visual identity under `apps
 
 Consumer-specific values, including color, typography, radius, and spacing, must be expressed as CSS custom properties. Components may have structural fallbacks, but every variable visual value must stay overridable.
 
-Configure tokens in the consuming site's theme entry with `createTheme()`. Use `root` for shared values and `dark` for dark-mode overrides:
+Configure tokens in the consuming site's `themeConfig.inp146`. Use `root` for shared values and `dark` for dark-mode overrides:
 
 ```ts
-import { createTheme } from '@inp146/vitepress-theme'
+import { defineConfig } from 'vitepress'
 
-export default createTheme({
-  cssVars: {
-    root: {
-      '--vp-c-brand-1': '#2563eb',
-      '--theme-badge-radius': '6px'
-    },
-    dark: {
-      '--vp-c-brand-1': '#60a5fa'
+export default defineConfig({
+  themeConfig: {
+    inp146: {
+      cssVars: {
+        root: {
+          '--vp-c-brand-1': '#2563eb',
+          '--theme-badge-radius': '6px'
+        },
+        dark: {
+          '--vp-c-brand-1': '#60a5fa'
+        }
+      }
     }
   }
 })
