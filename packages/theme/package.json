@@ -1,0 +1,36 @@
+{
+  "name": "@inp146/vitepress-theme",
+  "version": "0.1.0",
+  "description": "A reusable VitePress theme extending the default theme.",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": "./dist/style.css",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist",
+    "dev": "vite build --watch",
+    "check": "vue-tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vitepress": "^2.0.0-alpha.18",
+    "vue": "^3.5.39"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.7",
+    "typescript": "6.0.3",
+    "vite": "^8.1.4",
+    "vitepress": "2.0.0-alpha.18",
+    "vue-tsc": "^3.3.7"
+  }
+}

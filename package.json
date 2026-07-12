@@ -1,0 +1,14 @@
+{
+  "name": "vitepress-theme-workspace",
+  "private": true,
+  "packageManager": "pnpm@11.10.0",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @your-scope/vitepress-theme-preview dev",
+    "build": "pnpm --filter @your-scope/vitepress-theme build && pnpm --filter @your-scope/vitepress-theme-preview build",
+    "check": "pnpm --filter @your-scope/vitepress-theme check && pnpm --filter @your-scope/vitepress-theme-preview build",
+    "preview": "pnpm --filter @your-scope/vitepress-theme-preview preview"
+  }
+}
