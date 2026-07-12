@@ -6,9 +6,12 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
-      entry: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
+      entry: {
+        index: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
+        i18n: fileURLToPath(new URL('./src/i18n.ts', import.meta.url))
+      },
       formats: ['es'],
-      fileName: 'index',
+      fileName: (_format, entryName) => `${entryName}.js`,
       cssFileName: 'style'
     },
     rollupOptions: {

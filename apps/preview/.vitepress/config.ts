@@ -1,5 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
+import { themeI18n } from '@inp146/vitepress-theme/i18n'
 
 export default defineConfig({
   title: 'VitePress Theme',
@@ -17,6 +18,7 @@ export default defineConfig({
       title: 'VitePress Theme',
       description: '@inp146/vitepress-theme 的文档与开发站',
       themeConfig: {
+        ...themeI18n.zh,
         nav: [
           { text: '文档', link: '/zh/guide/getting-started' },
           { text: '组件示例', link: '/zh/showcase/components' }
@@ -35,16 +37,6 @@ export default defineConfig({
             items: [{ text: '组件', link: '/zh/showcase/components' }]
           }
         ],
-        outline: {
-          label: '本页内容'
-        },
-        darkModeSwitchLabel: '深色模式',
-        lightModeSwitchTitle: '切换为浅色模式',
-        darkModeSwitchTitle: '切换为深色模式',
-        sidebarMenuLabel: '菜单',
-        returnToTopLabel: '返回顶部',
-        langMenuLabel: '切换语言',
-        skipToContentLabel: '跳到正文',
         footer: {
           message: '基于 VitePress 2.0 alpha 构建。',
           copyright: 'Copyright 2026'
@@ -53,6 +45,7 @@ export default defineConfig({
     }
   },
   themeConfig: {
+    ...themeI18n.en,
     logo: '/logo.svg',
     nav: [
       { text: 'Docs', link: '/guide/getting-started' },
@@ -72,36 +65,6 @@ export default defineConfig({
         items: [{ text: 'Components', link: '/showcase/components' }]
       }
     ],
-    search: {
-      provider: 'local',
-      options: {
-        locales: {
-          zh: {
-            translations: {
-              button: {
-                buttonText: '搜索',
-                buttonAriaLabel: '搜索'
-              },
-              modal: {
-                displayDetails: '显示详细列表',
-                resetButtonTitle: '清除查询条件',
-                backButtonTitle: '关闭搜索',
-                noResultsText: '未找到结果',
-                footer: {
-                  selectText: '选择',
-                  selectKeyAriaLabel: '回车',
-                  navigateText: '切换',
-                  navigateUpKeyAriaLabel: '向上箭头',
-                  navigateDownKeyAriaLabel: '向下箭头',
-                  closeText: '关闭',
-                  closeKeyAriaLabel: 'Esc'
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     socialLinks: [{ icon: 'github', link: 'https://github.com' }],
     footer: {
       message: 'Built on VitePress 2.0 alpha.',

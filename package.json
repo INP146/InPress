@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "pnpm --filter @inp146/vitepress-theme-preview dev",
     "build": "pnpm --filter @inp146/vitepress-theme build && pnpm --filter @inp146/vitepress-theme-preview build",
-    "check": "pnpm --filter @inp146/vitepress-theme check && pnpm --filter @inp146/vitepress-theme-preview build",
+    "check": "pnpm --filter @inp146/vitepress-theme check && pnpm --filter @inp146/vitepress-theme build && pnpm --filter @inp146/vitepress-theme-preview build",
     "preview": "pnpm --filter @inp146/vitepress-theme-preview preview"
   }
 }

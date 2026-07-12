@@ -33,3 +33,27 @@ export default createTheme({
 ## 扩展 VitePress
 
 优先使用 VitePress 的公开扩展点：CSS 变量、插槽、布局包装层和主题配置。只有当所需的结构或交互无法用这些 API 表达时，才 fork 或替换默认主题内部实现。
+
+## 界面语言
+
+主题包导出 `themeI18n`，用于默认主题的通用界面文字。在 VitePress 配置中导入并展开相应 preset；站点导航、文档正文和页脚文案仍保留在消费站点：
+
+```ts
+import { defineConfig } from 'vitepress'
+import { themeI18n } from '@inp146/vitepress-theme/i18n'
+
+export default defineConfig({
+  themeConfig: {
+    ...themeI18n.en
+  },
+  locales: {
+    zh: {
+      label: '简体中文',
+      lang: 'zh-CN',
+      themeConfig: {
+        ...themeI18n.zh
+      }
+    }
+  }
+})
+```

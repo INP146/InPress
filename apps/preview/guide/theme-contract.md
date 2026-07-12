@@ -33,3 +33,27 @@ export default createTheme({
 ## Extending VitePress
 
 Prefer the documented VitePress extension points: CSS variables, slots, a wrapped layout, and theme configuration. Fork or replace default-theme internals only when a required markup or interaction cannot be expressed through those APIs.
+
+## Interface language
+
+The package exports `themeI18n` for default-theme interface strings. Import and spread the matching preset in the VitePress configuration; keep site navigation, documentation, and footer copy in the consuming site:
+
+```ts
+import { defineConfig } from 'vitepress'
+import { themeI18n } from '@inp146/vitepress-theme/i18n'
+
+export default defineConfig({
+  themeConfig: {
+    ...themeI18n.en
+  },
+  locales: {
+    zh: {
+      label: '简体中文',
+      lang: 'zh-CN',
+      themeConfig: {
+        ...themeI18n.zh
+      }
+    }
+  }
+})
+```
