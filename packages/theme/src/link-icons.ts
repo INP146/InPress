@@ -9,6 +9,7 @@ const providerIcons = {
   github: {
     icon: githubIcon,
     monochrome: true,
+    offset: 'calc(var(--theme-provider-link-icon-offset,-1px) - 1px)',
     urls: ['https://github.com/', 'https://www.github.com/']
   },
   x: {
@@ -79,8 +80,12 @@ export function createLinkIconStyle(
           : 'var(--theme-provider-link-icon-size,20px)'
       const aspectRatio =
         'aspectRatio' in providerIcon ? providerIcon.aspectRatio : '1'
+      const offset =
+        'offset' in providerIcon
+          ? providerIcon.offset
+          : 'var(--theme-provider-link-icon-offset,-1px)'
 
-      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--theme-provider-link-icon-size,20px);aspect-ratio:${aspectRatio};margin-inline-end:var(--theme-provider-link-icon-gap,4px);vertical-align:var(--theme-provider-link-icon-align,middle);${iconStyle}}`
+      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--theme-provider-link-icon-size,20px);aspect-ratio:${aspectRatio};margin-inline-end:var(--theme-provider-link-icon-gap,4px);vertical-align:var(--theme-provider-link-icon-align,middle);transform:translateY(var(--theme-provider-link-icon-${provider}-offset,${offset}));${iconStyle}}`
     })
     .join('')
 }

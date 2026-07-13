@@ -44,4 +44,18 @@ export default defineConfig({
 
 `cssVars` 接受任意 CSS 自定义属性，因此消费方也可以在不 fork 主题的前提下调整 `--theme-badge-radius` 等组件 token。
 
+## 链接下划线
+
+文档正文链接默认不显示下划线。需要恢复 VitePress 默认下划线时，配置：
+
+```ts
+export default defineConfig({
+  themeConfig: {
+    inp146: {
+      hideLinkUnderline: false
+    }
+  }
+})
+```
+
 <ThemeBadge label="由主题注册的组件" />

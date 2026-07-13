@@ -28,6 +28,7 @@ export default defineConfig({
             text: '主题开发',
             items: [
               { text: '快速开始', link: '/zh/guide/getting-started' },
+              { text: '配置与 API', link: '/zh/guide/configuration' },
               { text: '主题契约', link: '/zh/guide/theme-contract' },
               { text: '发布', link: '/zh/guide/publishing' }
             ]
@@ -83,6 +84,7 @@ export default defineConfig({
         text: 'Theme development',
         items: [
           { text: 'Getting started', link: '/guide/getting-started' },
+          { text: 'Configuration & API', link: '/guide/configuration' },
           { text: 'Theme contract', link: '/guide/theme-contract' },
           { text: 'Publishing', link: '/guide/publishing' }
         ]

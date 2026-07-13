@@ -44,4 +44,18 @@ export default defineConfig({
 
 `cssVars` accepts any CSS custom property, so consumers can also tune exported component tokens such as `--theme-badge-radius` without forking the theme.
 
+## Link underlines
+
+Document links have no underline by default. Restore the VitePress underline with:
+
+```ts
+export default defineConfig({
+  themeConfig: {
+    inp146: {
+      hideLinkUnderline: false
+    }
+  }
+})
+```
+
 <ThemeBadge label="Registered by the theme" />

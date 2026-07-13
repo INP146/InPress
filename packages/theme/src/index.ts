@@ -20,6 +20,7 @@ export interface Inp146ThemeSettings {
     dark?: ThemeCssVars
   }
   linkIcons?: boolean | readonly LinkIconProvider[]
+  hideLinkUnderline?: boolean
 }
 
 export interface Inp146ThemeConfig {
@@ -54,6 +55,12 @@ function resolveLinkIcons(
   return linkIconProviders
 }
 
+function createLinkUnderlineStyle(hideLinkUnderline = true): string {
+  return hideLinkUnderline
+    ? '.vp-doc a,.vp-doc a:hover{text-decoration:none;}'
+    : ''
+}
+
 export function createTheme(): Theme {
   const Layout = defineComponent({
     name: 'VitePressThemeLayout',
@@ -64,7 +71,8 @@ export function createTheme(): Theme {
         const settings = theme.value.inp146
         const themeStyle = [
           createTokenStyle(settings?.cssVars),
-          createLinkIconStyle(resolveLinkIcons(settings?.linkIcons))
+          createLinkIconStyle(resolveLinkIcons(settings?.linkIcons)),
+          createLinkUnderlineStyle(settings?.hideLinkUnderline)
         ].join('')
 
         return h(Fragment, null, [
