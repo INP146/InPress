@@ -10,7 +10,13 @@ import theme from '@inp146/vitepress-theme'
 export default theme
 ```
 
-同时导出的 `createTheme()` 用于程序化组合，目前不接收参数。站点相关设置统一放在 `themeConfig.inp146`。
+使用构建后的包时，需要同时导入主题样式：
+
+```ts
+import '@inp146/vitepress-theme/style.css'
+```
+
+同时导出的 `createTheme()` 用于程序化组合，目前不接收参数。站点相关设置直接放在 `themeConfig`。
 
 ## 主题设置
 
@@ -19,18 +25,16 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    inp146: {
-      cssVars: {
-        root: {
-          '--vp-c-brand-1': '#0f766e'
-        },
-        dark: {
-          '--vp-c-brand-1': '#2dd4bf'
-        }
+    cssVars: {
+      root: {
+        '--vp-c-brand-1': '#0f766e'
       },
-      linkIcons: ['github', 'youtube'],
-      hideLinkUnderline: false
-    }
+      dark: {
+        '--vp-c-brand-1': '#2dd4bf'
+      }
+    },
+    linkIcons: ['github', 'youtube'],
+    hideLinkUnderline: false
   }
 })
 ```
@@ -42,6 +46,20 @@ export default defineConfig({
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | 默认启用全部平台图标。设为 `false` 关闭，传入列表可只启用部分平台。 |
 | `autoLinkText` | `boolean` | `true` | 将无显式文案的 GitHub、GitLab URL 显示为 `user/repo`，npm 包 URL 显示为包名。设为 `false` 保留 URL 文本。 |
 | `hideLinkUnderline` | `boolean` | `true` | 隐藏 `.vp-doc` 内链接的文字下划线。设为 `false` 恢复 VitePress 默认样式。 |
+
+## 文本记号笔
+
+下划线记号笔适合短文本强调，笔刷高亮适合标记一段文字：
+
+<p><mark>下划线记号笔</mark></p>
+<p><mark class="highlight">笔刷风格高亮文本</mark></p>
+
+```html
+<mark>下划线记号笔</mark>
+<mark class="highlight">笔刷风格高亮文本</mark>
+```
+
+两种记号笔默认跟随 VitePress 全局品牌色。可通过 `--theme-marker-color` 或 `--theme-marker-highlight-color` 覆盖颜色，通过 `--theme-marker-thickness`、`--theme-marker-offset` 和 `--theme-marker-highlight-radius` 调整形态。
 
 ## 平台链接图标
 
@@ -60,7 +78,6 @@ export default defineConfig({
 | `--theme-provider-link-icon-gap` | `4px` | 图标与链接文字之间的间距。 |
 | `--theme-provider-link-icon-align` | `middle` | 行内垂直对齐方式。 |
 | `--theme-provider-link-icon-offset` | `-1px` | 最终视觉垂直偏移。 |
-| `--theme-provider-link-icon-github-offset` | 全局偏移再减 `1px` | GitHub 专用的垂直偏移。 |
 
 ## 包导出
 
@@ -68,13 +85,10 @@ export default defineConfig({
 | --- | --- | --- |
 | 默认主题 | `@inp146/vitepress-theme` | 用于 `.vitepress/theme/index.ts` 的主题对象。 |
 | `createTheme()` | `@inp146/vitepress-theme` | 用于程序化创建同一主题对象。 |
-| `ThemeBadge` | `@inp146/vitepress-theme` | 由主题全局注册的 Vue 组件。可选 `label` prop 的默认值为 `Theme component`。 |
 | `linkIconProviders` | `@inp146/vitepress-theme` | 包含所有支持平台标识符的数组。 |
 | `LinkIconProvider` | `@inp146/vitepress-theme` | 平台标识符的联合类型。 |
-| `resolveProviderLinkText()` | `@inp146/vitepress-theme` | 为支持的平台 URL 解析简短显示文案。 |
 | `ThemeCssVars` | `@inp146/vitepress-theme` | CSS 自定义属性记录的类型。 |
-| `Inp146ThemeSettings` | `@inp146/vitepress-theme` | `themeConfig.inp146` 的类型。 |
-| `Inp146ThemeConfig` | `@inp146/vitepress-theme` | 含有 `inp146` 命名空间的类型。 |
+| `Inp146ThemeConfig` | `@inp146/vitepress-theme` | `themeConfig` 中主题专属字段的类型。 |
 
 ## 界面语言
 
@@ -84,10 +98,14 @@ export default defineConfig({
 import { themeI18n } from '@inp146/vitepress-theme/i18n'
 
 export default defineConfig({
-  themeConfig: {
-    ...themeI18n.en
-  },
   locales: {
+    root: {
+      label: 'English',
+      lang: 'en',
+      themeConfig: {
+        ...themeI18n.en
+      }
+    },
     zh: {
       label: '简体中文',
       lang: 'zh-CN',

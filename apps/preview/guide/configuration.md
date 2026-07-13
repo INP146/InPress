@@ -10,7 +10,13 @@ import theme from '@inp146/vitepress-theme'
 export default theme
 ```
 
-`createTheme()` is also exported for programmatic composition and currently accepts no options. Site-specific settings belong in `themeConfig.inp146`.
+When consuming the built package, import its styles alongside the theme entry:
+
+```ts
+import '@inp146/vitepress-theme/style.css'
+```
+
+`createTheme()` is also exported for programmatic composition and currently accepts no options. Site-specific settings belong directly in `themeConfig`.
 
 ## Theme settings
 
@@ -19,18 +25,16 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    inp146: {
-      cssVars: {
-        root: {
-          '--vp-c-brand-1': '#0f766e'
-        },
-        dark: {
-          '--vp-c-brand-1': '#2dd4bf'
-        }
+    cssVars: {
+      root: {
+        '--vp-c-brand-1': '#0f766e'
       },
-      linkIcons: ['github', 'youtube'],
-      hideLinkUnderline: false
-    }
+      dark: {
+        '--vp-c-brand-1': '#2dd4bf'
+      }
+    },
+    linkIcons: ['github', 'youtube'],
+    hideLinkUnderline: false
   }
 })
 ```
@@ -42,6 +46,20 @@ export default defineConfig({
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | Enables all provider icons by default. Set `false` to disable them, or pass a list to enable a subset. |
 | `autoLinkText` | `boolean` | `true` | Replaces bare GitHub and GitLab URLs with `user/repo`, and bare npm package URLs with the package name. Set `false` to keep the URL text. |
 | `hideLinkUnderline` | `boolean` | `true` | Hides text underlines for links inside `.vp-doc`. Set `false` to restore the VitePress default. |
+
+## Text markers
+
+Use the underline marker for a short emphasis and the brush marker for highlighted text:
+
+<p><mark>Underline marker</mark></p>
+<p><mark class="highlight">Brush-style marker highlight</mark></p>
+
+```html
+<mark>Underline marker</mark>
+<mark class="highlight">Brush-style marker highlight</mark>
+```
+
+By default, both markers derive their colors from the global VitePress brand colors. Override them with `--theme-marker-color` or `--theme-marker-highlight-color`; geometry can be adjusted with `--theme-marker-thickness`, `--theme-marker-offset`, and `--theme-marker-highlight-radius`.
 
 ## Provider link icons
 
@@ -60,7 +78,6 @@ These CSS custom properties adjust every provider icon:
 | `--theme-provider-link-icon-gap` | `4px` | Space between icon and link text. |
 | `--theme-provider-link-icon-align` | `middle` | Inline vertical alignment mode. |
 | `--theme-provider-link-icon-offset` | `-1px` | Final visual vertical adjustment. |
-| `--theme-provider-link-icon-github-offset` | Global offset minus `1px` | GitHub-specific vertical adjustment. |
 
 ## Package exports
 
@@ -68,13 +85,10 @@ These CSS custom properties adjust every provider icon:
 | --- | --- | --- |
 | Default theme | `@inp146/vitepress-theme` | Theme object for `.vitepress/theme/index.ts`. |
 | `createTheme()` | `@inp146/vitepress-theme` | Creates the same theme object for programmatic use. |
-| `ThemeBadge` | `@inp146/vitepress-theme` | Vue component registered globally by the theme. Its optional `label` prop defaults to `Theme component`. |
 | `linkIconProviders` | `@inp146/vitepress-theme` | Array containing every supported provider identifier. |
 | `LinkIconProvider` | `@inp146/vitepress-theme` | Union type for provider identifiers. |
-| `resolveProviderLinkText()` | `@inp146/vitepress-theme` | Resolves compact labels for supported provider URLs. |
 | `ThemeCssVars` | `@inp146/vitepress-theme` | Type for a CSS custom-property record. |
-| `Inp146ThemeSettings` | `@inp146/vitepress-theme` | Type of `themeConfig.inp146`. |
-| `Inp146ThemeConfig` | `@inp146/vitepress-theme` | Type containing the `inp146` namespace. |
+| `Inp146ThemeConfig` | `@inp146/vitepress-theme` | Type of the theme-specific fields in `themeConfig`. |
 
 ## Interface language
 
@@ -84,10 +98,14 @@ Import `themeI18n` through the Node-safe subpath and spread the matching preset 
 import { themeI18n } from '@inp146/vitepress-theme/i18n'
 
 export default defineConfig({
-  themeConfig: {
-    ...themeI18n.en
-  },
   locales: {
+    root: {
+      label: 'English',
+      lang: 'en',
+      themeConfig: {
+        ...themeI18n.en
+      }
+    },
     zh: {
       label: '简体中文',
       lang: 'zh-CN',

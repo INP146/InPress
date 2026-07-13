@@ -1,12 +1,4 @@
-# 组件
-
-此页面用于确认由主题包注册的组件可在 Markdown 内容中使用。
-
-## Theme badge
-
-<ThemeBadge label="由工作区主题渲染" />
-
-该组件也会从包中导出；当消费方希望进行局部注册或组合时，可以直接导入它。
+# 链接功能
 
 ## 平台链接
 
@@ -18,10 +10,8 @@ import { defineConfig } from "vitepress";
 
 export default defineConfig({
   themeConfig: {
-    inp146: {
-      linkIcons: false,
-      // 或：linkIcons: ['github', 'youtube']
-    },
+    linkIcons: false,
+    // 或：linkIcons: ['github', 'youtube']
   },
 });
 ```

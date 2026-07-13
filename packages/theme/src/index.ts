@@ -1,7 +1,7 @@
 import { defineComponent, Fragment, h, nextTick, watch } from 'vue'
 import { useData, useRoute, type Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
-import ThemeBadge from './components/ThemeBadge.vue'
+import './style.css'
 import {
   createLinkIconStyle,
   linkIconProviders,
@@ -9,13 +9,12 @@ import {
   type LinkIconProvider
 } from './link-icons'
 
-export { ThemeBadge }
-export { linkIconProviders, resolveProviderLinkText } from './link-icons'
+export { linkIconProviders } from './link-icons'
 export type { LinkIconProvider } from './link-icons'
 
 export type ThemeCssVars = Record<`--${string}`, string | number>
 
-export interface Inp146ThemeSettings {
+export interface Inp146ThemeConfig {
   cssVars?: {
     root?: ThemeCssVars
     dark?: ThemeCssVars
@@ -25,13 +24,13 @@ export interface Inp146ThemeSettings {
   hideLinkUnderline?: boolean
 }
 
-export interface Inp146ThemeConfig {
-  inp146?: Inp146ThemeSettings
+declare module 'vitepress' {
+  namespace DefaultTheme {
+    interface Config extends Inp146ThemeConfig {}
+  }
 }
 
-function createTokenStyle(
-  cssVars: Inp146ThemeSettings['cssVars']
-): string {
+function createTokenStyle(cssVars: Inp146ThemeConfig['cssVars']): string {
   const rules = [
     [':root', cssVars?.root],
     [':root.dark', cssVars?.dark]
@@ -50,7 +49,7 @@ function createTokenStyle(
 }
 
 function resolveLinkIcons(
-  linkIcons: Inp146ThemeSettings['linkIcons']
+  linkIcons: Inp146ThemeConfig['linkIcons']
 ): readonly LinkIconProvider[] {
   if (linkIcons === false) return []
   if (Array.isArray(linkIcons)) return linkIcons
@@ -106,23 +105,22 @@ export function createTheme(): Theme {
       const route = useRoute()
 
       watch(
-        [() => route.path, () => theme.value.inp146?.autoLinkText],
+        [() => route.path, () => theme.value.autoLinkText],
         () => {
           if (typeof document === 'undefined') return
 
           void nextTick(() =>
-            applyAutoLinkText(theme.value.inp146?.autoLinkText !== false)
+            applyAutoLinkText(theme.value.autoLinkText !== false)
           )
         },
         { flush: 'post', immediate: true }
       )
 
       return () => {
-        const settings = theme.value.inp146
         const themeStyle = [
-          createTokenStyle(settings?.cssVars),
-          createLinkIconStyle(resolveLinkIcons(settings?.linkIcons)),
-          createLinkUnderlineStyle(settings?.hideLinkUnderline)
+          createTokenStyle(theme.value.cssVars),
+          createLinkIconStyle(resolveLinkIcons(theme.value.linkIcons)),
+          createLinkUnderlineStyle(theme.value.hideLinkUnderline)
         ].join('')
 
         return h(Fragment, null, [
@@ -140,10 +138,7 @@ export function createTheme(): Theme {
 
   return {
     extends: DefaultTheme,
-    Layout,
-    enhanceApp({ app }) {
-      app.component('ThemeBadge', ThemeBadge)
-    }
+    Layout
   }
 }
 

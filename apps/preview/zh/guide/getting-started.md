@@ -15,34 +15,32 @@ pnpm dev
 
 ## 主题入口
 
-`src/index.ts` 扩展 `vitepress/theme`，保留默认主题，同时允许添加 CSS、全局组件、应用初始化逻辑或布局包装层。
+`src/index.ts` 扩展 `vitepress/theme`，保留默认主题，同时允许添加 CSS、应用初始化逻辑或布局包装层。
 
 ## 品牌 token
 
-主题包不包含固定品牌色。请在消费站点的 `themeConfig.inp146` 中配置 VitePress 变量：
+主题包不包含固定品牌色。请直接在消费站点的 `themeConfig` 中配置 VitePress 变量：
 
 ```ts
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    inp146: {
-      cssVars: {
-        root: {
-          '--vp-c-brand-1': '#2563eb',
-          '--vp-c-brand-2': '#3b82f6',
-          '--vp-c-brand-3': '#60a5fa'
-        },
-        dark: {
-          '--vp-c-brand-1': '#60a5fa'
-        }
+    cssVars: {
+      root: {
+        '--vp-c-brand-1': '#2563eb',
+        '--vp-c-brand-2': '#3b82f6',
+        '--vp-c-brand-3': '#60a5fa'
+      },
+      dark: {
+        '--vp-c-brand-1': '#60a5fa'
       }
     }
   }
 })
 ```
 
-`cssVars` 接受任意 CSS 自定义属性，因此消费方也可以在不 fork 主题的前提下调整 `--theme-badge-radius` 等组件 token。
+`cssVars` 接受任意 CSS 自定义属性，包括 VitePress token 和本包文档记录的主题 token。
 
 ## 链接下划线
 
@@ -51,11 +49,7 @@ export default defineConfig({
 ```ts
 export default defineConfig({
   themeConfig: {
-    inp146: {
-      hideLinkUnderline: false
-    }
+    hideLinkUnderline: false
   }
 })
 ```
-
-<ThemeBadge label="由主题注册的组件" />

@@ -1,0 +1,61 @@
+mark {
+  color: inherit;
+  background: transparent;
+  text-decoration-line: underline;
+  text-decoration-thickness: var(--theme-marker-thickness, 9px);
+  text-decoration-color: var(
+    --theme-marker-color,
+    var(--vp-c-brand-soft)
+  );
+  text-underline-offset: var(--theme-marker-offset, -4px);
+  text-decoration-skip-ink: none;
+}
+
+mark.highlight {
+  padding-inline: 0.08em;
+  border-radius: var(--theme-marker-highlight-radius, 5px);
+  text-decoration: none;
+  background:
+    linear-gradient(
+      104deg,
+      transparent 0.9%,
+      color-mix(
+          in srgb,
+          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 25%,
+          transparent
+        )
+        2.4%,
+      color-mix(
+          in srgb,
+          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 50%,
+          transparent
+        )
+        5.8%,
+      color-mix(
+          in srgb,
+          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 10%,
+          transparent
+        )
+        93%,
+      color-mix(
+          in srgb,
+          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 70%,
+          transparent
+        )
+        96%,
+      transparent 98%
+    ),
+    linear-gradient(
+      183deg,
+      transparent 0%,
+      color-mix(
+          in srgb,
+          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 30%,
+          transparent
+        )
+        7.9%,
+      transparent 15%
+    );
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}

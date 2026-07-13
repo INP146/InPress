@@ -10,24 +10,21 @@
 
 ## 视觉 token
 
-颜色、字体、圆角和间距等消费方特有的值都必须以 CSS 自定义属性表达。组件可以保留结构性默认值，但每一个可变的视觉值必须能够被覆盖。
+颜色、字体、圆角和间距等消费方特有的值都必须以 CSS 自定义属性表达，每一个可变的视觉值必须能够被覆盖。
 
-在消费站点的 `themeConfig.inp146` 中配置 token。`root` 用于共享值，`dark` 用于深色模式覆盖：
+在消费站点的 `themeConfig` 中配置 token。`root` 用于共享值，`dark` 用于深色模式覆盖：
 
 ```ts
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    inp146: {
-      cssVars: {
-        root: {
-          '--vp-c-brand-1': '#2563eb',
-          '--theme-badge-radius': '6px'
-        },
-        dark: {
-          '--vp-c-brand-1': '#60a5fa'
-        }
+    cssVars: {
+      root: {
+        '--vp-c-brand-1': '#2563eb'
+      },
+      dark: {
+        '--vp-c-brand-1': '#60a5fa'
       }
     }
   }
@@ -47,10 +44,14 @@ import { defineConfig } from 'vitepress'
 import { themeI18n } from '@inp146/vitepress-theme/i18n'
 
 export default defineConfig({
-  themeConfig: {
-    ...themeI18n.en
-  },
   locales: {
+    root: {
+      label: 'English',
+      lang: 'en',
+      themeConfig: {
+        ...themeI18n.en
+      }
+    },
     zh: {
       label: '简体中文',
       lang: 'zh-CN',

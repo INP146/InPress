@@ -18,11 +18,9 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    inp146: {
-      cssVars: {
-        root: {
-          '--vp-c-brand-1': '#2563eb'
-        }
+    cssVars: {
+      root: {
+        '--vp-c-brand-1': '#2563eb'
       }
     }
   }

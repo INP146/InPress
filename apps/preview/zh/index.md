@@ -10,7 +10,7 @@ hero:
       text: 阅读文档
       link: /zh/guide/getting-started
     - theme: alt
-      text: 查看组件
+      text: 查看链接功能
       link: /zh/showcase/components
 
 features:
@@ -22,5 +22,5 @@ features:
     details: 本站将工作区包别名到源码，修改主题即可实时刷新。
   - icon: 📚
     title: 活文档
-    details: 使用说明、设计决策和组件示例与主题在同一个站点中维护。
+    details: 使用说明、设计决策和功能示例与主题在同一个站点中维护。
 ---

@@ -158,13 +158,6 @@ export const linkIconProviders = Object.keys(providerIcons) as Array<
 
 export type LinkIconProvider = keyof typeof providerIcons
 
-/**
- * Returns a compact label for supported provider URLs.
- *
- * GitHub and GitLab URLs resolve to `user/repo`; npm package URLs resolve to
- * the package name. Other URLs return `undefined` and keep their original
- * link text.
- */
 export function resolveProviderLinkText(href: string): string | undefined {
   let url: URL
 
@@ -211,7 +204,7 @@ export function createLinkIconStyle(
           ? providerIcon.offset
           : 'var(--theme-provider-link-icon-offset,-1px)'
 
-      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--theme-provider-link-icon-size,20px);aspect-ratio:${aspectRatio};margin-inline-end:var(--theme-provider-link-icon-gap,4px);vertical-align:var(--theme-provider-link-icon-align,middle);transform:translateY(var(--theme-provider-link-icon-${provider}-offset,${offset}));${iconStyle}}`
+      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--theme-provider-link-icon-size,20px);aspect-ratio:${aspectRatio};margin-inline-end:var(--theme-provider-link-icon-gap,4px);vertical-align:var(--theme-provider-link-icon-align,middle);transform:translateY(${offset});${iconStyle}}`
     })
     .join('')
 }

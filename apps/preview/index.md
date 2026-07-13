@@ -10,7 +10,7 @@ hero:
       text: Read the docs
       link: /guide/getting-started
     - theme: alt
-      text: View components
+      text: View link features
       link: /showcase/components
 
 features:
@@ -22,5 +22,5 @@ features:
     details: This site aliases the workspace package to its source, so theme edits refresh during development.
   - icon: 🎨
     title: Living documentation
-    details: Usage guides, design decisions, and component examples ship with the same site used to build the theme.
+    details: Usage guides, design decisions, and feature examples ship with the same site used to build the theme.
 ---

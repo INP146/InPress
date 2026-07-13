@@ -10,24 +10,21 @@ Keep documentation prose, demo data, and this site's visual identity under `apps
 
 ## Visual tokens
 
-Consumer-specific values, including color, typography, radius, and spacing, must be expressed as CSS custom properties. Components may have structural fallbacks, but every variable visual value must stay overridable.
+Consumer-specific values, including color, typography, radius, and spacing, must be expressed as CSS custom properties. Every variable visual value must stay overridable.
 
-Configure tokens in the consuming site's `themeConfig.inp146`. Use `root` for shared values and `dark` for dark-mode overrides:
+Configure tokens in the consuming site's `themeConfig`. Use `root` for shared values and `dark` for dark-mode overrides:
 
 ```ts
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    inp146: {
-      cssVars: {
-        root: {
-          '--vp-c-brand-1': '#2563eb',
-          '--theme-badge-radius': '6px'
-        },
-        dark: {
-          '--vp-c-brand-1': '#60a5fa'
-        }
+    cssVars: {
+      root: {
+        '--vp-c-brand-1': '#2563eb'
+      },
+      dark: {
+        '--vp-c-brand-1': '#60a5fa'
       }
     }
   }
@@ -47,10 +44,14 @@ import { defineConfig } from 'vitepress'
 import { themeI18n } from '@inp146/vitepress-theme/i18n'
 
 export default defineConfig({
-  themeConfig: {
-    ...themeI18n.en
-  },
   locales: {
+    root: {
+      label: 'English',
+      lang: 'en',
+      themeConfig: {
+        ...themeI18n.en
+      }
+    },
     zh: {
       label: '简体中文',
       lang: 'zh-CN',

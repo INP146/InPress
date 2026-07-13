@@ -1,12 +1,4 @@
-# Components
-
-This page ensures components registered from the theme package work in Markdown content.
-
-## Theme badge
-
-<ThemeBadge label="Rendered from the workspace theme" />
-
-The component is also exported from the package for direct imports when a consumer needs local registration or composition.
+# Link features
 
 ## Provider links
 
@@ -18,10 +10,8 @@ import { defineConfig } from "vitepress";
 
 export default defineConfig({
   themeConfig: {
-    inp146: {
-      linkIcons: false,
-      // Or: linkIcons: ['github', 'youtube']
-    },
+    linkIcons: false,
+    // Or: linkIcons: ['github', 'youtube']
   },
 });
 ```
