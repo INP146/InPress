@@ -29,6 +29,7 @@ const providerIcons = {
     icon: threadsIcon,
     monochrome: true,
     inlineSize: 'var(--theme-provider-link-icon-threads-width,17.5px)',
+    aspectRatio: '7 / 8',
     urls: ['https://threads.net/', 'https://www.threads.net/']
   },
   youtube: {
@@ -70,14 +71,16 @@ export function createLinkIconStyle(
 
       const iconStyle =
         'monochrome' in providerIcons[provider]
-          ? `background-color:currentColor;-webkit-mask-image:url("${icon}");-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-image:url("${icon}");mask-position:center;mask-repeat:no-repeat;mask-size:100% 100%;`
+          ? `background-color:currentColor;-webkit-mask-image:url("${icon}");-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;-webkit-mask-size:contain;mask-image:url("${icon}");mask-mode:alpha;mask-position:center;mask-repeat:no-repeat;mask-size:contain;`
           : `background-image:url("${icon}");background-position:center;background-repeat:no-repeat;background-size:100% 100%;`
       const inlineSize =
         'inlineSize' in providerIcon
           ? providerIcon.inlineSize
           : 'var(--theme-provider-link-icon-size,20px)'
+      const aspectRatio =
+        'aspectRatio' in providerIcon ? providerIcon.aspectRatio : '1'
 
-      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--theme-provider-link-icon-size,20px);aspect-ratio:1;margin-inline-end:var(--theme-provider-link-icon-gap,4px);vertical-align:var(--theme-provider-link-icon-align,-0.125em);${iconStyle}}`
+      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--theme-provider-link-icon-size,20px);aspect-ratio:${aspectRatio};margin-inline-end:var(--theme-provider-link-icon-gap,4px);vertical-align:var(--theme-provider-link-icon-align,-0.125em);${iconStyle}}`
     })
     .join('')
 }
