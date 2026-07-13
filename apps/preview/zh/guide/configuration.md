@@ -34,7 +34,13 @@ export default defineConfig({
       }
     },
     linkIcons: ['github', 'youtube'],
-    hideLinkUnderline: false
+    hideLinkUnderline: false,
+    giscus: {
+      repo: 'owner/repository',
+      repoId: 'R_kgDO...',
+      category: 'Announcements',
+      categoryId: 'DIC_kwDO...'
+    }
   }
 })
 ```
@@ -46,6 +52,38 @@ export default defineConfig({
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | 默认启用全部平台图标。设为 `false` 关闭，传入列表可只启用部分平台。 |
 | `autoLinkText` | `boolean` | `true` | 将无显式文案的 GitHub、GitLab URL 显示为 `user/repo`，npm 包 URL 显示为包名。设为 `false` 保留 URL 文本。 |
 | `hideLinkUnderline` | `boolean` | `true` | 隐藏 `.vp-doc` 内链接的文字下划线。设为 `false` 恢复 VitePress 默认样式。 |
+| `giscus` | `GiscusConfig \| false` | - | 在每篇文档页底部启用 Giscus。设为 `false` 关闭。 |
+
+## Giscus 评论
+
+Giscus 会将评论存储为 GitHub Discussions。用户需要先到 [giscus.app](https://giscus.app) 为自己的仓库完成配置，再把 `giscus` 写入 `themeConfig`：
+
+1. 在目标仓库启用 Discussions，并安装 [Giscus GitHub App](https://github.com/apps/giscus)。
+2. 打开 [giscus.app](https://giscus.app)，填写仓库、选择讨论分类，并设置页面映射和语言。
+3. 将页面生成的 `repo`、`repoId`、`category`、`categoryId` 复制到 `themeConfig`。
+
+```ts
+giscus: {
+  repo: 'owner/repository',
+  repoId: 'R_kgDO...',
+  category: 'Announcements',
+  categoryId: 'DIC_kwDO...',
+  mapping: 'url',
+  inputPosition: 'bottom',
+  lang: 'zh-CN'
+}
+```
+
+评论显示在文档页脚后。应使用 giscus.app 中选择的映射方式：`pathname` 会为每个页面创建独立的讨论，`url` 则会使用完整页面 URL。组件默认跟随 VitePress 的浅色或深色模式。`preferred_color_scheme` 只跟随操作系统设置；若需要跟随 VitePress 的模式切换，请使用分别指定浅色和深色主题的对象。需要自定义 Giscus 主题时，传入 `theme: 'https://example.com/giscus-theme.css'`；也可以分别配置两种模式：
+
+```ts
+theme: {
+  light: 'light',
+  dark: 'dark_dimmed'
+}
+```
+
+在单篇文档的 frontmatter 中设置 `giscus: false`，可隐藏该页评论。
 
 ## 文本记号笔
 
@@ -60,6 +98,10 @@ export default defineConfig({
 ```
 
 两种记号笔默认跟随 VitePress 全局品牌色。可通过 `--theme-marker-color` 或 `--theme-marker-highlight-color` 覆盖颜色，通过 `--theme-marker-thickness`、`--theme-marker-offset` 和 `--theme-marker-highlight-radius` 调整形态。
+
+## 侧边栏层级
+
+一级页面链接默认相对分组标题缩进 `16px`，可通过 `--theme-sidebar-indent` 调整。
 
 ## 平台链接图标
 
@@ -88,6 +130,7 @@ export default defineConfig({
 | `linkIconProviders` | `@inp146/vitepress-theme` | 包含所有支持平台标识符的数组。 |
 | `LinkIconProvider` | `@inp146/vitepress-theme` | 平台标识符的联合类型。 |
 | `ThemeCssVars` | `@inp146/vitepress-theme` | CSS 自定义属性记录的类型。 |
+| `GiscusConfig` | `@inp146/vitepress-theme` | Giscus 小组件的配置类型。 |
 | `Inp146ThemeConfig` | `@inp146/vitepress-theme` | `themeConfig` 中主题专属字段的类型。 |
 
 ## 界面语言

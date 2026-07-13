@@ -34,7 +34,13 @@ export default defineConfig({
       }
     },
     linkIcons: ['github', 'youtube'],
-    hideLinkUnderline: false
+    hideLinkUnderline: false,
+    giscus: {
+      repo: 'owner/repository',
+      repoId: 'R_kgDO...',
+      category: 'Announcements',
+      categoryId: 'DIC_kwDO...'
+    }
   }
 })
 ```
@@ -46,6 +52,38 @@ export default defineConfig({
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | Enables all provider icons by default. Set `false` to disable them, or pass a list to enable a subset. |
 | `autoLinkText` | `boolean` | `true` | Replaces bare GitHub and GitLab URLs with `user/repo`, and bare npm package URLs with the package name. Set `false` to keep the URL text. |
 | `hideLinkUnderline` | `boolean` | `true` | Hides text underlines for links inside `.vp-doc`. Set `false` to restore the VitePress default. |
+| `giscus` | `GiscusConfig \| false` | - | Enables Giscus below each document page. Set `false` to disable it. |
+
+## Giscus comments
+
+Giscus stores comments as GitHub Discussions. Users must configure their own repository at [giscus.app](https://giscus.app) before adding `giscus` to `themeConfig`:
+
+1. Enable Discussions for the repository and install the [Giscus GitHub App](https://github.com/apps/giscus).
+2. Open [giscus.app](https://giscus.app), enter the repository, choose a discussion category, and select the page mapping and language.
+3. Copy the generated `repo`, `repoId`, `category`, and `categoryId` values into `themeConfig`.
+
+```ts
+giscus: {
+  repo: 'owner/repository',
+  repoId: 'R_kgDO...',
+  category: 'Announcements',
+  categoryId: 'DIC_kwDO...',
+  mapping: 'url',
+  inputPosition: 'bottom',
+  lang: 'en'
+}
+```
+
+Comments render after the document footer. Use the mapping selected at giscus.app; `pathname` creates a separate discussion for each page, while `url` includes the full page URL. The widget follows the VitePress light or dark appearance by default. `preferred_color_scheme` follows the operating system setting, so use a two-theme object when it must track VitePress's appearance switch. To use a custom Giscus theme, provide `theme: 'https://example.com/giscus-theme.css'`, or specify a theme for each appearance:
+
+```ts
+theme: {
+  light: 'light',
+  dark: 'dark_dimmed'
+}
+```
+
+Set `giscus: false` in a page's frontmatter to hide comments on that page.
 
 ## Text markers
 
@@ -60,6 +98,10 @@ Use the underline marker for a short emphasis and the brush marker for highlight
 ```
 
 By default, both markers derive their colors from the global VitePress brand colors. Override them with `--theme-marker-color` or `--theme-marker-highlight-color`; geometry can be adjusted with `--theme-marker-thickness`, `--theme-marker-offset`, and `--theme-marker-highlight-radius`.
+
+## Sidebar hierarchy
+
+First-level links are indented by `16px` below their group heading. Override the spacing with `--theme-sidebar-indent`.
 
 ## Provider link icons
 
@@ -88,6 +130,7 @@ These CSS custom properties adjust every provider icon:
 | `linkIconProviders` | `@inp146/vitepress-theme` | Array containing every supported provider identifier. |
 | `LinkIconProvider` | `@inp146/vitepress-theme` | Union type for provider identifiers. |
 | `ThemeCssVars` | `@inp146/vitepress-theme` | Type for a CSS custom-property record. |
+| `GiscusConfig` | `@inp146/vitepress-theme` | Giscus widget configuration. |
 | `Inp146ThemeConfig` | `@inp146/vitepress-theme` | Type of the theme-specific fields in `themeConfig`. |
 
 ## Interface language

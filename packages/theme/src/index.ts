@@ -2,6 +2,7 @@ import { defineComponent, Fragment, h, nextTick, watch } from 'vue'
 import { useData, useRoute, type Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
+import { Giscus, type GiscusConfig } from './giscus'
 import {
   createLinkIconStyle,
   linkIconProviders,
@@ -11,6 +12,7 @@ import {
 
 export { linkIconProviders } from './link-icons'
 export type { LinkIconProvider } from './link-icons'
+export type { GiscusConfig, GiscusMapping, GiscusTheme } from './giscus'
 
 export type ThemeCssVars = Record<`--${string}`, string | number>
 
@@ -22,6 +24,7 @@ export interface Inp146ThemeConfig {
   linkIcons?: boolean | readonly LinkIconProvider[]
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
+  giscus?: GiscusConfig | false
 }
 
 declare module 'vitepress' {
@@ -101,7 +104,7 @@ export function createTheme(): Theme {
   const Layout = defineComponent({
     name: 'VitePressThemeLayout',
     setup() {
-      const { theme } = useData<Inp146ThemeConfig>()
+      const { theme, frontmatter } = useData<Inp146ThemeConfig>()
       const route = useRoute()
 
       watch(
@@ -130,7 +133,15 @@ export function createTheme(): Theme {
                 innerHTML: themeStyle
               })
             : null,
-          h(DefaultTheme.Layout)
+          h(DefaultTheme.Layout, null, {
+            'doc-after': () => {
+              const giscus = theme.value.giscus
+
+              return giscus && frontmatter.value.giscus !== false
+                ? h(Giscus, { config: giscus, key: route.path })
+                : null
+            }
+          })
         ])
       }
     }

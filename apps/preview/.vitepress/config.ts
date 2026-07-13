@@ -29,7 +29,24 @@ const sharedThemeConfig = {
     }
   },
   logo: '/logo.svg',
-  socialLinks: [{ icon: 'github' as const, link: 'https://github.com' }]
+  socialLinks: [{ icon: 'github' as const, link: 'https://github.com' }],
+  giscus: {
+    repo: 'INP146/vitepress-theme',
+    repoId: 'R_kgDOTWQyyQ',
+    category: 'Announcements',
+    categoryId: 'DIC_kwDOTWQyyc4DBHZH',
+    mapping: 'url',
+    strict: false,
+    reactionsEnabled: true,
+    emitMetadata: false,
+    inputPosition: 'top',
+    theme: {
+      light: 'light',
+      dark: 'dark'
+    },
+    lang: 'zh-CN',
+    loading: 'lazy'
+  }
 }
 
 export default defineConfig({

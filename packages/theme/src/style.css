@@ -59,3 +59,15 @@ mark.highlight {
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
+
+.VPSidebarItem.level-0 > .items {
+  padding-inline-start: var(--theme-sidebar-indent, 4px);
+}
+
+.theme-giscus {
+  margin-top: 48px;
+}
+
+.theme-giscus :is(iframe, .giscus) {
+  width: 100%;
+}
