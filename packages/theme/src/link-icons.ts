@@ -80,7 +80,7 @@ export function createLinkIconStyle(
       const aspectRatio =
         'aspectRatio' in providerIcon ? providerIcon.aspectRatio : '1'
 
-      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--theme-provider-link-icon-size,20px);aspect-ratio:${aspectRatio};margin-inline-end:var(--theme-provider-link-icon-gap,4px);vertical-align:var(--theme-provider-link-icon-align,-0.125em);${iconStyle}}`
+      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--theme-provider-link-icon-size,20px);aspect-ratio:${aspectRatio};margin-inline-end:var(--theme-provider-link-icon-gap,4px);vertical-align:var(--theme-provider-link-icon-align,middle);${iconStyle}}`
     })
     .join('')
 }
