@@ -1,4 +1,4 @@
-import { defineComponent, Fragment, h, nextTick, watch } from 'vue'
+import { defineComponent, Fragment, h, nextTick, provide, watch } from 'vue'
 import { useData, useRoute, type Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
@@ -24,6 +24,7 @@ export interface Inp146ThemeConfig {
   linkIcons?: boolean | readonly LinkIconProvider[]
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
+  appearanceTransition?: boolean
   giscus?: GiscusConfig | false
 }
 
@@ -100,12 +101,65 @@ function applyAutoLinkText(enabled: boolean): void {
   })
 }
 
+function toggleAppearance(
+  isDark: { value: boolean },
+  enabled: boolean,
+  event?: Event
+): void {
+  const updateAppearance = async () => {
+    isDark.value = !isDark.value
+    await nextTick()
+  }
+
+  const canAnimate =
+    enabled &&
+    typeof document !== 'undefined' &&
+    'startViewTransition' in document &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  if (!canAnimate) {
+    void updateAppearance()
+    return
+  }
+
+  const pointerEvent = event instanceof MouseEvent && event.detail > 0
+  const x = pointerEvent ? event.clientX : window.innerWidth / 2
+  const y = pointerEvent ? event.clientY : window.innerHeight / 2
+  const radius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y)
+  )
+  const transition = document.startViewTransition(updateAppearance)
+  const clipPath = [
+    `circle(0px at ${x}px ${y}px)`,
+    `circle(${radius}px at ${x}px ${y}px)`
+  ]
+
+  void transition.ready.then(() => {
+    document.documentElement.animate(
+      { clipPath: isDark.value ? clipPath : [...clipPath].reverse() },
+      {
+        duration: 420,
+        easing: 'ease-in-out',
+        fill: 'forwards',
+        pseudoElement: isDark.value
+          ? '::view-transition-new(root)'
+          : '::view-transition-old(root)'
+      }
+    )
+  })
+}
+
 export function createTheme(): Theme {
   const Layout = defineComponent({
     name: 'VitePressThemeLayout',
     setup() {
-      const { theme, frontmatter } = useData<Inp146ThemeConfig>()
+      const { theme, frontmatter, isDark } = useData<Inp146ThemeConfig>()
       const route = useRoute()
+
+      provide('toggle-appearance', (event?: Event) =>
+        toggleAppearance(isDark, theme.value.appearanceTransition !== false, event)
+      )
 
       watch(
         [() => route.path, () => theme.value.autoLinkText],

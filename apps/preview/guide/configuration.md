@@ -35,6 +35,7 @@ export default defineConfig({
     },
     linkIcons: ['github', 'youtube'],
     hideLinkUnderline: false,
+    appearanceTransition: false,
     giscus: {
       repo: 'owner/repository',
       repoId: 'R_kgDO...',
@@ -52,7 +53,12 @@ export default defineConfig({
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | Enables all provider icons by default. Set `false` to disable them, or pass a list to enable a subset. |
 | `autoLinkText` | `boolean` | `true` | Replaces bare GitHub and GitLab URLs with `user/repo`, and bare npm package URLs with the package name. Set `false` to keep the URL text. |
 | `hideLinkUnderline` | `boolean` | `true` | Hides text underlines for links inside `.vp-doc`. Set `false` to restore the VitePress default. |
+| `appearanceTransition` | `boolean` | `true` | Animates light and dark mode changes from the switch position when the browser supports View Transition API. Set `false` to disable it. |
 | `giscus` | `GiscusConfig \| false` | - | Enables Giscus below each document page. Set `false` to disable it. |
+
+## Appearance transition
+
+When the user switches appearance, the new theme expands from the switch position. Browsers without the View Transition API, and users who prefer reduced motion, keep VitePress's instant switch. Set `appearanceTransition: false` to opt out.
 
 ## Giscus comments
 
