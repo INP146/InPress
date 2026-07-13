@@ -40,13 +40,16 @@ export default defineConfig({
 | `cssVars.root` | `Record<\`--${string}\`, string \| number>` | - | CSS custom properties applied to `:root`. |
 | `cssVars.dark` | `Record<\`--${string}\`, string \| number>` | - | CSS custom properties applied to `:root.dark`. |
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | Enables all provider icons by default. Set `false` to disable them, or pass a list to enable a subset. |
+| `autoLinkText` | `boolean` | `true` | Replaces bare GitHub and GitLab URLs with `user/repo`, and bare npm package URLs with the package name. Set `false` to keep the URL text. |
 | `hideLinkUnderline` | `boolean` | `true` | Hides text underlines for links inside `.vp-doc`. Set `false` to restore the VitePress default. |
 
 ## Provider link icons
 
-`LinkIconProvider` is one of: `github`, `x`, `instagram`, `threads`, `youtube`, or `bilibili`.
+`LinkIconProvider` is one of: `github`, `gitlab`, `npm`, `discord`, `telegram`, `linkedin`, `reddit`, `twitch`, `tiktok`, `weibo`, `xiaohongshu`, `zhihu`, `juejin`, `x`, `instagram`, `threads`, `youtube`, or `bilibili`.
 
-The `x` provider also matches `twitter.com`; `youtube` matches `youtu.be`; `bilibili` matches `b23.tv`.
+The `x` provider also matches `twitter.com`; `youtube` matches `youtu.be`; `bilibili` matches `b23.tv`; `discord` matches `discord.gg`; and `telegram` matches `t.me` and `telegram.me`.
+
+When an auto-link has no explicit label, GitHub and GitLab links are displayed as `user/repo`; npm links use their package name. For example, `<https://github.com/vuejs/vitepress>` displays as `vuejs/vitepress`. Explicit Markdown labels, such as `[VitePress](https://github.com/vuejs/vitepress)`, are never changed.
 
 These CSS custom properties adjust every provider icon:
 
@@ -68,6 +71,7 @@ These CSS custom properties adjust every provider icon:
 | `ThemeBadge` | `@inp146/vitepress-theme` | Vue component registered globally by the theme. Its optional `label` prop defaults to `Theme component`. |
 | `linkIconProviders` | `@inp146/vitepress-theme` | Array containing every supported provider identifier. |
 | `LinkIconProvider` | `@inp146/vitepress-theme` | Union type for provider identifiers. |
+| `resolveProviderLinkText()` | `@inp146/vitepress-theme` | Resolves compact labels for supported provider URLs. |
 | `ThemeCssVars` | `@inp146/vitepress-theme` | Type for a CSS custom-property record. |
 | `Inp146ThemeSettings` | `@inp146/vitepress-theme` | Type of `themeConfig.inp146`. |
 | `Inp146ThemeConfig` | `@inp146/vitepress-theme` | Type containing the `inp146` namespace. |

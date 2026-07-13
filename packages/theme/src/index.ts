@@ -1,15 +1,16 @@
-import { defineComponent, Fragment, h } from 'vue'
-import { useData, type Theme } from 'vitepress'
+import { defineComponent, Fragment, h, nextTick, watch } from 'vue'
+import { useData, useRoute, type Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import ThemeBadge from './components/ThemeBadge.vue'
 import {
   createLinkIconStyle,
   linkIconProviders,
+  resolveProviderLinkText,
   type LinkIconProvider
 } from './link-icons'
 
 export { ThemeBadge }
-export { linkIconProviders } from './link-icons'
+export { linkIconProviders, resolveProviderLinkText } from './link-icons'
 export type { LinkIconProvider } from './link-icons'
 
 export type ThemeCssVars = Record<`--${string}`, string | number>
@@ -20,6 +21,7 @@ export interface Inp146ThemeSettings {
     dark?: ThemeCssVars
   }
   linkIcons?: boolean | readonly LinkIconProvider[]
+  autoLinkText?: boolean
   hideLinkUnderline?: boolean
 }
 
@@ -61,11 +63,59 @@ function createLinkUnderlineStyle(hideLinkUnderline = true): string {
     : ''
 }
 
+function hasUrlLinkText(link: HTMLAnchorElement): boolean {
+  if (link.childElementCount > 0) return false
+
+  const text = link.textContent?.trim()
+  if (!text) return false
+
+  try {
+    return new URL(text, document.baseURI).href === link.href
+  } catch {
+    return false
+  }
+}
+
+function applyAutoLinkText(enabled: boolean): void {
+  document.querySelectorAll<HTMLAnchorElement>('.vp-doc a[href]').forEach((link) => {
+    const originalText = link.dataset.inp146AutoLinkText
+
+    if (!enabled) {
+      if (originalText !== undefined) {
+        link.textContent = originalText
+        delete link.dataset.inp146AutoLinkText
+      }
+      return
+    }
+
+    if (originalText !== undefined || !hasUrlLinkText(link)) return
+
+    const label = resolveProviderLinkText(link.href)
+    if (!label) return
+
+    link.dataset.inp146AutoLinkText = link.textContent ?? ''
+    link.textContent = label
+  })
+}
+
 export function createTheme(): Theme {
   const Layout = defineComponent({
     name: 'VitePressThemeLayout',
     setup() {
       const { theme } = useData<Inp146ThemeConfig>()
+      const route = useRoute()
+
+      watch(
+        [() => route.path, () => theme.value.inp146?.autoLinkText],
+        () => {
+          if (typeof document === 'undefined') return
+
+          void nextTick(() =>
+            applyAutoLinkText(theme.value.inp146?.autoLinkText !== false)
+          )
+        },
+        { flush: 'post', immediate: true }
+      )
 
       return () => {
         const settings = theme.value.inp146

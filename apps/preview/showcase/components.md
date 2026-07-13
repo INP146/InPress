@@ -26,9 +26,29 @@ export default defineConfig({
 });
 ```
 
-- [YouTube](https://www.youtube.com/)
-- [Bilibili](https://www.bilibili.com/)
-- [GitHub](https://github.com/)
-- [Twitter](https://x.com/)
+### Developer and community
+
+- <https://github.com/vuejs/vitepress>
+- <https://gitlab.com/gitlab-org/gitlab>
+- <https://www.npmjs.com/package/vitepress>
+- [Discord](https://discord.gg/)
+- [Telegram](https://t.me/)
+- [LinkedIn](https://www.linkedin.com/)
+- [Reddit](https://www.reddit.com/)
+
+### Social and video
+
+- [X](https://x.com/)
 - [Instagram](https://www.instagram.com/)
 - [Threads](https://www.threads.net/)
+- [Twitch](https://www.twitch.tv/)
+- [TikTok](https://www.tiktok.com/)
+- [YouTube](https://www.youtube.com/)
+- [Bilibili](https://www.bilibili.com/)
+
+### Chinese platforms
+
+- [Weibo](https://www.weibo.com/)
+- [Xiaohongshu](https://www.xiaohongshu.com/)
+- [Zhihu](https://www.zhihu.com/)
+- [Juejin](https://juejin.cn/)
