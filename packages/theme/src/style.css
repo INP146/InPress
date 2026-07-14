@@ -72,10 +72,27 @@ mark.highlight {
   width: 100%;
 }
 
+.VPFlyout.theme-appearance-transition .menu {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+:root.theme-appearance-transition-running .VPSwitchAppearance .check {
+  view-transition-name: appearance-switch-thumb;
+  transition: none !important;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+::view-transition-group(appearance-switch-thumb) {
+  z-index: 10000;
+  animation-duration: 420ms;
+  animation-timing-function: ease-in-out;
 }
 
 :root.dark::view-transition-old(root),

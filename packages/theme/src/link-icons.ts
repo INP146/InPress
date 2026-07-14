@@ -57,7 +57,6 @@ const providerIcons = {
   github: {
     icon: githubIcon,
     monochrome: true,
-    offset: 'calc(var(--theme-provider-link-icon-offset,-1px) - 1px)',
     urls: ['https://github.com/', 'https://www.github.com/'],
     getLinkText: getRepositoryLinkText
   },

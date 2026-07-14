@@ -111,6 +111,20 @@ function toggleAppearance(
     await nextTick()
   }
 
+  const target =
+    event?.currentTarget instanceof Element ? event.currentTarget : null
+  const flyout = target?.closest<HTMLElement>('.VPFlyout')
+  const thumb = target
+    ?.closest<HTMLElement>('.VPSwitchAppearance')
+    ?.querySelector<HTMLElement>('.check')
+  const startsDark = isDark.value
+  const initialThumbBounds = thumb?.getBoundingClientRect()
+  const initialThumbCenter = initialThumbBounds
+    ? {
+        x: initialThumbBounds.left + initialThumbBounds.width / 2,
+        y: initialThumbBounds.top + initialThumbBounds.height / 2
+      }
+    : undefined
   const canAnimate =
     enabled &&
     typeof document !== 'undefined' &&
@@ -123,20 +137,33 @@ function toggleAppearance(
   }
 
   const pointerEvent = event instanceof MouseEvent && event.detail > 0
-  const x = pointerEvent ? event.clientX : window.innerWidth / 2
-  const y = pointerEvent ? event.clientY : window.innerHeight / 2
-  const radius = Math.hypot(
-    Math.max(x, window.innerWidth - x),
-    Math.max(y, window.innerHeight - y)
-  )
+  const fallbackX = pointerEvent ? event.clientX : window.innerWidth / 2
+  const fallbackY = pointerEvent ? event.clientY : window.innerHeight / 2
+  document.documentElement.classList.add('theme-appearance-transition-running')
+  flyout?.classList.add('theme-appearance-transition')
   const transition = document.startViewTransition(updateAppearance)
-  const clipPath = [
-    `circle(0px at ${x}px ${y}px)`,
-    `circle(${radius}px at ${x}px ${y}px)`
-  ]
+  let appearanceAnimation: Animation | undefined
 
   void transition.ready.then(() => {
-    document.documentElement.animate(
+    const lightThumbBounds = startsDark
+      ? thumb?.getBoundingClientRect()
+      : undefined
+    const x = lightThumbBounds
+      ? lightThumbBounds.left + lightThumbBounds.width / 2
+      : (initialThumbCenter?.x ?? fallbackX)
+    const y = lightThumbBounds
+      ? lightThumbBounds.top + lightThumbBounds.height / 2
+      : (initialThumbCenter?.y ?? fallbackY)
+    const radius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    )
+    const clipPath = [
+      `circle(0px at ${x}px ${y}px)`,
+      `circle(${radius}px at ${x}px ${y}px)`
+    ]
+
+    appearanceAnimation = document.documentElement.animate(
       { clipPath: isDark.value ? clipPath : [...clipPath].reverse() },
       {
         duration: 420,
@@ -148,6 +175,20 @@ function toggleAppearance(
       }
     )
   })
+
+  const finishTransition = async () => {
+    appearanceAnimation?.cancel()
+    document.documentElement.classList.remove(
+      'theme-appearance-transition-running'
+    )
+    if (!flyout) return
+
+    flyout.dispatchEvent(new MouseEvent('mouseenter'))
+    await nextTick()
+    flyout.classList.remove('theme-appearance-transition')
+  }
+
+  void transition.finished.then(finishTransition, finishTransition)
 }
 
 export function createTheme(): Theme {
