@@ -36,6 +36,10 @@ export default defineConfig({
     linkIcons: ['github', 'youtube'],
     hideLinkUnderline: false,
     appearanceTransition: false,
+    analytics: {
+      googleAnalytics: 'G-XXXXXXXXXX',
+      clarity: 'xxxxxxxxxx'
+    },
     giscus: {
       repo: 'owner/repository',
       repoId: 'R_kgDO...',
@@ -54,11 +58,25 @@ export default defineConfig({
 | `autoLinkText` | `boolean` | `true` | Replaces bare GitHub and GitLab URLs with `user/repo`, and bare npm package URLs with the package name. Set `false` to keep the URL text. |
 | `hideLinkUnderline` | `boolean` | `true` | Hides text underlines for links inside `.vp-doc`. Set `false` to restore the VitePress default. |
 | `appearanceTransition` | `boolean` | `true` | Animates light and dark mode changes from the switch position when the browser supports View Transition API. Set `false` to disable it. |
+| `analytics` | `AnalyticsConfig \| false` | - | Enables Google Analytics, Microsoft Clarity, or both. Set `false` to disable them. |
 | `giscus` | `GiscusConfig \| false` | - | Enables Giscus below each document page. Set `false` to disable it. |
 
 ## Appearance transition
 
 When the user switches appearance, the new theme expands from the switch position. Browsers without the View Transition API, and users who prefer reduced motion, keep VitePress's instant switch. Set `appearanceTransition: false` to opt out.
+
+## Analytics
+
+Add a GA4 Measurement ID, a Microsoft Clarity Project ID, or both:
+
+```ts
+analytics: {
+  googleAnalytics: 'G-XXXXXXXXXX',
+  clarity: 'xxxxxxxxxx'
+}
+```
+
+Google Analytics records the initial page and subsequent client-side VitePress navigation. Clarity is initialized once and follows the session across client-side navigation. No analytics scripts are loaded when `analytics` is omitted or set to `false`.
 
 ## Giscus comments
 
@@ -136,6 +154,7 @@ These CSS custom properties adjust every provider icon:
 | `linkIconProviders` | `@inp146/vitepress-theme` | Array containing every supported provider identifier. |
 | `LinkIconProvider` | `@inp146/vitepress-theme` | Union type for provider identifiers. |
 | `ThemeCssVars` | `@inp146/vitepress-theme` | Type for a CSS custom-property record. |
+| `AnalyticsConfig` | `@inp146/vitepress-theme` | Google Analytics and Microsoft Clarity configuration. |
 | `GiscusConfig` | `@inp146/vitepress-theme` | Giscus widget configuration. |
 | `Inp146ThemeConfig` | `@inp146/vitepress-theme` | Type of the theme-specific fields in `themeConfig`. |
 

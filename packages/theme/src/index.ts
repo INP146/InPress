@@ -2,6 +2,7 @@ import { defineComponent, Fragment, h, nextTick, provide, watch } from 'vue'
 import { useData, useRoute, type Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
+import { Analytics, type AnalyticsConfig } from './analytics'
 import { Giscus, type GiscusConfig } from './giscus'
 import {
   createLinkIconStyle,
@@ -12,6 +13,7 @@ import {
 
 export { linkIconProviders } from './link-icons'
 export type { LinkIconProvider } from './link-icons'
+export type { AnalyticsConfig } from './analytics'
 export type { GiscusConfig, GiscusMapping, GiscusTheme } from './giscus'
 
 export type ThemeCssVars = Record<`--${string}`, string | number>
@@ -25,6 +27,7 @@ export interface Inp146ThemeConfig {
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
   appearanceTransition?: boolean
+  analytics?: AnalyticsConfig | false
   giscus?: GiscusConfig | false
 }
 
@@ -222,6 +225,9 @@ export function createTheme(): Theme {
         ].join('')
 
         return h(Fragment, null, [
+          theme.value.analytics
+            ? h(Analytics, { config: theme.value.analytics })
+            : null,
           themeStyle
             ? h('style', {
                 id: 'vitepress-theme-overrides',

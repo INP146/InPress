@@ -36,6 +36,10 @@ export default defineConfig({
     linkIcons: ['github', 'youtube'],
     hideLinkUnderline: false,
     appearanceTransition: false,
+    analytics: {
+      googleAnalytics: 'G-XXXXXXXXXX',
+      clarity: 'xxxxxxxxxx'
+    },
     giscus: {
       repo: 'owner/repository',
       repoId: 'R_kgDO...',
@@ -54,11 +58,25 @@ export default defineConfig({
 | `autoLinkText` | `boolean` | `true` | 将无显式文案的 GitHub、GitLab URL 显示为 `user/repo`，npm 包 URL 显示为包名。设为 `false` 保留 URL 文本。 |
 | `hideLinkUnderline` | `boolean` | `true` | 隐藏 `.vp-doc` 内链接的文字下划线。设为 `false` 恢复 VitePress 默认样式。 |
 | `appearanceTransition` | `boolean` | `true` | 浏览器支持 View Transition API 时，从切换按钮位置播放深浅色模式扩散动画。设为 `false` 关闭。 |
+| `analytics` | `AnalyticsConfig \| false` | - | 启用 Google Analytics、Microsoft Clarity 或同时启用两者。设为 `false` 关闭。 |
 | `giscus` | `GiscusConfig \| false` | - | 在每篇文档页底部启用 Giscus。设为 `false` 关闭。 |
 
 ## 模式切换动画
 
 切换深浅色模式时，新主题会从切换按钮的位置扩散。未支持 View Transition API 的浏览器，以及偏好减少动态效果的用户，会保留 VitePress 原本的即时切换。设置 `appearanceTransition: false` 可关闭该动画。
+
+## 访问分析
+
+可填写 GA4 衡量 ID、Microsoft Clarity 项目 ID，或同时填写两者：
+
+```ts
+analytics: {
+  googleAnalytics: 'G-XXXXXXXXXX',
+  clarity: 'xxxxxxxxxx'
+}
+```
+
+Google Analytics 会记录首次访问以及后续的 VitePress 客户端路由跳转。Clarity 只初始化一次，并在客户端路由跳转时保持同一会话。未配置 `analytics` 或设为 `false` 时，不会加载任何分析脚本。
 
 ## Giscus 评论
 
@@ -136,6 +154,7 @@ theme: {
 | `linkIconProviders` | `@inp146/vitepress-theme` | 包含所有支持平台标识符的数组。 |
 | `LinkIconProvider` | `@inp146/vitepress-theme` | 平台标识符的联合类型。 |
 | `ThemeCssVars` | `@inp146/vitepress-theme` | CSS 自定义属性记录的类型。 |
+| `AnalyticsConfig` | `@inp146/vitepress-theme` | Google Analytics 与 Microsoft Clarity 的配置类型。 |
 | `GiscusConfig` | `@inp146/vitepress-theme` | Giscus 小组件的配置类型。 |
 | `Inp146ThemeConfig` | `@inp146/vitepress-theme` | `themeConfig` 中主题专属字段的类型。 |
 
