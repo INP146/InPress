@@ -186,7 +186,9 @@ function toggleAppearance(
     )
     if (!flyout) return
 
-    flyout.dispatchEvent(new MouseEvent('mouseenter'))
+    flyout.dispatchEvent(
+      new MouseEvent(flyout.matches(':hover') ? 'mouseenter' : 'mouseleave')
+    )
     await nextTick()
     flyout.classList.remove('theme-appearance-transition')
   }
