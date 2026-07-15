@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "vitepress-theme",
+  "compatibility_date": "2026-07-15",
+  "assets": {
+    "directory": "./apps/preview/.vitepress/dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}
