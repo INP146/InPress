@@ -3,7 +3,11 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import { linkIconProviders, type LinkIconProvider } from '../link-icons'
 import { useThemeRuntime } from '../runtime'
-import type { Inp146ThemeConfig, ThemeCssVars } from '../index'
+import type {
+  AppearanceTransitionMode,
+  Inp146ThemeConfig,
+  ThemeCssVars
+} from '../index'
 
 interface PlaygroundState {
   root: Record<string, string>
@@ -13,6 +17,7 @@ interface PlaygroundState {
   autoLinkText: boolean
   hideLinkUnderline: boolean
   appearanceTransition: boolean
+  appearanceTransitionMode: AppearanceTransitionMode
   giscus: boolean
 }
 
@@ -163,6 +168,10 @@ function createState(theme: Inp146ThemeConfig): PlaygroundState {
     autoLinkText: theme.autoLinkText !== false,
     hideLinkUnderline: theme.hideLinkUnderline !== false,
     appearanceTransition: theme.appearanceTransition !== false,
+    appearanceTransitionMode:
+      typeof theme.appearanceTransition === 'string'
+        ? theme.appearanceTransition
+        : 'spread',
     giscus: Boolean(theme.giscus)
   }
 }
@@ -188,6 +197,11 @@ function normalizeState(value: Partial<PlaygroundState>): PlaygroundState {
         linkIconProviders.includes(provider as LinkIconProvider)
       )
     : fallback.providers
+  const appearanceTransitionMode =
+    value.appearanceTransitionMode === 'fade' ||
+    value.appearanceTransitionMode === 'spread'
+      ? value.appearanceTransitionMode
+      : fallback.appearanceTransitionMode
 
   return {
     root: { ...fallback.root, ...(value.root ?? {}) },
@@ -199,6 +213,7 @@ function normalizeState(value: Partial<PlaygroundState>): PlaygroundState {
       value.hideLinkUnderline ?? fallback.hideLinkUnderline,
     appearanceTransition:
       value.appearanceTransition ?? fallback.appearanceTransition,
+    appearanceTransitionMode,
     giscus: hasGiscusConfig.value && (value.giscus ?? fallback.giscus)
   }
 }
@@ -211,6 +226,7 @@ function assignState(value: PlaygroundState): void {
   state.autoLinkText = value.autoLinkText
   state.hideLinkUnderline = value.hideLinkUnderline
   state.appearanceTransition = value.appearanceTransition
+  state.appearanceTransitionMode = value.appearanceTransitionMode
   state.giscus = value.giscus
 }
 
@@ -233,7 +249,9 @@ function createOverrides(): Partial<Inp146ThemeConfig> {
     linkIcons: state.linkIcons ? [...state.providers] : false,
     autoLinkText: state.autoLinkText,
     hideLinkUnderline: state.hideLinkUnderline,
-    appearanceTransition: state.appearanceTransition,
+    appearanceTransition: state.appearanceTransition
+      ? state.appearanceTransitionMode
+      : false,
     giscus: state.giscus ? runtime.baseTheme.value.giscus : false
   }
 }
@@ -512,6 +530,29 @@ async function copyConfig(): Promise<void> {
                 role="switch"
               />
             </label>
+
+            <div
+              v-if="state.appearanceTransition"
+              class="theme-playground-segmented"
+              :aria-label="label('Appearance transition style', '深浅色切换动画样式')"
+            >
+              <button
+                type="button"
+                :aria-pressed="state.appearanceTransitionMode === 'spread'"
+                :class="{ active: state.appearanceTransitionMode === 'spread' }"
+                @click="state.appearanceTransitionMode = 'spread'"
+              >
+                {{ label('Spread', '扩散') }}
+              </button>
+              <button
+                type="button"
+                :aria-pressed="state.appearanceTransitionMode === 'fade'"
+                :class="{ active: state.appearanceTransitionMode === 'fade' }"
+                @click="state.appearanceTransitionMode = 'fade'"
+              >
+                {{ label('Fade', '渐变') }}
+              </button>
+            </div>
 
             <label
               class="theme-playground-toggle-row"

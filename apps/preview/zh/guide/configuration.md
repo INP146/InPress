@@ -57,7 +57,7 @@ export default defineConfig({
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | 默认启用全部平台图标。设为 `false` 关闭，传入列表可只启用部分平台。 |
 | `autoLinkText` | `boolean` | `true` | 将无显式文案的 GitHub、GitLab URL 显示为 `user/repo`，npm 包 URL 显示为包名。设为 `false` 保留 URL 文本。 |
 | `hideLinkUnderline` | `boolean` | `true` | 隐藏 `.vp-doc` 内链接的文字下划线。设为 `false` 恢复 VitePress 默认样式。 |
-| `appearanceTransition` | `boolean` | `true` | 浏览器支持 View Transition API 时，从切换按钮位置播放深浅色模式扩散动画。设为 `false` 关闭。 |
+| `appearanceTransition` | `boolean \| 'spread' \| 'fade'` | `true` | 浏览器支持 View Transition API 时，选择深浅色切换动画。`true` 和 `'spread'` 表示从切换按钮位置扩散，`'fade'` 表示渐变，`false` 表示关闭。 |
 | `analytics` | `AnalyticsConfig \| false` | - | 启用 Google Analytics、Microsoft Clarity 或同时启用两者。设为 `false` 关闭。 |
 | `giscus` | `GiscusConfig \| false` | - | 在每篇文档页底部启用 Giscus。设为 `false` 关闭。 |
 
@@ -81,7 +81,7 @@ import { ThemeConfigPlayground } from '@inp146/vitepress-theme/playground'
 
 ## 模式切换动画
 
-切换深浅色模式时，新主题会从切换按钮的位置扩散。未支持 View Transition API 的浏览器，以及偏好减少动态效果的用户，会保留 VitePress 原本的即时切换。设置 `appearanceTransition: false` 可关闭该动画。
+将 `appearanceTransition` 设为 `'spread'`，新主题会从切换按钮的位置扩散；设为 `'fade'`，深浅色主题会渐变切换。`true` 仍等同于 `'spread'`。未支持 View Transition API 的浏览器，以及偏好减少动态效果的用户，会保留 VitePress 原本的即时切换。设置 `appearanceTransition: false` 可关闭动画。
 
 ## 访问分析
 

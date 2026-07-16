@@ -36,7 +36,7 @@ import { VPButton } from 'vitepress/theme'
 export default defineConfig({
   themeConfig: {
     hideLinkUnderline: true,
-    appearanceTransition: true
+    appearanceTransition: 'spread'
   }
 })
 ```

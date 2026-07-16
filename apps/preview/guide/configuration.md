@@ -57,7 +57,7 @@ export default defineConfig({
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | Enables all provider icons by default. Set `false` to disable them, or pass a list to enable a subset. |
 | `autoLinkText` | `boolean` | `true` | Replaces bare GitHub and GitLab URLs with `user/repo`, and bare npm package URLs with the package name. Set `false` to keep the URL text. |
 | `hideLinkUnderline` | `boolean` | `true` | Hides text underlines for links inside `.vp-doc`. Set `false` to restore the VitePress default. |
-| `appearanceTransition` | `boolean` | `true` | Animates light and dark mode changes from the switch position when the browser supports View Transition API. Set `false` to disable it. |
+| `appearanceTransition` | `boolean \| 'spread' \| 'fade'` | `true` | Selects the light and dark mode transition when the browser supports View Transition API. `true` and `'spread'` expand from the switch position, `'fade'` crossfades the themes, and `false` disables animation. |
 | `analytics` | `AnalyticsConfig \| false` | - | Enables Google Analytics, Microsoft Clarity, or both. Set `false` to disable them. |
 | `giscus` | `GiscusConfig \| false` | - | Enables Giscus below each document page. Set `false` to disable it. |
 
@@ -81,7 +81,7 @@ Set `initially-open` to open the panel on first render. `persist` stores the cur
 
 ## Appearance transition
 
-When the user switches appearance, the new theme expands from the switch position. Browsers without the View Transition API, and users who prefer reduced motion, keep VitePress's instant switch. Set `appearanceTransition: false` to opt out.
+Set `appearanceTransition: 'spread'` to expand the new theme from the switch position, or `'fade'` to crossfade between themes. `true` remains an alias for `'spread'`. Browsers without the View Transition API, and users who prefer reduced motion, keep VitePress's instant switch. Set `appearanceTransition: false` to opt out.
 
 ## Analytics
 

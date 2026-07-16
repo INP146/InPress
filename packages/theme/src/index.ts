@@ -26,6 +26,7 @@ export type { AnalyticsConfig } from './analytics'
 export type { GiscusConfig, GiscusMapping, GiscusTheme } from './giscus'
 
 export type ThemeCssVars = Record<`--${string}`, string | number>
+export type AppearanceTransitionMode = 'spread' | 'fade'
 
 export interface Inp146ThemeConfig {
   cssVars?: {
@@ -35,7 +36,7 @@ export interface Inp146ThemeConfig {
   linkIcons?: boolean | readonly LinkIconProvider[]
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
-  appearanceTransition?: boolean
+  appearanceTransition?: boolean | AppearanceTransitionMode
   analytics?: AnalyticsConfig | false
   giscus?: GiscusConfig | false
 }
@@ -115,7 +116,7 @@ function applyAutoLinkText(enabled: boolean): void {
 
 function toggleAppearance(
   isDark: { value: boolean },
-  enabled: boolean,
+  mode: boolean | AppearanceTransitionMode,
   event?: Event
 ): void {
   const updateAppearance = async () => {
@@ -138,7 +139,7 @@ function toggleAppearance(
       }
     : undefined
   const canAnimate =
-    enabled &&
+    mode !== false &&
     typeof document !== 'undefined' &&
     'startViewTransition' in document &&
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -170,18 +171,29 @@ function toggleAppearance(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
     )
-    const clipPath = [
-      `circle(0px at ${x}px ${y}px)`,
-      `circle(${radius}px at ${x}px ${y}px)`
-    ]
+    const revealsDark = isDark.value
+    const keyframes =
+      mode === 'fade'
+        ? { opacity: revealsDark ? [0, 1] : [1, 0] }
+        : {
+            clipPath: revealsDark
+              ? [
+                  `circle(0px at ${x}px ${y}px)`,
+                  `circle(${radius}px at ${x}px ${y}px)`
+                ]
+              : [
+                  `circle(${radius}px at ${x}px ${y}px)`,
+                  `circle(0px at ${x}px ${y}px)`
+                ]
+          }
 
     appearanceAnimation = document.documentElement.animate(
-      { clipPath: isDark.value ? clipPath : [...clipPath].reverse() },
+      keyframes,
       {
         duration: 420,
         easing: 'ease-in-out',
         fill: 'forwards',
-        pseudoElement: isDark.value
+        pseudoElement: revealsDark
           ? '::view-transition-new(root)'
           : '::view-transition-old(root)'
       }
@@ -219,7 +231,7 @@ export function createTheme(): Theme {
       provide('toggle-appearance', (event?: Event) =>
         toggleAppearance(
           isDark,
-          effectiveTheme.value.appearanceTransition !== false,
+          effectiveTheme.value.appearanceTransition ?? true,
           event
         )
       )

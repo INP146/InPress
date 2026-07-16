@@ -36,7 +36,7 @@ Theme variables also affect regular [document links](https://vitepress.dev/), in
 export default defineConfig({
   themeConfig: {
     hideLinkUnderline: true,
-    appearanceTransition: true
+    appearanceTransition: 'spread'
   }
 })
 ```
