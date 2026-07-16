@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
-import { themeI18n } from '@inp146/vitepress-theme/i18n'
+import { themeI18n } from '@inp146/inpress/i18n'
 
 const sharedThemeConfig = {
   cssVars: {
@@ -29,12 +29,15 @@ const sharedThemeConfig = {
     }
   },
   logo: '/logo.svg',
-  socialLinks: [{ icon: 'github' as const, link: 'https://github.com' }]
+  socialLinks: [
+    { icon: 'github' as const, link: 'https://github.com/INP146/inpress' }
+  ],
+  "appearanceTransition": "fade"
 }
 
 export default defineConfig({
-  title: 'VitePress Theme',
-  description: 'Documentation and development site for @inp146/vitepress-theme',
+  title: 'InPress',
+  description: 'Documentation and development site for InPress',
   cleanUrls: true,
   themeConfig: {
     search: {
@@ -73,7 +76,7 @@ export default defineConfig({
           copyright: 'Copyright 2026'
         },
         giscus: {
-          repo: 'INP146/vitepress-theme',
+          repo: 'INP146/inpress',
           repoId: 'R_kgDOTWQyyQ',
           category: 'Announcements',
           categoryId: 'DIC_kwDOTWQyyc4DBHZH',
@@ -95,8 +98,8 @@ export default defineConfig({
       label: '简体中文',
       lang: 'zh-CN',
       link: '/zh/',
-      title: 'VitePress Theme',
-      description: '@inp146/vitepress-theme 的文档与开发站',
+      title: 'InPress',
+      description: 'InPress 的文档与开发站',
       themeConfig: {
         ...themeI18n.zh,
         ...sharedThemeConfig,
@@ -125,7 +128,7 @@ export default defineConfig({
           copyright: 'Copyright 2026'
         },
         giscus: {
-          repo: 'INP146/vitepress-theme',
+          repo: 'INP146/inpress',
           repoId: 'R_kgDOTWQyyQ',
           category: 'Announcements',
           categoryId: 'DIC_kwDOTWQyyc4DBHZH',
@@ -147,14 +150,14 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        '@inp146/vitepress-theme/playground': fileURLToPath(
+        '@inp146/inpress/playground': fileURLToPath(
           new URL(
-            '../../../packages/theme/src/playground.ts',
+            '../../../packages/inpress/src/playground.ts',
             import.meta.url
           )
         ),
-        '@inp146/vitepress-theme': fileURLToPath(
-          new URL('../../../packages/theme/src/index.ts', import.meta.url)
+        '@inp146/inpress': fileURLToPath(
+          new URL('../../../packages/inpress/src/index.ts', import.meta.url)
         )
       }
     }

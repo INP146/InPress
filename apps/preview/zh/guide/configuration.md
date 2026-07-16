@@ -5,7 +5,7 @@
 在 `.vitepress/theme/index.ts` 中使用默认导出：
 
 ```ts
-import theme from '@inp146/vitepress-theme'
+import theme from '@inp146/inpress'
 
 export default theme
 ```
@@ -13,7 +13,7 @@ export default theme
 使用构建后的包时，需要同时导入主题样式：
 
 ```ts
-import '@inp146/vitepress-theme/style.css'
+import '@inp146/inpress/style.css'
 ```
 
 同时导出的 `createTheme()` 用于程序化组合，目前不接收参数。站点相关设置直接放在 `themeConfig`。
@@ -67,7 +67,7 @@ export default defineConfig({
 
 ```vue
 <script setup>
-import { ThemeConfigPlayground } from '@inp146/vitepress-theme/playground'
+import { ThemeConfigPlayground } from '@inp146/inpress/playground'
 </script>
 
 <ClientOnly>
@@ -139,11 +139,11 @@ theme: {
 <mark class="highlight">笔刷风格高亮文本</mark>
 ```
 
-两种记号笔默认跟随 VitePress 全局品牌色。可通过 `--theme-marker-color` 或 `--theme-marker-highlight-color` 覆盖颜色，通过 `--theme-marker-thickness`、`--theme-marker-offset` 和 `--theme-marker-highlight-radius` 调整形态。
+两种记号笔默认跟随 VitePress 全局品牌色。可通过 `--inpress-marker-color` 或 `--inpress-marker-highlight-color` 覆盖颜色，通过 `--inpress-marker-thickness`、`--inpress-marker-offset` 和 `--inpress-marker-highlight-radius` 调整形态。
 
 ## 侧边栏层级
 
-一级页面链接默认相对分组标题缩进 `16px`，可通过 `--theme-sidebar-indent` 调整。
+一级页面链接默认相对分组标题缩进 `16px`，可通过 `--inpress-sidebar-indent` 调整。
 
 ## 平台链接图标
 
@@ -157,32 +157,32 @@ theme: {
 
 | Token | 默认值 | 说明 |
 | --- | --- | --- |
-| `--theme-provider-link-icon-size` | `20px` | 通用图标高度和正方形图标宽度。 |
-| `--theme-provider-link-icon-threads-width` | `17.5px` | 保持 Threads 原始比例的宽度。 |
-| `--theme-provider-link-icon-gap` | `4px` | 图标与链接文字之间的间距。 |
-| `--theme-provider-link-icon-align` | `middle` | 行内垂直对齐方式。 |
-| `--theme-provider-link-icon-offset` | `-1px` | 最终视觉垂直偏移。 |
+| `--inpress-provider-link-icon-size` | `20px` | 通用图标高度和正方形图标宽度。 |
+| `--inpress-provider-link-icon-threads-width` | `17.5px` | 保持 Threads 原始比例的宽度。 |
+| `--inpress-provider-link-icon-gap` | `4px` | 图标与链接文字之间的间距。 |
+| `--inpress-provider-link-icon-align` | `middle` | 行内垂直对齐方式。 |
+| `--inpress-provider-link-icon-offset` | `-1px` | 最终视觉垂直偏移。 |
 
 ## 包导出
 
 | 导出项 | 导入路径 | 说明 |
 | --- | --- | --- |
-| 默认主题 | `@inp146/vitepress-theme` | 用于 `.vitepress/theme/index.ts` 的主题对象。 |
-| `createTheme()` | `@inp146/vitepress-theme` | 用于程序化创建同一主题对象。 |
-| `linkIconProviders` | `@inp146/vitepress-theme` | 包含所有支持平台标识符的数组。 |
-| `LinkIconProvider` | `@inp146/vitepress-theme` | 平台标识符的联合类型。 |
-| `ThemeCssVars` | `@inp146/vitepress-theme` | CSS 自定义属性记录的类型。 |
-| `AnalyticsConfig` | `@inp146/vitepress-theme` | Google Analytics 与 Microsoft Clarity 的配置类型。 |
-| `GiscusConfig` | `@inp146/vitepress-theme` | Giscus 小组件的配置类型。 |
-| `Inp146ThemeConfig` | `@inp146/vitepress-theme` | `themeConfig` 中主题专属字段的类型。 |
-| `ThemeConfigPlayground` | `@inp146/vitepress-theme/playground` | 用于实时调整主题设置和 CSS 变量的组件。 |
+| 默认主题 | `@inp146/inpress` | 用于 `.vitepress/theme/index.ts` 的主题对象。 |
+| `createTheme()` | `@inp146/inpress` | 用于程序化创建同一主题对象。 |
+| `linkIconProviders` | `@inp146/inpress` | 包含所有支持平台标识符的数组。 |
+| `LinkIconProvider` | `@inp146/inpress` | 平台标识符的联合类型。 |
+| `ThemeCssVars` | `@inp146/inpress` | CSS 自定义属性记录的类型。 |
+| `AnalyticsConfig` | `@inp146/inpress` | Google Analytics 与 Microsoft Clarity 的配置类型。 |
+| `GiscusConfig` | `@inp146/inpress` | Giscus 小组件的配置类型。 |
+| `InPressThemeConfig` | `@inp146/inpress` | `themeConfig` 中主题专属字段的类型。 |
+| `ThemeConfigPlayground` | `@inp146/inpress/playground` | 用于实时调整主题设置和 CSS 变量的组件。 |
 
 ## 界面语言
 
 通过 Node 安全的子路径导入 `themeI18n`，再将对应 preset 展开到 VitePress 配置中：
 
 ```ts
-import { themeI18n } from '@inp146/vitepress-theme/i18n'
+import { themeI18n } from '@inp146/inpress/i18n'
 
 export default defineConfig({
   locales: {

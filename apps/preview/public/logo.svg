@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="VitePress Theme">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="InPress">
   <rect width="64" height="64" rx="12" fill="#0f766e"/>
-  <path d="M16 16h32v9H36v23h-8V25H16z" fill="#fff"/>
+  <path d="M13 16h8v32h-8z" fill="#fff"/>
+  <path fill="#fff" fill-rule="evenodd" d="M28 16h13c7.5 0 12 4.5 12 12s-4.5 12-12 12h-5v8h-8V16zm8 7v10h5c2.7 0 4-1.7 4-5s-1.3-5-4-5h-5z"/>
 </svg>

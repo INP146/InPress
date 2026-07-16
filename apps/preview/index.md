@@ -2,9 +2,9 @@
 layout: home
 
 hero:
-  name: VitePress Theme
+  name: InPress
   text: Documentation and development site
-  tagline: Build the reusable theme in packages/theme, document its API here, and validate both together.
+  tagline: Build InPress in packages/inpress, document its API here, and validate both together.
   actions:
     - theme: brand
       text: Read the docs

@@ -1,10 +1,10 @@
 # Theme contract
 
-`@inp146/vitepress-theme` is a reusable package. The documentation site may carry this project's identity, but the package must remain neutral so another VitePress site can adopt it without removing embedded assumptions.
+`@inp146/inpress` is a reusable package. The documentation site may carry InPress's identity, but the package must remain neutral so another VitePress site can adopt it without removing embedded assumptions.
 
 ## Package boundary
 
-Do not add site names, logos, copy, external links, business behavior, or brand colors to `packages/theme`.
+Do not add site names, logos, copy, external links, business behavior, or brand colors to `packages/inpress`.
 
 Keep documentation prose, demo data, and this site's visual identity under `apps/preview`. The site consumes the package in the same way an external user would.
 
@@ -41,7 +41,7 @@ The package exports `themeI18n` for default-theme interface strings. Import and 
 
 ```ts
 import { defineConfig } from 'vitepress'
-import { themeI18n } from '@inp146/vitepress-theme/i18n'
+import { themeI18n } from '@inp146/inpress/i18n'
 
 export default defineConfig({
   locales: {

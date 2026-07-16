@@ -14,9 +14,9 @@ importers:
 
   apps/preview:
     devDependencies:
-      '@inp146/vitepress-theme':
+      '@inp146/inpress':
         specifier: workspace:*
-        version: link:../../packages/theme
+        version: link:../../packages/inpress
       '@types/node':
         specifier: ^22.20.1
         version: 22.20.1
@@ -24,7 +24,7 @@ importers:
         specifier: 2.0.0-alpha.18
         version: 2.0.0-alpha.18(@types/node@22.20.1)(esbuild@0.28.1)(postcss@8.5.16)(typescript@7.0.2)
 
-  packages/theme:
+  packages/inpress:
     dependencies:
       vue:
         specifier: ^3.5.39

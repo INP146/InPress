@@ -6,26 +6,26 @@ import {
   type InjectionKey,
   type ShallowRef
 } from 'vue'
-import type { Inp146ThemeConfig } from './index'
+import type { InPressThemeConfig } from './index'
 
-export type ThemeConfigOverrides = Partial<Inp146ThemeConfig>
+export type ThemeConfigOverrides = Partial<InPressThemeConfig>
 
 export interface ThemeRuntime {
-  baseTheme: ComputedRef<Inp146ThemeConfig>
-  theme: ComputedRef<Inp146ThemeConfig>
+  baseTheme: ComputedRef<InPressThemeConfig>
+  theme: ComputedRef<InPressThemeConfig>
   overrides: ShallowRef<ThemeConfigOverrides>
   setOverrides: (value: ThemeConfigOverrides) => void
   reset: () => void
 }
 
 export const themeRuntimeKey: InjectionKey<ThemeRuntime> = Symbol(
-  'inp146-theme-runtime'
+  'inpress-theme-runtime'
 )
 
 function mergeThemeConfig(
-  base: Inp146ThemeConfig,
+  base: InPressThemeConfig,
   overrides: ThemeConfigOverrides
-): Inp146ThemeConfig {
+): InPressThemeConfig {
   return {
     ...base,
     ...overrides,
@@ -35,7 +35,7 @@ function mergeThemeConfig(
 }
 
 export function createThemeRuntime(
-  baseTheme: ComputedRef<Inp146ThemeConfig>
+  baseTheme: ComputedRef<InPressThemeConfig>
 ): ThemeRuntime {
   const overrides = shallowRef<ThemeConfigOverrides>({})
   const theme = computed(() => mergeThemeConfig(baseTheme.value, overrides.value))
@@ -58,7 +58,7 @@ export function useThemeRuntime(): ThemeRuntime {
 
   if (!runtime) {
     throw new Error(
-      'ThemeConfigPlayground must be rendered inside @inp146/vitepress-theme.'
+      'ThemeConfigPlayground must be rendered inside @inp146/inpress.'
     )
   }
 

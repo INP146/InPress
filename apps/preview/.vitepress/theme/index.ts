@@ -1,3 +1,3 @@
-import theme from '@inp146/vitepress-theme'
+import theme from '@inp146/inpress'
 
 export default theme

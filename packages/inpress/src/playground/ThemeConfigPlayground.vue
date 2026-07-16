@@ -3,9 +3,10 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import { linkIconProviders, type LinkIconProvider } from '../link-icons'
 import { useThemeRuntime } from '../runtime'
+import ThemeSwitch from './ThemeSwitch.vue'
 import type {
   AppearanceTransitionMode,
-  Inp146ThemeConfig,
+  InPressThemeConfig,
   ThemeCssVars
 } from '../index'
 
@@ -29,7 +30,7 @@ const props = withDefaults(
   }>(),
   {
     persist: false,
-    storageKey: 'inp146-theme-playground',
+    storageKey: 'inpress-playground',
     initiallyOpen: false
   }
 )
@@ -77,20 +78,20 @@ const variableGroups = [
     en: 'Markers',
     zh: '文本记号笔',
     fields: [
-      { key: '--theme-marker-color', en: 'Underline color', zh: '下划线颜色' },
+      { key: '--inpress-marker-color', en: 'Underline color', zh: '下划线颜色' },
       {
-        key: '--theme-marker-highlight-color',
+        key: '--inpress-marker-highlight-color',
         en: 'Highlight color',
         zh: '高亮颜色'
       },
       {
-        key: '--theme-marker-thickness',
+        key: '--inpress-marker-thickness',
         en: 'Underline thickness',
         zh: '下划线粗细'
       },
-      { key: '--theme-marker-offset', en: 'Underline offset', zh: '下划线偏移' },
+      { key: '--inpress-marker-offset', en: 'Underline offset', zh: '下划线偏移' },
       {
-        key: '--theme-marker-highlight-radius',
+        key: '--inpress-marker-highlight-radius',
         en: 'Highlight radius',
         zh: '高亮圆角'
       }
@@ -100,20 +101,20 @@ const variableGroups = [
     en: 'Provider icons',
     zh: '平台链接图标',
     fields: [
-      { key: '--theme-provider-link-icon-size', en: 'Icon size', zh: '图标尺寸' },
+      { key: '--inpress-provider-link-icon-size', en: 'Icon size', zh: '图标尺寸' },
       {
-        key: '--theme-provider-link-icon-threads-width',
+        key: '--inpress-provider-link-icon-threads-width',
         en: 'Threads width',
         zh: 'Threads 宽度'
       },
-      { key: '--theme-provider-link-icon-gap', en: 'Text gap', zh: '文字间距' },
+      { key: '--inpress-provider-link-icon-gap', en: 'Text gap', zh: '文字间距' },
       {
-        key: '--theme-provider-link-icon-align',
+        key: '--inpress-provider-link-icon-align',
         en: 'Vertical align',
         zh: '垂直对齐'
       },
       {
-        key: '--theme-provider-link-icon-offset',
+        key: '--inpress-provider-link-icon-offset',
         en: 'Vertical offset',
         zh: '垂直偏移'
       }
@@ -122,16 +123,16 @@ const variableGroups = [
 ] as const
 
 const themeVariableDefaults: Record<string, string> = {
-  '--theme-marker-color': 'var(--vp-c-brand-soft)',
-  '--theme-marker-highlight-color': 'var(--vp-c-brand-1)',
-  '--theme-marker-thickness': '9px',
-  '--theme-marker-offset': '-4px',
-  '--theme-marker-highlight-radius': '5px',
-  '--theme-provider-link-icon-size': '20px',
-  '--theme-provider-link-icon-threads-width': '17.5px',
-  '--theme-provider-link-icon-gap': '4px',
-  '--theme-provider-link-icon-align': 'middle',
-  '--theme-provider-link-icon-offset': '-1px'
+  '--inpress-marker-color': 'var(--vp-c-brand-soft)',
+  '--inpress-marker-highlight-color': 'var(--vp-c-brand-1)',
+  '--inpress-marker-thickness': '9px',
+  '--inpress-marker-offset': '-4px',
+  '--inpress-marker-highlight-radius': '5px',
+  '--inpress-provider-link-icon-size': '20px',
+  '--inpress-provider-link-icon-threads-width': '17.5px',
+  '--inpress-provider-link-icon-gap': '4px',
+  '--inpress-provider-link-icon-align': 'middle',
+  '--inpress-provider-link-icon-offset': '-1px'
 }
 
 const knownVariableNames = new Set<string>(
@@ -154,7 +155,7 @@ function stringVars(values: ThemeCssVars | undefined): Record<string, string> {
   )
 }
 
-function createState(theme: Inp146ThemeConfig): PlaygroundState {
+function createState(theme: InPressThemeConfig): PlaygroundState {
   return {
     root: {
       ...themeVariableDefaults,
@@ -240,7 +241,7 @@ function cleanVars(values: Record<string, string>): ThemeCssVars {
   ) as ThemeCssVars
 }
 
-function createOverrides(): Partial<Inp146ThemeConfig> {
+function createOverrides(): Partial<InPressThemeConfig> {
   return {
     cssVars: {
       root: cleanVars(state.root),
@@ -256,7 +257,7 @@ function createOverrides(): Partial<Inp146ThemeConfig> {
   }
 }
 
-function createExportConfig(): Partial<Inp146ThemeConfig> {
+function createExportConfig(): Partial<InPressThemeConfig> {
   const config = createOverrides()
 
   if (state.giscus) delete config.giscus
@@ -351,41 +352,41 @@ async function copyConfig(): Promise<void> {
 <template>
   <Teleport to="body">
     <button
-      class="theme-playground-trigger"
+      class="inpress-playground-trigger"
       type="button"
       :aria-expanded="open"
-      aria-controls="theme-config-playground"
-      :title="label('Open theme playground', '打开主题调试面板')"
+      aria-controls="inpress-config-playground"
+      :title="label('Open InPress playground', '打开 InPress 调试面板')"
       @click="open = !open"
     >
       <span aria-hidden="true">◐</span>
-      <span>{{ label('Theme', '主题') }}</span>
+      <span>InPress</span>
     </button>
 
-    <Transition name="theme-playground-backdrop">
+    <Transition name="inpress-playground-backdrop">
       <button
         v-if="open"
-        class="theme-playground-backdrop"
+        class="inpress-playground-backdrop"
         type="button"
-        :aria-label="label('Close theme playground', '关闭主题调试面板')"
+        :aria-label="label('Close InPress playground', '关闭 InPress 调试面板')"
         @click="open = false"
       />
     </Transition>
 
-    <Transition name="theme-playground-panel">
+    <Transition name="inpress-playground-panel">
       <aside
         v-if="open"
-        id="theme-config-playground"
-        class="theme-playground-panel"
-        :aria-label="label('Theme configuration', '主题配置')"
+        id="inpress-config-playground"
+        class="inpress-playground-panel"
+        :aria-label="label('InPress configuration', 'InPress 配置')"
       >
-        <header class="theme-playground-header">
+        <header class="inpress-playground-header">
           <div>
-            <strong>{{ label('Theme configuration', '主题配置') }}</strong>
+            <strong>{{ label('InPress configuration', 'InPress 配置') }}</strong>
             <span>{{ label('Changes apply to this page', '修改会实时应用到当前页面') }}</span>
           </div>
           <button
-            class="theme-playground-icon-button"
+            class="inpress-playground-icon-button"
             type="button"
             :title="label('Close', '关闭')"
             @click="open = false"
@@ -394,9 +395,9 @@ async function copyConfig(): Promise<void> {
           </button>
         </header>
 
-        <div class="theme-playground-body">
-          <section class="theme-playground-mode-section">
-            <div class="theme-playground-segmented" role="tablist">
+        <div class="inpress-playground-body">
+          <section class="inpress-playground-mode-section">
+            <div class="inpress-playground-segmented" role="tablist">
               <button
                 type="button"
                 role="tab"
@@ -421,13 +422,13 @@ async function copyConfig(): Promise<void> {
           <section
             v-for="group in variableGroups"
             :key="group.en"
-            class="theme-playground-section"
+            class="inpress-playground-section"
           >
             <h2>{{ label(group.en, group.zh) }}</h2>
             <label
               v-for="field in group.fields"
               :key="field.key"
-              class="theme-playground-color-row"
+              class="inpress-playground-color-row"
             >
               <span>{{ label(field.en, field.zh) }}</span>
               <input
@@ -445,13 +446,13 @@ async function copyConfig(): Promise<void> {
             </label>
           </section>
 
-          <section class="theme-playground-section">
+          <section class="inpress-playground-section">
             <h2>{{ label('Custom CSS variables', '自定义 CSS 变量') }}</h2>
 
             <div
               v-for="name in customVariables"
               :key="name"
-              class="theme-playground-custom-row"
+              class="inpress-playground-custom-row"
             >
               <code>{{ name }}</code>
               <input v-model="activeVars[name]" type="text" spellcheck="false" />
@@ -464,12 +465,12 @@ async function copyConfig(): Promise<void> {
               </button>
             </div>
 
-            <form class="theme-playground-custom-form" @submit.prevent="addCustomVariable">
+            <form class="inpress-playground-custom-form" @submit.prevent="addCustomVariable">
               <input
                 v-model="customVarName"
                 type="text"
                 spellcheck="false"
-                placeholder="--theme-example"
+                placeholder="--inpress-example"
                 :aria-label="label('Variable name', '变量名')"
               />
               <input
@@ -489,15 +490,18 @@ async function copyConfig(): Promise<void> {
             </form>
           </section>
 
-          <section class="theme-playground-section">
+          <section class="inpress-playground-section">
             <h2>{{ label('Features', '功能') }}</h2>
 
-            <label class="theme-playground-toggle-row">
+            <div class="inpress-playground-toggle-row">
               <span>{{ label('Provider link icons', '平台链接图标') }}</span>
-              <input v-model="state.linkIcons" type="checkbox" role="switch" />
-            </label>
+              <ThemeSwitch
+                v-model="state.linkIcons"
+                :aria-label="label('Provider link icons', '平台链接图标')"
+              />
+            </div>
 
-            <div v-if="state.linkIcons" class="theme-playground-provider-grid">
+            <div v-if="state.linkIcons" class="inpress-playground-provider-grid">
               <label v-for="provider in linkIconProviders" :key="provider">
                 <input
                   type="checkbox"
@@ -508,32 +512,33 @@ async function copyConfig(): Promise<void> {
               </label>
             </div>
 
-            <label class="theme-playground-toggle-row">
+            <div class="inpress-playground-toggle-row">
               <span>{{ label('Automatic link text', '自动链接文案') }}</span>
-              <input v-model="state.autoLinkText" type="checkbox" role="switch" />
-            </label>
+              <ThemeSwitch
+                v-model="state.autoLinkText"
+                :aria-label="label('Automatic link text', '自动链接文案')"
+              />
+            </div>
 
-            <label class="theme-playground-toggle-row">
+            <div class="inpress-playground-toggle-row">
               <span>{{ label('Hide link underline', '隐藏链接下划线') }}</span>
-              <input
+              <ThemeSwitch
                 v-model="state.hideLinkUnderline"
-                type="checkbox"
-                role="switch"
+                :aria-label="label('Hide link underline', '隐藏链接下划线')"
               />
-            </label>
+            </div>
 
-            <label class="theme-playground-toggle-row">
+            <div class="inpress-playground-toggle-row">
               <span>{{ label('Appearance transition', '深浅色切换动画') }}</span>
-              <input
+              <ThemeSwitch
                 v-model="state.appearanceTransition"
-                type="checkbox"
-                role="switch"
+                :aria-label="label('Appearance transition', '深浅色切换动画')"
               />
-            </label>
+            </div>
 
             <div
               v-if="state.appearanceTransition"
-              class="theme-playground-segmented"
+              class="inpress-playground-segmented"
               :aria-label="label('Appearance transition style', '深浅色切换动画样式')"
             >
               <button
@@ -554,8 +559,8 @@ async function copyConfig(): Promise<void> {
               </button>
             </div>
 
-            <label
-              class="theme-playground-toggle-row"
+            <div
+              class="inpress-playground-toggle-row"
               :title="
                 hasGiscusConfig
                   ? ''
@@ -566,22 +571,21 @@ async function copyConfig(): Promise<void> {
               "
             >
               <span>Giscus</span>
-              <input
+              <ThemeSwitch
                 v-model="state.giscus"
-                type="checkbox"
-                role="switch"
                 :disabled="!hasGiscusConfig"
+                aria-label="Giscus"
               />
-            </label>
+            </div>
           </section>
 
-          <section class="theme-playground-section">
+          <section class="inpress-playground-section">
             <h2>{{ label('Generated configuration', '生成的配置') }}</h2>
-            <pre class="theme-playground-output"><code>{{ output }}</code></pre>
+            <pre class="inpress-playground-output"><code>{{ output }}</code></pre>
           </section>
         </div>
 
-        <footer class="theme-playground-footer">
+        <footer class="inpress-playground-footer">
           <button type="button" class="alt" @click="reset">
             {{ label('Reset', '重置') }}
           </button>

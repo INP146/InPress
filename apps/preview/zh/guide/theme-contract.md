@@ -1,10 +1,10 @@
 # 主题契约
 
-`@inp146/vitepress-theme` 是可复用包。文档站可以使用本项目的名称和视觉身份，但主题包本身必须保持中性，使其他 VitePress 站点无需移除隐含前提即可采用它。
+`@inp146/inpress` 是可复用包。文档站可以使用 InPress 的名称和视觉身份，但主题包本身必须保持中性，使其他 VitePress 站点无需移除隐含前提即可采用它。
 
 ## 包边界
 
-不要在 `packages/theme` 中加入站点名称、Logo、文案、外部链接、业务行为或品牌色。
+不要在 `packages/inpress` 中加入站点名称、Logo、文案、外部链接、业务行为或品牌色。
 
 文档正文、演示数据和本站视觉身份均放在 `apps/preview`。本站应以外部使用者相同的方式消费主题包。
 
@@ -41,7 +41,7 @@ export default defineConfig({
 
 ```ts
 import { defineConfig } from 'vitepress'
-import { themeI18n } from '@inp146/vitepress-theme/i18n'
+import { themeI18n } from '@inp146/inpress/i18n'
 
 export default defineConfig({
   locales: {

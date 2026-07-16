@@ -2,18 +2,18 @@ mark {
   color: inherit;
   background: transparent;
   text-decoration-line: underline;
-  text-decoration-thickness: var(--theme-marker-thickness, 9px);
+  text-decoration-thickness: var(--inpress-marker-thickness, 9px);
   text-decoration-color: var(
-    --theme-marker-color,
+    --inpress-marker-color,
     var(--vp-c-brand-soft)
   );
-  text-underline-offset: var(--theme-marker-offset, -4px);
+  text-underline-offset: var(--inpress-marker-offset, -4px);
   text-decoration-skip-ink: none;
 }
 
 mark.highlight {
   padding-inline: 0.08em;
-  border-radius: var(--theme-marker-highlight-radius, 5px);
+  border-radius: var(--inpress-marker-highlight-radius, 5px);
   text-decoration: none;
   background:
     linear-gradient(
@@ -21,25 +21,25 @@ mark.highlight {
       transparent 0.9%,
       color-mix(
           in srgb,
-          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 25%,
+          var(--inpress-marker-highlight-color, var(--vp-c-brand-1)) 25%,
           transparent
         )
         2.4%,
       color-mix(
           in srgb,
-          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 50%,
+          var(--inpress-marker-highlight-color, var(--vp-c-brand-1)) 50%,
           transparent
         )
         5.8%,
       color-mix(
           in srgb,
-          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 10%,
+          var(--inpress-marker-highlight-color, var(--vp-c-brand-1)) 10%,
           transparent
         )
         93%,
       color-mix(
           in srgb,
-          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 70%,
+          var(--inpress-marker-highlight-color, var(--vp-c-brand-1)) 70%,
           transparent
         )
         96%,
@@ -50,7 +50,7 @@ mark.highlight {
       transparent 0%,
       color-mix(
           in srgb,
-          var(--theme-marker-highlight-color, var(--vp-c-brand-1)) 30%,
+          var(--inpress-marker-highlight-color, var(--vp-c-brand-1)) 30%,
           transparent
         )
         7.9%,
@@ -61,24 +61,24 @@ mark.highlight {
 }
 
 .VPSidebarItem.level-0 > .items {
-  padding-inline-start: var(--theme-sidebar-indent, 4px);
+  padding-inline-start: var(--inpress-sidebar-indent, 4px);
 }
 
-.theme-giscus {
+.inpress-giscus {
   margin-top: 48px;
 }
 
-.theme-giscus :is(iframe, .giscus) {
+.inpress-giscus :is(iframe, .giscus) {
   width: 100%;
 }
 
-.VPFlyout.theme-appearance-transition .menu {
+.VPFlyout.inpress-appearance-transition .menu {
   opacity: 1 !important;
   visibility: visible !important;
   transform: translateY(0) !important;
 }
 
-:root.theme-appearance-transition-running .VPSwitchAppearance .check {
+:root.inpress-appearance-transition-running .VPSwitchAppearance .check {
   view-transition-name: appearance-switch-thumb;
   transition: none !important;
 }
@@ -105,7 +105,7 @@ mark.highlight {
   z-index: 9999;
 }
 
-.theme-playground-trigger {
+.inpress-playground-trigger {
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -126,17 +126,17 @@ mark.highlight {
   cursor: pointer;
 }
 
-.theme-playground-trigger:hover {
+.inpress-playground-trigger:hover {
   border-color: var(--vp-c-brand-1);
   color: var(--vp-c-brand-1);
 }
 
-.theme-playground-trigger > span:first-child {
+.inpress-playground-trigger > span:first-child {
   font-size: 20px;
   line-height: 1;
 }
 
-.theme-playground-backdrop {
+.inpress-playground-backdrop {
   position: fixed;
   inset: 0;
   z-index: 90;
@@ -145,7 +145,7 @@ mark.highlight {
   cursor: default;
 }
 
-.theme-playground-panel {
+.inpress-playground-panel {
   position: fixed;
   top: 0;
   right: 0;
@@ -161,8 +161,8 @@ mark.highlight {
   font-size: 14px;
 }
 
-.theme-playground-header,
-.theme-playground-footer {
+.inpress-playground-header,
+.inpress-playground-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -171,26 +171,26 @@ mark.highlight {
   border-color: var(--vp-c-divider);
 }
 
-.theme-playground-header {
+.inpress-playground-header {
   border-bottom: 1px solid var(--vp-c-divider);
 }
 
-.theme-playground-header > div {
+.inpress-playground-header > div {
   display: grid;
   gap: 2px;
   min-width: 0;
 }
 
-.theme-playground-header strong {
+.inpress-playground-header strong {
   font-size: 16px;
 }
 
-.theme-playground-header span {
+.inpress-playground-header span {
   color: var(--vp-c-text-2);
   font-size: 12px;
 }
 
-.theme-playground-icon-button {
+.inpress-playground-icon-button {
   display: grid;
   flex: 0 0 32px;
   place-items: center;
@@ -207,24 +207,24 @@ mark.highlight {
   cursor: pointer;
 }
 
-.theme-playground-icon-button:hover {
+.inpress-playground-icon-button:hover {
   color: var(--vp-c-text-1);
   background: var(--vp-c-default-soft);
 }
 
-.theme-playground-body {
+.inpress-playground-body {
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 
-.theme-playground-section {
+.inpress-playground-section {
   display: grid;
   gap: 12px;
   padding: 18px 16px;
   border-bottom: 1px solid var(--vp-c-divider);
 }
 
-.theme-playground-mode-section {
+.inpress-playground-mode-section {
   position: sticky;
   top: 0;
   z-index: 1;
@@ -233,7 +233,7 @@ mark.highlight {
   background: var(--vp-c-bg);
 }
 
-.theme-playground-section h2 {
+.inpress-playground-section h2 {
   margin: 0;
   border: 0;
   padding: 0;
@@ -241,7 +241,7 @@ mark.highlight {
   line-height: 20px;
 }
 
-.theme-playground-segmented {
+.inpress-playground-segmented {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2px;
@@ -250,7 +250,7 @@ mark.highlight {
   background: var(--vp-c-default-soft);
 }
 
-.theme-playground-segmented button {
+.inpress-playground-segmented button {
   min-height: 32px;
   border: 0;
   border-radius: 4px;
@@ -261,13 +261,13 @@ mark.highlight {
   cursor: pointer;
 }
 
-.theme-playground-segmented button.active {
+.inpress-playground-segmented button.active {
   color: var(--vp-c-text-1);
   background: var(--vp-c-bg);
   box-shadow: var(--vp-shadow-1);
 }
 
-.theme-playground-color-row {
+.inpress-playground-color-row {
   display: grid;
   grid-template-columns: minmax(110px, 1fr) 32px minmax(100px, 132px);
   align-items: center;
@@ -275,13 +275,13 @@ mark.highlight {
   min-height: 34px;
 }
 
-.theme-playground-color-row > span,
-.theme-playground-toggle-row > span {
+.inpress-playground-color-row > span,
+.inpress-playground-toggle-row > span {
   min-width: 0;
   overflow-wrap: anywhere;
 }
 
-.theme-playground-color-row input[type='color'] {
+.inpress-playground-color-row input[type='color'] {
   width: 32px;
   height: 32px;
   padding: 2px;
@@ -291,7 +291,7 @@ mark.highlight {
   cursor: pointer;
 }
 
-.theme-playground-color-row input[type='text'] {
+.inpress-playground-color-row input[type='text'] {
   grid-column: 3;
   width: 100%;
   height: 32px;
@@ -303,15 +303,15 @@ mark.highlight {
   font: 12px/1.4 var(--vp-font-family-mono);
 }
 
-.theme-playground-custom-row,
-.theme-playground-custom-form {
+.inpress-playground-custom-row,
+.inpress-playground-custom-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(100px, 132px) 32px;
   align-items: center;
   gap: 8px;
 }
 
-.theme-playground-custom-row code {
+.inpress-playground-custom-row code {
   min-width: 0;
   overflow: hidden;
   color: var(--vp-c-text-2);
@@ -320,8 +320,8 @@ mark.highlight {
   white-space: nowrap;
 }
 
-.theme-playground-custom-row input,
-.theme-playground-custom-form input {
+.inpress-playground-custom-row input,
+.inpress-playground-custom-form input {
   width: 100%;
   height: 32px;
   min-width: 0;
@@ -333,8 +333,8 @@ mark.highlight {
   font: 12px/1.4 var(--vp-font-family-mono);
 }
 
-.theme-playground-custom-row button,
-.theme-playground-custom-form button {
+.inpress-playground-custom-row button,
+.inpress-playground-custom-form button {
   width: 32px;
   height: 32px;
   padding: 0;
@@ -347,27 +347,28 @@ mark.highlight {
   cursor: pointer;
 }
 
-.theme-playground-custom-row button:hover,
-.theme-playground-custom-form button:hover:not(:disabled) {
+.inpress-playground-custom-row button:hover,
+.inpress-playground-custom-form button:hover:not(:disabled) {
   border-color: var(--vp-c-brand-1);
   color: var(--vp-c-brand-1);
 }
 
-.theme-playground-custom-form button:disabled {
+.inpress-playground-custom-form button:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-.theme-playground-color-row input:focus-visible,
-.theme-playground-segmented button:focus-visible,
-.theme-playground-trigger:focus-visible,
-.theme-playground-icon-button:focus-visible,
-.theme-playground-footer button:focus-visible {
+.inpress-playground-color-row input:focus-visible,
+.inpress-playground-segmented button:focus-visible,
+.inpress-playground-trigger:focus-visible,
+.inpress-playground-icon-button:focus-visible,
+.inpress-playground-switch:focus-visible,
+.inpress-playground-footer button:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 2px;
 }
 
-.theme-playground-toggle-row {
+.inpress-playground-toggle-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -375,46 +376,7 @@ mark.highlight {
   min-height: 32px;
 }
 
-.theme-playground-toggle-row input[role='switch'] {
-  position: relative;
-  flex: 0 0 38px;
-  width: 38px;
-  height: 22px;
-  margin: 0;
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 11px;
-  appearance: none;
-  background: var(--vp-c-default-2);
-  cursor: pointer;
-}
-
-.theme-playground-toggle-row input[role='switch']::after {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--vp-c-white);
-  content: '';
-  transition: transform 160ms ease;
-}
-
-.theme-playground-toggle-row input[role='switch']:checked {
-  border-color: var(--vp-c-brand-1);
-  background: var(--vp-c-brand-1);
-}
-
-.theme-playground-toggle-row input[role='switch']:checked::after {
-  transform: translateX(16px);
-}
-
-.theme-playground-toggle-row input[role='switch']:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.theme-playground-provider-grid {
+.inpress-playground-provider-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
@@ -424,7 +386,7 @@ mark.highlight {
   background: var(--vp-c-bg-soft);
 }
 
-.theme-playground-provider-grid label {
+.inpress-playground-provider-grid label {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -432,19 +394,19 @@ mark.highlight {
   font-size: 12px;
 }
 
-.theme-playground-provider-grid input {
+.inpress-playground-provider-grid input {
   flex: 0 0 auto;
   margin: 0;
   accent-color: var(--vp-c-brand-1);
 }
 
-.theme-playground-provider-grid span {
+.inpress-playground-provider-grid span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.theme-playground-output {
+.inpress-playground-output {
   max-height: 240px;
   margin: 0;
   overflow: auto;
@@ -456,12 +418,12 @@ mark.highlight {
   white-space: pre;
 }
 
-.theme-playground-footer {
+.inpress-playground-footer {
   justify-content: flex-end;
   border-top: 1px solid var(--vp-c-divider);
 }
 
-.theme-playground-footer button {
+.inpress-playground-footer button {
   min-height: 36px;
   padding: 0 14px;
   border: 1px solid transparent;
@@ -471,53 +433,53 @@ mark.highlight {
   cursor: pointer;
 }
 
-.theme-playground-footer button.alt {
+.inpress-playground-footer button.alt {
   border-color: var(--vp-c-divider);
   color: var(--vp-c-text-1);
   background: var(--vp-c-bg);
 }
 
-.theme-playground-footer button.brand {
+.inpress-playground-footer button.brand {
   border-color: var(--vp-button-brand-border, transparent);
   color: var(--vp-button-brand-text, var(--vp-c-white));
   background: var(--vp-button-brand-bg, var(--vp-c-brand-1));
 }
 
-.theme-playground-panel-enter-active,
-.theme-playground-panel-leave-active,
-.theme-playground-backdrop-enter-active,
-.theme-playground-backdrop-leave-active {
+.inpress-playground-panel-enter-active,
+.inpress-playground-panel-leave-active,
+.inpress-playground-backdrop-enter-active,
+.inpress-playground-backdrop-leave-active {
   transition-duration: 180ms;
   transition-timing-function: ease;
 }
 
-.theme-playground-panel-enter-active,
-.theme-playground-panel-leave-active {
+.inpress-playground-panel-enter-active,
+.inpress-playground-panel-leave-active {
   transition-property: transform;
 }
 
-.theme-playground-panel-enter-from,
-.theme-playground-panel-leave-to {
+.inpress-playground-panel-enter-from,
+.inpress-playground-panel-leave-to {
   transform: translateX(100%);
 }
 
-.theme-playground-backdrop-enter-active,
-.theme-playground-backdrop-leave-active {
+.inpress-playground-backdrop-enter-active,
+.inpress-playground-backdrop-leave-active {
   transition-property: opacity;
 }
 
-.theme-playground-backdrop-enter-from,
-.theme-playground-backdrop-leave-to {
+.inpress-playground-backdrop-enter-from,
+.inpress-playground-backdrop-leave-to {
   opacity: 0;
 }
 
 @media (max-width: 640px) {
-  .theme-playground-trigger {
+  .inpress-playground-trigger {
     right: 12px;
     bottom: 12px;
   }
 
-  .theme-playground-panel {
+  .inpress-playground-panel {
     top: auto;
     bottom: 0;
     width: 100%;
@@ -526,22 +488,21 @@ mark.highlight {
     border-left: 0;
   }
 
-  .theme-playground-panel-enter-from,
-  .theme-playground-panel-leave-to {
+  .inpress-playground-panel-enter-from,
+  .inpress-playground-panel-leave-to {
     transform: translateY(100%);
   }
 
-  .theme-playground-provider-grid {
+  .inpress-playground-provider-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .theme-playground-panel-enter-active,
-  .theme-playground-panel-leave-active,
-  .theme-playground-backdrop-enter-active,
-  .theme-playground-backdrop-leave-active,
-  .theme-playground-toggle-row input[role='switch']::after {
+  .inpress-playground-panel-enter-active,
+  .inpress-playground-panel-leave-active,
+  .inpress-playground-backdrop-enter-active,
+  .inpress-playground-backdrop-leave-active {
     transition: none;
   }
 }

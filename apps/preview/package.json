@@ -1,16 +1,16 @@
 {
-  "name": "@inp146/vitepress-theme-preview",
+  "name": "@inp146/inpress-preview",
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "pnpm --filter @inp146/vitepress-theme build",
+    "predev": "pnpm --filter @inp146/inpress build",
     "dev": "vitepress dev .",
     "build": "vitepress build .",
     "preview": "vitepress preview ."
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
-    "@inp146/vitepress-theme": "workspace:*",
+    "@inp146/inpress": "workspace:*",
     "vitepress": "2.0.0-alpha.18"
   }
 }

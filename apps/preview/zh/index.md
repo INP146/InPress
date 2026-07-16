@@ -2,9 +2,9 @@
 layout: home
 
 hero:
-  name: VitePress Theme
+  name: InPress
   text: 文档与开发站
-  tagline: 在 packages/theme 中开发可复用主题，在这里维护文档并实时验证效果。
+  tagline: 在 packages/inpress 中开发 InPress，在这里维护文档并实时验证效果。
   actions:
     - theme: brand
       text: 阅读文档

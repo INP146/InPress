@@ -1,16 +1,16 @@
 {
-  "name": "vitepress-theme-workspace",
+  "name": "inpress-workspace",
   "private": true,
   "packageManager": "pnpm@11.10.0",
   "engines": {
     "node": ">=20.19.0"
   },
   "scripts": {
-    "dev": "pnpm --filter @inp146/vitepress-theme-preview dev",
-    "build": "pnpm --filter @inp146/vitepress-theme build && pnpm --filter @inp146/vitepress-theme-preview build",
-    "check": "pnpm --filter @inp146/vitepress-theme check && pnpm --filter @inp146/vitepress-theme build && pnpm --filter @inp146/vitepress-theme-preview build",
+    "dev": "pnpm --filter @inp146/inpress-preview dev",
+    "build": "pnpm --filter @inp146/inpress build && pnpm --filter @inp146/inpress-preview build",
+    "check": "pnpm --filter @inp146/inpress check && pnpm --filter @inp146/inpress build && pnpm --filter @inp146/inpress-preview build",
     "deploy": "wrangler deploy",
-    "preview": "pnpm --filter @inp146/vitepress-theme-preview preview"
+    "preview": "pnpm --filter @inp146/inpress-preview preview"
   },
   "devDependencies": {
     "wrangler": "^4.110.0"

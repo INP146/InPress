@@ -1,7 +1,7 @@
 {
-  "name": "@inp146/vitepress-theme",
+  "name": "@inp146/inpress",
   "version": "0.1.0",
-  "description": "A reusable VitePress theme extending the default theme.",
+  "description": "InPress, a reusable theme extending the VitePress default theme.",
   "type": "module",
   "files": [
     "dist"

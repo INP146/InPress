@@ -40,7 +40,7 @@ function trackGooglePageView(measurementId: string, path: string): void {
   if (shouldInitialize) analyticsWindow.gtag('js', new Date())
 
   appendScript(
-    'vitepress-theme-google-analytics',
+    'inpress-google-analytics',
     `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`,
     'https://www.googletagmanager.com/gtag/js'
   )
@@ -65,14 +65,14 @@ function installClarity(projectId: string): void {
   }
 
   appendScript(
-    'vitepress-theme-clarity',
+    'inpress-clarity',
     `https://www.clarity.ms/tag/${encodeURIComponent(projectId)}`,
     'https://www.clarity.ms/tag/'
   )
 }
 
 export const Analytics = defineComponent({
-  name: 'ThemeAnalytics',
+  name: 'InPressAnalytics',
   props: {
     config: {
       type: Object as PropType<AnalyticsConfig>,

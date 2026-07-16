@@ -1,5 +1,5 @@
 <script setup>
-import { ThemeConfigPlayground } from '@inp146/vitepress-theme/playground'
+import { ThemeConfigPlayground } from '@inp146/inpress/playground'
 import { VPButton } from 'vitepress/theme'
 </script>
 

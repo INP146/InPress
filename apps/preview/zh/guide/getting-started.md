@@ -1,6 +1,6 @@
 # 快速开始
 
-可复用主题实现位于 `packages/theme`。这个 VitePress 站点既是主题文档，也是在开发时直接引用主题源码的环境。
+可复用的 InPress 实现位于 `packages/inpress`。这个 VitePress 站点既是主题文档，也是在开发时直接引用主题源码的环境。
 
 ## 开发
 
@@ -11,7 +11,7 @@ pnpm install
 pnpm dev
 ```
 
-文档站导入 `@inp146/vitepress-theme`，但 Vite 在开发时将其别名到 `packages/theme/src/index.ts`。因此修改主题源码后无需发布或重新构建包，页面就会更新。
+文档站导入 `@inp146/inpress`，但 Vite 在开发时将其别名到 `packages/inpress/src/index.ts`。因此修改主题源码后无需发布或重新构建包，页面就会更新。
 
 ## 主题入口
 

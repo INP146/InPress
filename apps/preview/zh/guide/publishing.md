@@ -5,10 +5,10 @@
 构建主题包：
 
 ```sh
-pnpm --filter @inp146/vitepress-theme build
+pnpm --filter @inp146/inpress build
 ```
 
-发布包只包含 `dist`，导出主题入口和 `@inp146/vitepress-theme/style.css`。
+发布包只包含 `dist`，导出主题入口和 `@inp146/inpress/style.css`。
 
 消费方应与 VitePress 2 一同安装此包：
 

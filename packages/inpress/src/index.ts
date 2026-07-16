@@ -28,7 +28,7 @@ export type { GiscusConfig, GiscusMapping, GiscusTheme } from './giscus'
 export type ThemeCssVars = Record<`--${string}`, string | number>
 export type AppearanceTransitionMode = 'spread' | 'fade'
 
-export interface Inp146ThemeConfig {
+export interface InPressThemeConfig {
   cssVars?: {
     root?: ThemeCssVars
     dark?: ThemeCssVars
@@ -43,11 +43,11 @@ export interface Inp146ThemeConfig {
 
 declare module 'vitepress' {
   namespace DefaultTheme {
-    interface Config extends Inp146ThemeConfig {}
+    interface Config extends InPressThemeConfig {}
   }
 }
 
-function createTokenStyle(cssVars: Inp146ThemeConfig['cssVars']): string {
+function createTokenStyle(cssVars: InPressThemeConfig['cssVars']): string {
   const rules = [
     [':root', cssVars?.root],
     [':root.dark', cssVars?.dark]
@@ -66,7 +66,7 @@ function createTokenStyle(cssVars: Inp146ThemeConfig['cssVars']): string {
 }
 
 function resolveLinkIcons(
-  linkIcons: Inp146ThemeConfig['linkIcons']
+  linkIcons: InPressThemeConfig['linkIcons']
 ): readonly LinkIconProvider[] {
   if (linkIcons === false) return []
   if (Array.isArray(linkIcons)) return linkIcons
@@ -94,12 +94,12 @@ function hasUrlLinkText(link: HTMLAnchorElement): boolean {
 
 function applyAutoLinkText(enabled: boolean): void {
   document.querySelectorAll<HTMLAnchorElement>('.vp-doc a[href]').forEach((link) => {
-    const originalText = link.dataset.inp146AutoLinkText
+    const originalText = link.dataset.inpressAutoLinkText
 
     if (!enabled) {
       if (originalText !== undefined) {
         link.textContent = originalText
-        delete link.dataset.inp146AutoLinkText
+        delete link.dataset.inpressAutoLinkText
       }
       return
     }
@@ -109,7 +109,7 @@ function applyAutoLinkText(enabled: boolean): void {
     const label = resolveProviderLinkText(link.href)
     if (!label) return
 
-    link.dataset.inp146AutoLinkText = link.textContent ?? ''
+    link.dataset.inpressAutoLinkText = link.textContent ?? ''
     link.textContent = label
   })
 }
@@ -152,8 +152,8 @@ function toggleAppearance(
   const pointerEvent = event instanceof MouseEvent && event.detail > 0
   const fallbackX = pointerEvent ? event.clientX : window.innerWidth / 2
   const fallbackY = pointerEvent ? event.clientY : window.innerHeight / 2
-  document.documentElement.classList.add('theme-appearance-transition-running')
-  flyout?.classList.add('theme-appearance-transition')
+  document.documentElement.classList.add('inpress-appearance-transition-running')
+  flyout?.classList.add('inpress-appearance-transition')
   const transition = document.startViewTransition(updateAppearance)
   let appearanceAnimation: Animation | undefined
 
@@ -203,7 +203,7 @@ function toggleAppearance(
   const finishTransition = async () => {
     appearanceAnimation?.cancel()
     document.documentElement.classList.remove(
-      'theme-appearance-transition-running'
+      'inpress-appearance-transition-running'
     )
     if (!flyout) return
 
@@ -211,7 +211,7 @@ function toggleAppearance(
       new MouseEvent(flyout.matches(':hover') ? 'mouseenter' : 'mouseleave')
     )
     await nextTick()
-    flyout.classList.remove('theme-appearance-transition')
+    flyout.classList.remove('inpress-appearance-transition')
   }
 
   void transition.finished.then(finishTransition, finishTransition)
@@ -219,9 +219,9 @@ function toggleAppearance(
 
 export function createTheme(): Theme {
   const Layout = defineComponent({
-    name: 'VitePressThemeLayout',
+    name: 'InPressLayout',
     setup() {
-      const { theme, frontmatter, isDark } = useData<Inp146ThemeConfig>()
+      const { theme, frontmatter, isDark } = useData<InPressThemeConfig>()
       const route = useRoute()
       const runtime = createThemeRuntime(computed(() => theme.value))
       const effectiveTheme = runtime.theme
@@ -261,7 +261,7 @@ export function createTheme(): Theme {
             : null,
           themeStyle
             ? h('style', {
-                id: 'vitepress-theme-overrides',
+                id: 'inpress-overrides',
                 innerHTML: themeStyle
               })
             : null,

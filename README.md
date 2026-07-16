@@ -1,6 +1,6 @@
-# VitePress theme workspace
+# InPress
 
-This repository treats the VitePress theme as the product and `apps/preview` as both its documentation site and source-linked development environment.
+This repository treats InPress as the product and `apps/preview` as both its documentation site and source-linked development environment.
 
 ## Commands
 
@@ -13,14 +13,14 @@ pnpm build
 
 ## Structure
 
-- `packages/theme`: independently publishable VitePress 2 theme package.
+- `packages/inpress`: independently publishable VitePress 2 theme package.
 - `apps/preview`: VitePress documentation site used to develop and validate the theme.
 
-The documentation site aliases the package name to `packages/theme/src/index.ts`; package consumers resolve the built `dist` entry instead. Brand colors and other CSS tokens are configured by each consumer through `themeConfig`, not embedded in the package. Write guides, API notes, and design decisions in `apps/preview`.
+The documentation site aliases the package name to `packages/inpress/src/index.ts`; package consumers resolve the built `dist` entry instead. Brand colors and other CSS tokens are configured by each consumer through `themeConfig`, not embedded in the package. Write guides, API notes, and design decisions in `apps/preview`.
 
 ## Theme Contract
 
-`packages/theme` is a reusable product, not this repository's branded website. Keep the following boundary intact:
+`packages/inpress` is a reusable product, not this repository's branded website. Keep the following boundary intact:
 
 - Do not put site names, logos, copy, links, business behavior, or brand colors in the theme package.
 - Put every consumer-specific visual token, including color, typography, radius, and spacing, behind CSS custom properties. A component may have a structural fallback only when the property remains overridable.

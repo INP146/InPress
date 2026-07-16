@@ -5,10 +5,10 @@ The package is configured for the `@inp146` npm scope.
 Build the package:
 
 ```sh
-pnpm --filter @inp146/vitepress-theme build
+pnpm --filter @inp146/inpress build
 ```
 
-The published package contains only `dist`. It exports the theme entry point and `@inp146/vitepress-theme/style.css`.
+The published package contains only `dist`. It exports the theme entry point and `@inp146/inpress/style.css`.
 
 Consumers install the package alongside VitePress 2:
 

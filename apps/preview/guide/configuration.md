@@ -5,7 +5,7 @@
 Use the default export in `.vitepress/theme/index.ts`:
 
 ```ts
-import theme from '@inp146/vitepress-theme'
+import theme from '@inp146/inpress'
 
 export default theme
 ```
@@ -13,7 +13,7 @@ export default theme
 When consuming the built package, import its styles alongside the theme entry:
 
 ```ts
-import '@inp146/vitepress-theme/style.css'
+import '@inp146/inpress/style.css'
 ```
 
 `createTheme()` is also exported for programmatic composition and currently accepts no options. Site-specific settings belong directly in `themeConfig`.
@@ -67,7 +67,7 @@ Import the optional playground component on a development or public demo page:
 
 ```vue
 <script setup>
-import { ThemeConfigPlayground } from '@inp146/vitepress-theme/playground'
+import { ThemeConfigPlayground } from '@inp146/inpress/playground'
 </script>
 
 <ClientOnly>
@@ -139,11 +139,11 @@ Use the underline marker for a short emphasis and the brush marker for highlight
 <mark class="highlight">Brush-style marker highlight</mark>
 ```
 
-By default, both markers derive their colors from the global VitePress brand colors. Override them with `--theme-marker-color` or `--theme-marker-highlight-color`; geometry can be adjusted with `--theme-marker-thickness`, `--theme-marker-offset`, and `--theme-marker-highlight-radius`.
+By default, both markers derive their colors from the global VitePress brand colors. Override them with `--inpress-marker-color` or `--inpress-marker-highlight-color`; geometry can be adjusted with `--inpress-marker-thickness`, `--inpress-marker-offset`, and `--inpress-marker-highlight-radius`.
 
 ## Sidebar hierarchy
 
-First-level links are indented by `16px` below their group heading. Override the spacing with `--theme-sidebar-indent`.
+First-level links are indented by `16px` below their group heading. Override the spacing with `--inpress-sidebar-indent`.
 
 ## Provider link icons
 
@@ -157,32 +157,32 @@ These CSS custom properties adjust every provider icon:
 
 | Token | Default | Description |
 | --- | --- | --- |
-| `--theme-provider-link-icon-size` | `20px` | Common icon height and square icon width. |
-| `--theme-provider-link-icon-threads-width` | `17.5px` | Threads width, preserving its original aspect ratio. |
-| `--theme-provider-link-icon-gap` | `4px` | Space between icon and link text. |
-| `--theme-provider-link-icon-align` | `middle` | Inline vertical alignment mode. |
-| `--theme-provider-link-icon-offset` | `-1px` | Final visual vertical adjustment. |
+| `--inpress-provider-link-icon-size` | `20px` | Common icon height and square icon width. |
+| `--inpress-provider-link-icon-threads-width` | `17.5px` | Threads width, preserving its original aspect ratio. |
+| `--inpress-provider-link-icon-gap` | `4px` | Space between icon and link text. |
+| `--inpress-provider-link-icon-align` | `middle` | Inline vertical alignment mode. |
+| `--inpress-provider-link-icon-offset` | `-1px` | Final visual vertical adjustment. |
 
 ## Package exports
 
 | Export | Import path | Description |
 | --- | --- | --- |
-| Default theme | `@inp146/vitepress-theme` | Theme object for `.vitepress/theme/index.ts`. |
-| `createTheme()` | `@inp146/vitepress-theme` | Creates the same theme object for programmatic use. |
-| `linkIconProviders` | `@inp146/vitepress-theme` | Array containing every supported provider identifier. |
-| `LinkIconProvider` | `@inp146/vitepress-theme` | Union type for provider identifiers. |
-| `ThemeCssVars` | `@inp146/vitepress-theme` | Type for a CSS custom-property record. |
-| `AnalyticsConfig` | `@inp146/vitepress-theme` | Google Analytics and Microsoft Clarity configuration. |
-| `GiscusConfig` | `@inp146/vitepress-theme` | Giscus widget configuration. |
-| `Inp146ThemeConfig` | `@inp146/vitepress-theme` | Type of the theme-specific fields in `themeConfig`. |
-| `ThemeConfigPlayground` | `@inp146/vitepress-theme/playground` | Runtime editor for this theme's settings and CSS variables. |
+| Default theme | `@inp146/inpress` | Theme object for `.vitepress/theme/index.ts`. |
+| `createTheme()` | `@inp146/inpress` | Creates the same theme object for programmatic use. |
+| `linkIconProviders` | `@inp146/inpress` | Array containing every supported provider identifier. |
+| `LinkIconProvider` | `@inp146/inpress` | Union type for provider identifiers. |
+| `ThemeCssVars` | `@inp146/inpress` | Type for a CSS custom-property record. |
+| `AnalyticsConfig` | `@inp146/inpress` | Google Analytics and Microsoft Clarity configuration. |
+| `GiscusConfig` | `@inp146/inpress` | Giscus widget configuration. |
+| `InPressThemeConfig` | `@inp146/inpress` | Type of the theme-specific fields in `themeConfig`. |
+| `ThemeConfigPlayground` | `@inp146/inpress/playground` | Runtime editor for this theme's settings and CSS variables. |
 
 ## Interface language
 
 Import `themeI18n` through the Node-safe subpath and spread the matching preset into VitePress configuration:
 
 ```ts
-import { themeI18n } from '@inp146/vitepress-theme/i18n'
+import { themeI18n } from '@inp146/inpress/i18n'
 
 export default defineConfig({
   locales: {

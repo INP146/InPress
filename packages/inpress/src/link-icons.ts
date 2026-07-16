@@ -113,7 +113,7 @@ const providerIcons = {
   x: {
     icon: xIcon,
     monochrome: true,
-    offset: 'calc(var(--theme-provider-link-icon-offset,-1px) - 1px)',
+    offset: 'calc(var(--inpress-provider-link-icon-offset,-1px) - 1px)',
     urls: [
       'https://x.com/',
       'https://www.x.com/',
@@ -128,8 +128,8 @@ const providerIcons = {
   threads: {
     icon: threadsIcon,
     monochrome: true,
-    offset: 'calc(var(--theme-provider-link-icon-offset,-1px) - 1px)',
-    inlineSize: 'var(--theme-provider-link-icon-threads-width,17.5px)',
+    offset: 'calc(var(--inpress-provider-link-icon-offset,-1px) - 1px)',
+    inlineSize: 'var(--inpress-provider-link-icon-threads-width,17.5px)',
     aspectRatio: '7 / 8',
     urls: ['https://threads.net/', 'https://www.threads.net/']
   },
@@ -195,15 +195,15 @@ export function createLinkIconStyle(
       const inlineSize =
         'inlineSize' in providerIcon
           ? providerIcon.inlineSize
-          : 'var(--theme-provider-link-icon-size,20px)'
+          : 'var(--inpress-provider-link-icon-size,20px)'
       const aspectRatio =
         'aspectRatio' in providerIcon ? providerIcon.aspectRatio : '1'
       const offset =
         'offset' in providerIcon
           ? providerIcon.offset
-          : 'var(--theme-provider-link-icon-offset,-1px)'
+          : 'var(--inpress-provider-link-icon-offset,-1px)'
 
-      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--theme-provider-link-icon-size,20px);aspect-ratio:${aspectRatio};margin-inline-end:var(--theme-provider-link-icon-gap,4px);vertical-align:var(--theme-provider-link-icon-align,middle);transform:translateY(${offset});${iconStyle}}`
+      return `${selectors}{content:"";display:inline-block;box-sizing:border-box;inline-size:${inlineSize};block-size:var(--inpress-provider-link-icon-size,20px);aspect-ratio:${aspectRatio};margin-inline-end:var(--inpress-provider-link-icon-gap,4px);vertical-align:var(--inpress-provider-link-icon-align,middle);transform:translateY(${offset});${iconStyle}}`
     })
     .join('')
 }

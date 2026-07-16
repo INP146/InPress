@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "vitepress-theme",
+  "name": "inpress",
   "compatibility_date": "2026-07-15",
   "assets": {
     "directory": "./apps/preview/.vitepress/dist",

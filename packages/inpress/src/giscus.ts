@@ -113,6 +113,6 @@ export const Giscus = defineComponent({
       target.append(script)
     })
 
-    return () => h('div', { class: 'theme-giscus', ref: container })
+    return () => h('div', { class: 'inpress-giscus', ref: container })
   }
 })
