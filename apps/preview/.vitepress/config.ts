@@ -29,24 +29,7 @@ const sharedThemeConfig = {
     }
   },
   logo: '/logo.svg',
-  socialLinks: [{ icon: 'github' as const, link: 'https://github.com' }],
-  giscus: {
-    repo: 'INP146/vitepress-theme',
-    repoId: 'R_kgDOTWQyyQ',
-    category: 'Announcements',
-    categoryId: 'DIC_kwDOTWQyyc4DBHZH',
-    mapping: 'url',
-    strict: false,
-    reactionsEnabled: true,
-    emitMetadata: false,
-    inputPosition: 'top',
-    theme: {
-      light: 'light',
-      dark: 'dark'
-    },
-    lang: 'zh-CN',
-    loading: 'lazy'
-  }
+  socialLinks: [{ icon: 'github' as const, link: 'https://github.com' }]
 }
 
 export default defineConfig({
@@ -87,6 +70,23 @@ export default defineConfig({
         footer: {
           message: 'Built on VitePress 2.0 alpha.',
           copyright: 'Copyright 2026'
+        },
+        giscus: {
+          repo: 'INP146/vitepress-theme',
+          repoId: 'R_kgDOTWQyyQ',
+          category: 'Announcements',
+          categoryId: 'DIC_kwDOTWQyyc4DBHZH',
+          mapping: 'url',
+          strict: false,
+          reactionsEnabled: true,
+          emitMetadata: false,
+          inputPosition: 'top',
+          theme: {
+            light: 'light',
+            dark: 'dark'
+          },
+          lang: 'en',
+          loading: 'lazy'
         }
       }
     },
@@ -121,6 +121,23 @@ export default defineConfig({
         footer: {
           message: '基于 VitePress 2.0 alpha 构建。',
           copyright: 'Copyright 2026'
+        },
+        giscus: {
+          repo: 'INP146/vitepress-theme',
+          repoId: 'R_kgDOTWQyyQ',
+          category: 'Announcements',
+          categoryId: 'DIC_kwDOTWQyyc4DBHZH',
+          mapping: 'url',
+          strict: false,
+          reactionsEnabled: true,
+          emitMetadata: false,
+          inputPosition: 'top',
+          theme: {
+            light: 'light',
+            dark: 'dark'
+          },
+          lang: 'zh-CN',
+          loading: 'lazy'
         }
       }
     }
