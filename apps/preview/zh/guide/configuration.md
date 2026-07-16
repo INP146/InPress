@@ -61,6 +61,24 @@ export default defineConfig({
 | `analytics` | `AnalyticsConfig \| false` | - | 启用 Google Analytics、Microsoft Clarity 或同时启用两者。设为 `false` 关闭。 |
 | `giscus` | `GiscusConfig \| false` | - | 在每篇文档页底部启用 Giscus。设为 `false` 关闭。 |
 
+## 主题调试面板
+
+可在开发页面或公开演示页中导入可选的调试组件：
+
+```vue
+<script setup>
+import { ThemeConfigPlayground } from '@inp146/vitepress-theme/playground'
+</script>
+
+<ClientOnly>
+  <ThemeConfigPlayground persist />
+</ClientOnly>
+```
+
+面板可调整本主题的颜色、记号笔 token、平台链接样式、链接行为、深浅色切换动画和 Giscus 显示状态，不修改 VitePress 的导航或侧边栏配置。只有站点已经提供有效的 `giscus` 配置时才能开启 Giscus。面板刻意不提供 Analytics 控制，避免游客操作时加载追踪脚本。
+
+设置 `initially-open` 可在首次渲染时直接展开面板。`persist` 会把当前设置保存到本地存储；需要自定义键名时可传入 `storage-key`。通过高级编辑器添加的任意 CSS 变量也会包含在生成的 `themeConfig` 中。
+
 ## 模式切换动画
 
 切换深浅色模式时，新主题会从切换按钮的位置扩散。未支持 View Transition API 的浏览器，以及偏好减少动态效果的用户，会保留 VitePress 原本的即时切换。设置 `appearanceTransition: false` 可关闭该动画。
@@ -157,6 +175,7 @@ theme: {
 | `AnalyticsConfig` | `@inp146/vitepress-theme` | Google Analytics 与 Microsoft Clarity 的配置类型。 |
 | `GiscusConfig` | `@inp146/vitepress-theme` | Giscus 小组件的配置类型。 |
 | `Inp146ThemeConfig` | `@inp146/vitepress-theme` | `themeConfig` 中主题专属字段的类型。 |
+| `ThemeConfigPlayground` | `@inp146/vitepress-theme/playground` | 用于实时调整主题设置和 CSS 变量的组件。 |
 
 ## 界面语言
 

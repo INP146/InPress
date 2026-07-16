@@ -61,6 +61,24 @@ export default defineConfig({
 | `analytics` | `AnalyticsConfig \| false` | - | Enables Google Analytics, Microsoft Clarity, or both. Set `false` to disable them. |
 | `giscus` | `GiscusConfig \| false` | - | Enables Giscus below each document page. Set `false` to disable it. |
 
+## Theme playground
+
+Import the optional playground component on a development or public demo page:
+
+```vue
+<script setup>
+import { ThemeConfigPlayground } from '@inp146/vitepress-theme/playground'
+</script>
+
+<ClientOnly>
+  <ThemeConfigPlayground persist />
+</ClientOnly>
+```
+
+The playground edits this theme's colors, marker tokens, provider-link presentation, link behavior, appearance transition, and Giscus visibility. It does not edit VitePress navigation or sidebar configuration. Giscus can only be enabled when the site already provides a valid `giscus` configuration. Analytics is intentionally excluded because a visitor-facing control must not load tracking scripts.
+
+Set `initially-open` to open the panel on first render. `persist` stores the current values in local storage; use `storage-key` when a site needs a custom key. The generated `themeConfig` output includes arbitrary custom CSS variables added through the advanced editor.
+
 ## Appearance transition
 
 When the user switches appearance, the new theme expands from the switch position. Browsers without the View Transition API, and users who prefer reduced motion, keep VitePress's instant switch. Set `appearanceTransition: false` to opt out.
@@ -157,6 +175,7 @@ These CSS custom properties adjust every provider icon:
 | `AnalyticsConfig` | `@inp146/vitepress-theme` | Google Analytics and Microsoft Clarity configuration. |
 | `GiscusConfig` | `@inp146/vitepress-theme` | Giscus widget configuration. |
 | `Inp146ThemeConfig` | `@inp146/vitepress-theme` | Type of the theme-specific fields in `themeConfig`. |
+| `ThemeConfigPlayground` | `@inp146/vitepress-theme/playground` | Runtime editor for this theme's settings and CSS variables. |
 
 ## Interface language
 

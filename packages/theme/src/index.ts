@@ -1,4 +1,12 @@
-import { defineComponent, Fragment, h, nextTick, provide, watch } from 'vue'
+import {
+  computed,
+  defineComponent,
+  Fragment,
+  h,
+  nextTick,
+  provide,
+  watch
+} from 'vue'
 import { useData, useRoute, type Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
@@ -10,6 +18,7 @@ import {
   resolveProviderLinkText,
   type LinkIconProvider
 } from './link-icons'
+import { createThemeRuntime, themeRuntimeKey } from './runtime'
 
 export { linkIconProviders } from './link-icons'
 export type { LinkIconProvider } from './link-icons'
@@ -202,18 +211,26 @@ export function createTheme(): Theme {
     setup() {
       const { theme, frontmatter, isDark } = useData<Inp146ThemeConfig>()
       const route = useRoute()
+      const runtime = createThemeRuntime(computed(() => theme.value))
+      const effectiveTheme = runtime.theme
+
+      provide(themeRuntimeKey, runtime)
 
       provide('toggle-appearance', (event?: Event) =>
-        toggleAppearance(isDark, theme.value.appearanceTransition !== false, event)
+        toggleAppearance(
+          isDark,
+          effectiveTheme.value.appearanceTransition !== false,
+          event
+        )
       )
 
       watch(
-        [() => route.path, () => theme.value.autoLinkText],
+        [() => route.path, () => effectiveTheme.value.autoLinkText],
         () => {
           if (typeof document === 'undefined') return
 
           void nextTick(() =>
-            applyAutoLinkText(theme.value.autoLinkText !== false)
+            applyAutoLinkText(effectiveTheme.value.autoLinkText !== false)
           )
         },
         { flush: 'post', immediate: true }
@@ -221,14 +238,14 @@ export function createTheme(): Theme {
 
       return () => {
         const themeStyle = [
-          createTokenStyle(theme.value.cssVars),
-          createLinkIconStyle(resolveLinkIcons(theme.value.linkIcons)),
-          createLinkUnderlineStyle(theme.value.hideLinkUnderline)
+          createTokenStyle(effectiveTheme.value.cssVars),
+          createLinkIconStyle(resolveLinkIcons(effectiveTheme.value.linkIcons)),
+          createLinkUnderlineStyle(effectiveTheme.value.hideLinkUnderline)
         ].join('')
 
         return h(Fragment, null, [
-          theme.value.analytics
-            ? h(Analytics, { config: theme.value.analytics })
+          effectiveTheme.value.analytics
+            ? h(Analytics, { config: effectiveTheme.value.analytics })
             : null,
           themeStyle
             ? h('style', {
@@ -238,7 +255,7 @@ export function createTheme(): Theme {
             : null,
           h(DefaultTheme.Layout, null, {
             'doc-after': () => {
-              const giscus = theme.value.giscus
+              const giscus = effectiveTheme.value.giscus
 
               return giscus && frontmatter.value.giscus !== false
                 ? h(Giscus, { config: giscus, key: route.path })

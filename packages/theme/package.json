@@ -15,6 +15,10 @@
       "types": "./dist/i18n.d.ts",
       "import": "./dist/i18n.js"
     },
+    "./playground": {
+      "types": "./dist/playground.d.ts",
+      "import": "./dist/playground.js"
+    },
     "./style.css": "./dist/style.css",
     "./package.json": "./package.json"
   },

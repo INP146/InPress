@@ -50,7 +50,8 @@ export default defineConfig({
         ...sharedThemeConfig,
         nav: [
           { text: 'Docs', link: '/guide/getting-started' },
-          { text: 'Link features', link: '/showcase/components' }
+          { text: 'Link features', link: '/showcase/components' },
+          { text: 'Playground', link: '/playground' }
         ],
         sidebar: [
           {
@@ -101,7 +102,8 @@ export default defineConfig({
         ...sharedThemeConfig,
         nav: [
           { text: '文档', link: '/zh/guide/getting-started' },
-          { text: '链接功能', link: '/zh/showcase/components' }
+          { text: '链接功能', link: '/zh/showcase/components' },
+          { text: '主题调试', link: '/zh/playground' }
         ],
         sidebar: [
           {
@@ -145,6 +147,12 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
+        '@inp146/vitepress-theme/playground': fileURLToPath(
+          new URL(
+            '../../../packages/theme/src/playground.ts',
+            import.meta.url
+          )
+        ),
         '@inp146/vitepress-theme': fileURLToPath(
           new URL('../../../packages/theme/src/index.ts', import.meta.url)
         )

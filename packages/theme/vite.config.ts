@@ -8,7 +8,10 @@ export default defineConfig({
     lib: {
       entry: {
         index: fileURLToPath(new URL('./src/index.ts', import.meta.url)),
-        i18n: fileURLToPath(new URL('./src/i18n.ts', import.meta.url))
+        i18n: fileURLToPath(new URL('./src/i18n.ts', import.meta.url)),
+        playground: fileURLToPath(
+          new URL('./src/playground.ts', import.meta.url)
+        )
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`,
