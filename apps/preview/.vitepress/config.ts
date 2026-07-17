@@ -3,14 +3,17 @@ import { defineConfig } from 'vitepress'
 import { themeI18n } from '@inp146/inpress/i18n'
 
 const sharedThemeConfig = {
-  color: '#14b8a6',
+  color: '#ff6090',
   playground: true,
   logo: '/logo.svg',
+  logoMonochrome: true,
+  homeLogoMonochrome: true,
   socialLinks: [
     { icon: 'github' as const, link: 'https://github.com/INP146/inpress' }
   ],
   appearanceTransition: 'fade'
 }
+const useBuiltPackage = process.env.INPRESS_USE_DIST === '1'
 
 export default defineConfig({
   title: 'InPress',
@@ -30,7 +33,7 @@ export default defineConfig({
         ...sharedThemeConfig,
         nav: [
           { text: 'Docs', link: '/guide/getting-started' },
-          { text: 'Link features', link: '/showcase/components' },
+          { text: 'Components', link: '/showcase/components' },
           { text: 'Playground', link: '/playground' }
         ],
         sidebar: [
@@ -44,8 +47,8 @@ export default defineConfig({
             ]
           },
           {
-            text: 'Link features',
-            items: [{ text: 'Links', link: '/showcase/components' }]
+            text: 'Components',
+            items: [{ text: 'Showcase', link: '/showcase/components' }]
           }
         ],
         footer: {
@@ -82,7 +85,7 @@ export default defineConfig({
         ...sharedThemeConfig,
         nav: [
           { text: '文档', link: '/zh/guide/getting-started' },
-          { text: '链接功能', link: '/zh/showcase/components' },
+          { text: '组件', link: '/zh/showcase/components' },
           { text: '主题调试', link: '/zh/playground' }
         ],
         sidebar: [
@@ -96,8 +99,8 @@ export default defineConfig({
             ]
           },
           {
-            text: '链接功能',
-            items: [{ text: '链接', link: '/zh/showcase/components' }]
+            text: '组件',
+            items: [{ text: '组件展示', link: '/zh/showcase/components' }]
           }
         ],
         footer: {
@@ -126,17 +129,19 @@ export default defineConfig({
   },
   vite: {
     resolve: {
-      alias: {
-        '@inp146/inpress/playground': fileURLToPath(
-          new URL(
-            '../../../packages/inpress/src/playground.ts',
-            import.meta.url
-          )
-        ),
-        '@inp146/inpress': fileURLToPath(
-          new URL('../../../packages/inpress/src/index.ts', import.meta.url)
-        )
-      }
+      alias: useBuiltPackage
+        ? {}
+        : {
+            '@inp146/inpress/playground': fileURLToPath(
+              new URL(
+                '../../../packages/inpress/src/playground.ts',
+                import.meta.url
+              )
+            ),
+            '@inp146/inpress': fileURLToPath(
+              new URL('../../../packages/inpress/src/index.ts', import.meta.url)
+            )
+          }
     }
   }
 })

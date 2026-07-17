@@ -13,6 +13,8 @@ export const defaultThemePlaygroundStorageKey = 'inpress-playground-v4'
 
 export interface ThemePlaygroundState {
   color: string
+  logoMonochrome: boolean
+  homeLogoMonochrome: boolean
   linkIcons: boolean
   providers: LinkIconProvider[]
   autoLinkText: boolean
@@ -42,6 +44,8 @@ export function createThemePlaygroundState(
 ): ThemePlaygroundState {
   return {
     color: theme.color ?? '',
+    logoMonochrome: theme.logoMonochrome === true,
+    homeLogoMonochrome: theme.homeLogoMonochrome === true,
     linkIcons: theme.linkIcons !== false,
     providers: Array.isArray(theme.linkIcons)
       ? [...theme.linkIcons]
@@ -80,6 +84,14 @@ export function normalizeThemePlaygroundState(
 
   return {
     color,
+    logoMonochrome:
+      typeof value.logoMonochrome === 'boolean'
+        ? value.logoMonochrome
+        : fallback.logoMonochrome,
+    homeLogoMonochrome:
+      typeof value.homeLogoMonochrome === 'boolean'
+        ? value.homeLogoMonochrome
+        : fallback.homeLogoMonochrome,
     linkIcons:
       typeof value.linkIcons === 'boolean'
         ? value.linkIcons
@@ -111,6 +123,8 @@ export function createThemePlaygroundOverrides(
 
   const overrides: Partial<InPressThemeConfig> = {
     color,
+    logoMonochrome: state.logoMonochrome,
+    homeLogoMonochrome: state.homeLogoMonochrome,
     linkIcons: state.linkIcons ? [...state.providers] : false,
     autoLinkText: state.autoLinkText,
     hideLinkUnderline: state.hideLinkUnderline,

@@ -13,6 +13,8 @@ pnpm dev
 
 文档站导入 `@inp146/inpress`，但 Vite 在开发时将其别名到 `packages/inpress/src/index.ts`。因此修改主题源码后无需发布或重新构建包，页面就会更新。
 
+仓库检查还会移除 alias，并使用生成的 `dist` 包再次构建本站，从而独立验证包导出和 CSS 自动加载，而不是只验证源码联调路径。
+
 ## 主题入口
 
 `src/index.ts` 扩展 `vitepress/theme`，保留默认主题，同时允许添加 CSS、应用初始化逻辑或布局包装层。

@@ -6,6 +6,7 @@
     "predev": "pnpm --filter @inp146/inpress build",
     "dev": "vitepress dev .",
     "build": "vitepress build .",
+    "build:dist": "INPRESS_USE_DIST=1 vitepress build .",
     "preview": "vitepress preview ."
   },
   "devDependencies": {

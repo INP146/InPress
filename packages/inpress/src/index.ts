@@ -5,6 +5,7 @@ import {
   h,
   nextTick,
   onMounted,
+  onUnmounted,
   provide,
   watch
 } from 'vue'
@@ -12,12 +13,12 @@ import { useData, useRoute, type Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
 import { Analytics, type AnalyticsConfig } from './analytics'
+import { applyAutoLinkText, observeAutoLinkText } from './auto-link-text'
 import { createColorStyle, type ThemeColor } from './color'
 import { Giscus, type GiscusConfig } from './giscus'
-import {
-  createLinkIconStyle,
-  resolveProviderLinkText
-} from './link-icons'
+import { applyHomeLogoMonochrome } from './home-logo'
+import { createLinkIconStyle } from './link-icons'
+import { applyNavLogoMonochrome } from './nav-logo'
 import {
   linkIconProviders,
   type LinkIconProvider
@@ -25,6 +26,8 @@ import {
 import { createThemeRuntime, themeRuntimeKey } from './runtime'
 
 export { linkIconProviders } from './link-icon-providers'
+export { default as ThemeCheckbox } from './components/ThemeCheckbox.vue'
+export { default as ThemeSwitch } from './components/ThemeSwitch.vue'
 export type { LinkIconProvider } from './link-icon-providers'
 export type { AnalyticsConfig } from './analytics'
 export type { ThemeColor } from './color'
@@ -39,6 +42,8 @@ export interface ThemePlaygroundConfig {
 export interface InPressThemeConfig {
   color?: ThemeColor
   playground?: boolean | ThemePlaygroundConfig
+  logoMonochrome?: boolean
+  homeLogoMonochrome?: boolean
   linkIcons?: boolean | readonly LinkIconProvider[]
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
@@ -59,41 +64,6 @@ function resolveLinkIcons(
   if (linkIcons === false) return []
   if (Array.isArray(linkIcons)) return linkIcons
   return linkIconProviders
-}
-
-function hasUrlLinkText(link: HTMLAnchorElement): boolean {
-  if (link.childElementCount > 0) return false
-
-  const text = link.textContent?.trim()
-  if (!text) return false
-
-  try {
-    return new URL(text, document.baseURI).href === link.href
-  } catch {
-    return false
-  }
-}
-
-function applyAutoLinkText(enabled: boolean): void {
-  document.querySelectorAll<HTMLAnchorElement>('.vp-doc a[href]').forEach((link) => {
-    const originalText = link.dataset.inpressAutoLinkText
-
-    if (!enabled) {
-      if (originalText !== undefined) {
-        link.textContent = originalText
-        delete link.dataset.inpressAutoLinkText
-      }
-      return
-    }
-
-    if (originalText !== undefined || !hasUrlLinkText(link)) return
-
-    const label = resolveProviderLinkText(link.href)
-    if (!label) return
-
-    link.dataset.inpressAutoLinkText = link.textContent ?? ''
-    link.textContent = label
-  })
 }
 
 function toggleAppearance(
@@ -206,6 +176,7 @@ const Layout = defineComponent({
     const route = useRoute()
     const runtime = createThemeRuntime(computed(() => theme.value))
     const effectiveTheme = runtime.theme
+    let autoLinkTextObserver: MutationObserver | undefined
     const themeStyle = computed(() =>
       [
         createColorStyle(effectiveTheme.value.color),
@@ -225,7 +196,17 @@ const Layout = defineComponent({
       }
 
       runtime.restorePlayground(storage)
+      applyAutoLinkText(
+        document,
+        effectiveTheme.value.autoLinkText !== false
+      )
+      autoLinkTextObserver = observeAutoLinkText(
+        document.body,
+        () => effectiveTheme.value.autoLinkText !== false
+      )
     })
+
+    onUnmounted(() => autoLinkTextObserver?.disconnect())
 
     provide('toggle-appearance', (event?: Event) =>
       toggleAppearance(
@@ -241,7 +222,42 @@ const Layout = defineComponent({
         if (typeof document === 'undefined') return
 
         void nextTick(() =>
-          applyAutoLinkText(effectiveTheme.value.autoLinkText !== false)
+          applyAutoLinkText(
+            document,
+            effectiveTheme.value.autoLinkText !== false
+          )
+        )
+      },
+      { flush: 'post', immediate: true }
+    )
+
+    watch(
+      [
+        () => route.path,
+        () => isDark.value,
+        () => effectiveTheme.value.logoMonochrome
+      ],
+      () => {
+        if (typeof document === 'undefined') return
+
+        void nextTick(() =>
+          applyNavLogoMonochrome(
+            effectiveTheme.value.logoMonochrome === true
+          )
+        )
+      },
+      { flush: 'post', immediate: true }
+    )
+
+    watch(
+      [() => route.path, () => effectiveTheme.value.homeLogoMonochrome],
+      () => {
+        if (typeof document === 'undefined') return
+
+        void nextTick(() =>
+          applyHomeLogoMonochrome(
+            effectiveTheme.value.homeLogoMonochrome === true
+          )
         )
       },
       { flush: 'post', immediate: true }
@@ -261,10 +277,14 @@ const Layout = defineComponent({
         h(
           DefaultTheme.Layout,
           {
-            class:
-              effectiveTheme.value.hideLinkUnderline === false
-                ? undefined
-                : 'inpress-hide-link-underline'
+            class: {
+              'inpress-hide-link-underline':
+                effectiveTheme.value.hideLinkUnderline !== false,
+              'inpress-logo-monochrome':
+                effectiveTheme.value.logoMonochrome === true,
+              'inpress-home-logo-monochrome':
+                effectiveTheme.value.homeLogoMonochrome === true
+            }
           },
           {
             'doc-after': () => {

@@ -19,14 +19,14 @@
       "types": "./dist/playground.d.ts",
       "import": "./dist/playground.js"
     },
-    "./style.css": "./dist/style.css",
+    "./style.css": "./dist/index.css",
     "./package.json": "./package.json"
   },
   "sideEffects": [
     "**/*.css"
   ],
   "scripts": {
-    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist",
+    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist && tsx scripts/verify-build.ts",
     "dev": "vite build --watch",
     "check": "vue-tsc --noEmit && tsx --test test/*.test.ts"
   },

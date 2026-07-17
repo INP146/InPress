@@ -13,7 +13,7 @@ withDefaults(
 
 <template>
   <button
-    class="inpress-playground-switch"
+    class="inpress-switch"
     type="button"
     role="switch"
     :aria-checked="model"
@@ -25,7 +25,7 @@ withDefaults(
 </template>
 
 <style scoped>
-.inpress-playground-switch {
+.inpress-switch {
   position: relative;
   display: block;
   flex: 0 0 40px;
@@ -41,8 +41,13 @@ withDefaults(
     background-color 0.25s !important;
 }
 
-.inpress-playground-switch:hover:not(:disabled) {
-  border-color: var(--vp-c-brand-1);
+.inpress-switch:hover:not(:disabled) {
+  border-color: var(--inpress-c-accent, var(--vp-c-brand-1));
+}
+
+.inpress-switch:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
 }
 
 .check {
@@ -57,23 +62,23 @@ withDefaults(
   transition: transform 0.25s !important;
 }
 
-.inpress-playground-switch[aria-checked='true'] .check {
+.inpress-switch[aria-checked='true'] .check {
   background-color: var(--vp-c-white);
   transform: translateX(18px);
 }
 
-.inpress-playground-switch[aria-checked='true'] {
-  border-color: var(--vp-c-brand-1);
-  background-color: var(--vp-c-brand-1);
+.inpress-switch[aria-checked='true'] {
+  border-color: var(--inpress-c-accent, var(--vp-c-brand-1));
+  background-color: var(--inpress-c-accent, var(--vp-c-brand-1));
 }
 
-.inpress-playground-switch:disabled {
+.inpress-switch:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .inpress-playground-switch,
+  .inpress-switch,
   .check {
     transition: none !important;
   }

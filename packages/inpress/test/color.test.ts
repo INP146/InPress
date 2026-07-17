@@ -22,12 +22,14 @@ function composite(color: string, background: string): Rgb {
   }
 }
 
-test('generates accessible semantic palettes across representative hues', () => {
+test('generates semantic palettes with accessible text and button tones', () => {
   const seeds = [
     '#14b8a6',
     '#2563eb',
     '#facc15',
     '#ef4444',
+    '#ff7aa9',
+    '#ffa3bc',
     '#777777',
     '#000000',
     '#ffffff'
@@ -42,6 +44,7 @@ test('generates accessible semantic palettes across representative hues', () => 
         scale.brand1,
         scale.brand2,
         scale.brand3,
+        scale.accent,
         scale.buttonBg,
         scale.buttonHoverBg,
         scale.buttonActiveBg
@@ -51,20 +54,37 @@ test('generates accessible semantic palettes across representative hues', () => 
       assert.doesNotMatch(scale.soft, /NaN|undefined/)
     }
 
-    assert(wcagContrast(palette.light.brand1, '#ffffff') >= 6.5)
-    assert(wcagContrast(palette.light.brand2, '#ffffff') >= 5.4)
-    assert(wcagContrast(palette.light.brand3, '#ffffff') >= 4.5)
-    assert(wcagContrast(palette.dark.brand1, '#1b1b1f') >= 7)
-    assert(wcagContrast(palette.dark.brand2, '#1b1b1f') >= 4.5)
-    assert(wcagContrast(palette.dark.brand3, '#ffffff') >= 5)
-    assert(wcagContrast(palette.dark.buttonBg, '#ffffff') >= 5)
-    assert(wcagContrast(palette.dark.buttonHoverBg, '#ffffff') >= 4.5)
-    assert(wcagContrast(palette.dark.buttonActiveBg, '#ffffff') >= 6)
+    assert(wcagContrast(palette.light.brand1, '#ffffff') >= 5.45)
+    assert(wcagContrast(palette.light.brand2, '#ffffff') >= 4.45)
+    assert(wcagContrast(palette.dark.brand1, '#1b1b1f') >= 5.45)
+    assert(wcagContrast(palette.dark.brand2, '#1b1b1f') >= 4.45)
+    assert(wcagContrast(palette.dark.brand3, '#ffffff') >= 4.45)
+
+    for (const scale of [palette.light, palette.dark]) {
+      assert(wcagContrast(scale.buttonBg, '#ffffff') >= 4.45)
+      assert(wcagContrast(scale.buttonHoverBg, '#ffffff') >= 4.95)
+      assert(wcagContrast(scale.buttonActiveBg, '#ffffff') >= 5.45)
+    }
 
     const lightSoft = composite(palette.light.soft, '#ffffff')
     const darkSoft = composite(palette.dark.soft, '#1b1b1f')
     assert(wcagContrast(palette.light.brand1, lightSoft) >= 4.5)
     assert(wcagContrast(palette.dark.brand1, darkSoft) >= 4.5)
+  }
+})
+
+test('uses light seeds directly for solid accents and controls', () => {
+  for (const seed of ['#ff658c', '#ffa3bc']) {
+    const palette = createColorPalette(seed)
+    const style = createColorStyle(seed)
+
+    assert(palette)
+    assert.equal(palette.light.brand3, seed)
+    assert.equal(palette.light.accent, seed)
+    assert.equal(palette.dark.brand1, seed)
+    assert.equal(palette.dark.accent, seed)
+    assert.match(style, new RegExp(`--inpress-c-accent:${seed}`))
+    assert.match(style, /--vp-button-brand-text:#ffffff/)
   }
 })
 
@@ -83,6 +103,7 @@ test('emits config styles above ordinary root declarations', () => {
   assert.match(style, /^:root:root\{/)
   assert.match(style, /:root:root\.dark\{/)
   assert.match(style, /--vp-c-brand-1:/)
+  assert.match(style, /--inpress-c-accent:/)
   assert.match(style, /--vp-button-brand-active-bg:/)
   assert.doesNotMatch(style, /NaN|undefined|body/)
 })

@@ -5,12 +5,15 @@ hero:
   name: InPress
   text: Documentation and development site
   tagline: Build InPress in packages/inpress, document its API here, and validate both together.
+  image:
+    src: /logo.svg
+    alt: Logo
   actions:
     - theme: brand
       text: Read the docs
       link: /guide/getting-started
     - theme: alt
-      text: View link features
+      text: View components
       link: /showcase/components
 
 features:

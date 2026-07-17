@@ -12,7 +12,8 @@ import {
   type ThemePlaygroundState
 } from '../playground-state'
 import { useThemeRuntime } from '../runtime'
-import ThemeSwitch from './ThemeSwitch.vue'
+import ThemeCheckbox from '../components/ThemeCheckbox.vue'
+import ThemeSwitch from '../components/ThemeSwitch.vue'
 
 const FALLBACK_PICKER_COLOR = '#3a5ccc'
 const paletteFields = [
@@ -71,6 +72,8 @@ const paletteModes = computed(() => {
 
 function assignState(value: ThemePlaygroundState): void {
   state.color = value.color
+  state.logoMonochrome = value.logoMonochrome
+  state.homeLogoMonochrome = value.homeLogoMonochrome
   state.linkIcons = value.linkIcons
   state.providers = [...value.providers]
   state.autoLinkText = value.autoLinkText
@@ -107,10 +110,10 @@ watch(
   { deep: true, flush: 'sync' }
 )
 
-function toggleProvider(provider: LinkIconProvider): void {
-  state.providers = state.providers.includes(provider)
-    ? state.providers.filter((item) => item !== provider)
-    : [...state.providers, provider]
+function setProvider(provider: LinkIconProvider, checked: boolean): void {
+  state.providers = checked
+    ? [...new Set([...state.providers, provider])]
+    : state.providers.filter((item) => item !== provider)
 }
 
 function updateColorFromPicker(event: Event): void {
@@ -192,6 +195,22 @@ async function copyConfig(): Promise<void> {
         <h2>{{ label('Features', '功能') }}</h2>
 
         <div class="inpress-playground-toggle-row">
+          <span>{{ label('Monochrome logo', '单色 Logo') }}</span>
+          <ThemeSwitch
+            v-model="state.logoMonochrome"
+            :aria-label="label('Monochrome logo', '单色 Logo')"
+          />
+        </div>
+
+        <div class="inpress-playground-toggle-row">
+          <span>{{ label('Monochrome home logo', '主页 Logo 单色') }}</span>
+          <ThemeSwitch
+            v-model="state.homeLogoMonochrome"
+            :aria-label="label('Monochrome home logo', '主页 Logo 单色')"
+          />
+        </div>
+
+        <div class="inpress-playground-toggle-row">
           <span>{{ label('Provider link icons', '平台链接图标') }}</span>
           <ThemeSwitch
             v-model="state.linkIcons"
@@ -200,14 +219,14 @@ async function copyConfig(): Promise<void> {
         </div>
 
         <div v-if="state.linkIcons" class="inpress-playground-provider-grid">
-          <label v-for="provider in linkIconProviders" :key="provider">
-            <input
-              type="checkbox"
-              :checked="state.providers.includes(provider)"
-              @change="toggleProvider(provider)"
-            />
-            <span>{{ provider }}</span>
-          </label>
+          <ThemeCheckbox
+            v-for="provider in linkIconProviders"
+            :key="provider"
+            :model-value="state.providers.includes(provider)"
+            @update:model-value="setProvider(provider, $event)"
+          >
+            {{ provider }}
+          </ThemeCheckbox>
         </div>
 
         <div class="inpress-playground-toggle-row">
@@ -293,3 +312,268 @@ async function copyConfig(): Promise<void> {
     </footer>
   </div>
 </template>
+
+<style scoped>
+.inpress-playground {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+  margin: 24px 0;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg);
+  font-size: 14px;
+}
+
+.inpress-playground-body {
+  min-width: 0;
+}
+
+.inpress-playground-section {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.inpress-playground-body .inpress-playground-section:last-child {
+  border-bottom: 0;
+}
+
+.inpress-playground-section h2,
+.inpress-playground-output-section h2 {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.inpress-playground-segmented {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px;
+  padding: 2px;
+  border-radius: 6px;
+  background: var(--vp-c-default-soft);
+}
+
+.inpress-playground-segmented button {
+  min-height: 32px;
+  border: 0;
+  border-radius: 4px;
+  color: var(--vp-c-text-2);
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.inpress-playground-segmented button.active {
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg);
+  box-shadow: var(--vp-shadow-1);
+}
+
+.inpress-playground-color-row {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) 32px minmax(108px, 132px);
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+}
+
+.inpress-playground-color-row > span,
+.inpress-playground-toggle-row > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.inpress-playground-color-row input[type='color'] {
+  width: 32px;
+  height: 32px;
+  padding: 2px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  background: var(--vp-c-bg);
+  cursor: pointer;
+}
+
+.inpress-playground-color-row input[type='text'] {
+  grid-column: 3;
+  width: 100%;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg);
+  font: 12px/1.4 var(--vp-font-family-mono);
+}
+
+.inpress-playground-color-row input[aria-invalid='true'] {
+  border-color: var(--vp-c-danger-1);
+}
+
+.inpress-playground-palette {
+  display: grid;
+  gap: 8px;
+}
+
+.inpress-playground-palette-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+}
+
+.inpress-playground-palette-row > div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  height: 28px;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 4px;
+}
+
+.inpress-playground-swatch {
+  min-width: 0;
+}
+
+.inpress-playground-color-row input:focus-visible,
+.inpress-playground-segmented button:focus-visible,
+.inpress-playground-footer button:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+
+.inpress-playground-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 32px;
+}
+
+.inpress-playground-provider-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  background: var(--vp-c-bg-soft);
+}
+
+.inpress-playground-provider-grid :deep(.inpress-checkbox) {
+  width: 100%;
+  min-height: 32px;
+  padding: 0 8px;
+  border-radius: 4px;
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.inpress-playground-provider-grid
+  :deep(.inpress-checkbox:hover:not(.is-disabled)) {
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-default-soft);
+}
+
+.inpress-playground-provider-grid :deep(.inpress-checkbox.is-checked) {
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-brand-soft);
+}
+
+.inpress-playground-provider-grid :deep(.inpress-checkbox .label) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inpress-playground-output {
+  max-height: 420px;
+  margin: 0;
+  overflow: auto;
+  border-radius: 6px;
+  padding: 12px;
+  background: var(--vp-code-block-bg);
+  font-size: 11px;
+  line-height: 1.55;
+  white-space: pre;
+}
+
+.inpress-playground-output-section {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+  padding: 20px;
+  border-left: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-alt);
+}
+
+.inpress-playground-footer {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.inpress-playground-footer button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.inpress-playground-footer button.alt {
+  border-color: var(--vp-c-divider);
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg);
+}
+
+.inpress-playground-footer button.brand {
+  border-color: var(--vp-button-brand-border, transparent);
+  color: var(--vp-button-brand-text, var(--vp-c-white));
+  background: var(--vp-button-brand-bg, var(--vp-c-brand-1));
+}
+
+@media (max-width: 768px) {
+  .inpress-playground {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .inpress-playground-output-section {
+    border-top: 1px solid var(--vp-c-divider);
+    border-left: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .inpress-playground-section,
+  .inpress-playground-output-section {
+    padding: 16px;
+  }
+
+  .inpress-playground-provider-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .inpress-playground-footer {
+    padding: 12px 16px;
+  }
+}
+</style>

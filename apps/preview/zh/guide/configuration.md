@@ -10,11 +10,7 @@ import theme from '@inp146/inpress'
 export default theme
 ```
 
-使用构建后的包时，需要同时导入主题样式：
-
-```ts
-import '@inp146/inpress/style.css'
-```
+主题入口会自动加载核心与组件样式。需要只引入 CSS 时，仍可使用 `style.css` 子路径。
 
 ## 主题设置
 
@@ -24,6 +20,8 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   themeConfig: {
     color: '#0f766e',
+    logoMonochrome: true,
+    homeLogoMonochrome: true,
     linkIcons: ['github', 'youtube'],
     hideLinkUnderline: false,
     appearanceTransition: false,
@@ -44,6 +42,8 @@ export default defineConfig({
 | 设置 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `color` | `ThemeColor` | - | 用于生成具有可读对比度的浅色与深色品牌、按钮 token；仅接受 `#RGB` 或 `#RRGGBB`。 |
+| `logoMonochrome` | `boolean` | `false` | 导航栏 Logo 使用与旁边站点标题相同的颜色。 |
+| `homeLogoMonochrome` | `boolean` | `false` | 将主页 Hero 图片作为单色蒙版，并使用当前品牌色 token 着色。 |
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | 默认启用全部平台图标。设为 `false` 关闭，传入列表可只启用部分平台。 |
 | `autoLinkText` | `boolean` | `true` | 将无显式文案的 GitHub、GitLab URL 显示为 `user/repo`，npm 包 URL 显示为包名。设为 `false` 保留 URL 文本。 |
 | `hideLinkUnderline` | `boolean` | `true` | 隐藏 `.vp-doc` 内链接的文字下划线。设为 `false` 恢复 VitePress 默认样式。 |
@@ -173,7 +173,9 @@ theme: {
 | `AnalyticsConfig` | `@inp146/inpress` | Google Analytics 与 Microsoft Clarity 的配置类型。 |
 | `GiscusConfig` | `@inp146/inpress` | Giscus 小组件的配置类型。 |
 | `InPressThemeConfig` | `@inp146/inpress` | `themeConfig` 中主题专属字段的类型。 |
+| `ThemeCheckbox` | `@inp146/inpress` | 带文案、焦点、选中和禁用状态的通用 checkbox 控件。 |
 | `ThemeConfigPlayground` | `@inp146/inpress/playground` | 页面内运行时编辑器，修改会作用于当前站点会话。 |
+| `ThemeSwitch` | `@inp146/inpress` | 用于立即生效布尔设置的通用 switch 控件。 |
 
 ## 界面语言
 

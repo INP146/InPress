@@ -45,6 +45,8 @@ function createBaseTheme(): InPressThemeConfig {
   return {
     color: '#2563eb',
     playground: true,
+    logoMonochrome: true,
+    homeLogoMonochrome: true,
     appearanceTransition: 'fade',
     giscus: englishGiscus
   }
@@ -62,11 +64,15 @@ test('restores global playground settings and resolves locale config dynamically
   runtime.setPlaygroundState({
     ...createThemePlaygroundState(baseTheme.value),
     color: '#ef4444',
+    logoMonochrome: false,
+    homeLogoMonochrome: false,
     hideLinkUnderline: false,
     giscus: undefined
   })
 
   assert.equal(runtime.theme.value.color, '#ef4444')
+  assert.equal(runtime.theme.value.logoMonochrome, false)
+  assert.equal(runtime.theme.value.homeLogoMonochrome, false)
   assert.equal(runtime.theme.value.hideLinkUnderline, false)
   assert.deepEqual(runtime.theme.value.giscus, englishGiscus)
   assert(storage.getItem(defaultThemePlaygroundStorageKey))
@@ -81,11 +87,15 @@ test('restores global playground settings and resolves locale config dynamically
   restored.restorePlayground(storage)
   assert.equal(restored.playgroundActive.value, true)
   assert.equal(restored.theme.value.color, '#ef4444')
+  assert.equal(restored.theme.value.logoMonochrome, false)
+  assert.equal(restored.theme.value.homeLogoMonochrome, false)
   assert.deepEqual(restored.theme.value.giscus, chineseGiscus)
 
   restored.reset()
   assert.equal(restored.playgroundActive.value, false)
   assert.equal(restored.theme.value.color, '#2563eb')
+  assert.equal(restored.theme.value.logoMonochrome, true)
+  assert.equal(restored.theme.value.homeLogoMonochrome, true)
   assert.equal(storage.getItem(defaultThemePlaygroundStorageKey), null)
 })
 

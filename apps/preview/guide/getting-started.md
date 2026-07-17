@@ -13,6 +13,8 @@ pnpm dev
 
 The documentation site imports `@inp146/inpress`, but Vite aliases it to `packages/inpress/src/index.ts` during development. Changes to theme source therefore update the site without publishing or rebuilding the package.
 
+The repository check also builds this site against the generated `dist` package without aliases, so package exports and automatic CSS loading are verified separately from the source-linked development path.
+
 ## Theme entry
 
 `src/index.ts` extends `vitepress/theme`, which preserves the default theme while allowing CSS, app setup, or a wrapped layout.

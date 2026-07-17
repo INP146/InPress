@@ -17,6 +17,11 @@ import youtubeIcon from './assets/youtube.svg?url'
 import zhihuIcon from './assets/zhihu.svg?url'
 import juejinIcon from './assets/juejin.svg?url'
 import type { LinkIconProvider } from './link-icon-providers'
+import {
+  githubLinkPrefixes,
+  gitlabLinkPrefixes,
+  npmLinkPrefixes
+} from './link-text'
 
 type ProviderIconDefinition = {
   icon: string
@@ -25,51 +30,21 @@ type ProviderIconDefinition = {
   inlineSize?: string
   aspectRatio?: string
   urls: readonly string[]
-  getLinkText?: (url: URL) => string | undefined
-}
-
-function decodePathSegment(segment: string): string {
-  try {
-    return decodeURIComponent(segment)
-  } catch {
-    return segment
-  }
-}
-
-function getRepositoryLinkText(url: URL): string | undefined {
-  const [owner, repository] = url.pathname
-    .split('/')
-    .filter(Boolean)
-    .map(decodePathSegment)
-
-  if (!owner) return undefined
-  return repository ? `${owner}/${repository}` : owner
-}
-
-function getNpmPackageLinkText(url: URL): string | undefined {
-  const path = url.pathname.split('/').filter(Boolean).map(decodePathSegment)
-
-  return path[0] === 'package' && path.length > 1
-    ? path.slice(1).join('/')
-    : undefined
 }
 
 const providerIcons = {
   github: {
     icon: githubIcon,
     monochrome: true,
-    urls: ['https://github.com/', 'https://www.github.com/'],
-    getLinkText: getRepositoryLinkText
+    urls: githubLinkPrefixes
   },
   gitlab: {
     icon: gitlabIcon,
-    urls: ['https://gitlab.com/', 'https://www.gitlab.com/'],
-    getLinkText: getRepositoryLinkText
+    urls: gitlabLinkPrefixes
   },
   npm: {
     icon: npmIcon,
-    urls: ['https://npmjs.com/', 'https://www.npmjs.com/'],
-    getLinkText: getNpmPackageLinkText
+    urls: npmLinkPrefixes
   },
   discord: {
     icon: discordIcon,
@@ -151,24 +126,6 @@ const providerIcons = {
     ]
   }
 } as const satisfies Record<LinkIconProvider, ProviderIconDefinition>
-
-export function resolveProviderLinkText(href: string): string | undefined {
-  let url: URL
-
-  try {
-    url = new URL(href)
-  } catch {
-    return undefined
-  }
-
-  const providerIcon = Object.values(providerIcons).find(({ urls }) =>
-    urls.some((providerUrl) => url.href.startsWith(providerUrl))
-  )
-
-  return providerIcon && 'getLinkText' in providerIcon
-    ? providerIcon.getLinkText(url)
-    : undefined
-}
 
 export function createLinkIconStyle(
   providers: readonly LinkIconProvider[] = []

@@ -8,7 +8,7 @@
 pnpm --filter @inp146/inpress build
 ```
 
-发布包只包含 `dist`，导出主题入口和 `@inp146/inpress/style.css`。
+发布包只包含 `dist`。主题与 playground 入口会自动加载各自拆分后的 CSS，同时保留 `@inp146/inpress/style.css` 作为仅核心样式的导出。
 
 消费方应与 VitePress 2 一同安装此包：
 

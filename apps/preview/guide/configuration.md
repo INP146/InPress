@@ -10,11 +10,7 @@ import theme from '@inp146/inpress'
 export default theme
 ```
 
-When consuming the built package, import its styles alongside the theme entry:
-
-```ts
-import '@inp146/inpress/style.css'
-```
+The theme entry loads its own core and component styles. The `style.css` subpath remains available for consumers that need a manual CSS-only import.
 
 ## Theme settings
 
@@ -24,6 +20,8 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   themeConfig: {
     color: '#0f766e',
+    logoMonochrome: true,
+    homeLogoMonochrome: true,
     linkIcons: ['github', 'youtube'],
     hideLinkUnderline: false,
     appearanceTransition: false,
@@ -44,6 +42,8 @@ export default defineConfig({
 | Setting | Type | Default | Description |
 | --- | --- | --- | --- |
 | `color` | `ThemeColor` | - | A `#RGB` or `#RRGGBB` seed used to generate accessible light and dark brand and button tokens. |
+| `logoMonochrome` | `boolean` | `false` | Renders the navigation logo in the same color as the adjacent site title. |
+| `homeLogoMonochrome` | `boolean` | `false` | Uses the home Hero image as a monochrome mask colored with the current brand token. |
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | Enables all provider icons by default. Set `false` to disable them, or pass a list to enable a subset. |
 | `autoLinkText` | `boolean` | `true` | Replaces bare GitHub and GitLab URLs with `user/repo`, and bare npm package URLs with the package name. Set `false` to keep the URL text. |
 | `hideLinkUnderline` | `boolean` | `true` | Hides text underlines for links inside `.vp-doc`. Set `false` to restore the VitePress default. |
@@ -173,7 +173,9 @@ These CSS custom properties adjust every provider icon:
 | `AnalyticsConfig` | `@inp146/inpress` | Google Analytics and Microsoft Clarity configuration. |
 | `GiscusConfig` | `@inp146/inpress` | Giscus widget configuration. |
 | `InPressThemeConfig` | `@inp146/inpress` | Type of the theme-specific fields in `themeConfig`. |
+| `ThemeCheckbox` | `@inp146/inpress` | Reusable checkbox control with label, focus, checked, and disabled states. |
 | `ThemeConfigPlayground` | `@inp146/inpress/playground` | Inline runtime editor whose changes apply across the current site session. |
+| `ThemeSwitch` | `@inp146/inpress` | Reusable switch control for immediately applied boolean settings. |
 
 ## Interface language
 

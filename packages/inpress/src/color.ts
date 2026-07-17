@@ -18,6 +18,7 @@ export interface ThemeColorScale {
   brand2: string
   brand3: string
   soft: string
+  accent: string
   buttonBg: string
   buttonHoverBg: string
   buttonActiveBg: string
@@ -31,13 +32,16 @@ export interface ThemeColorPalette {
 const HEX_COLOR_RE = /^#(?:[\da-f]{3}|[\da-f]{6})$/i
 const LIGHT_BACKGROUND = '#ffffff'
 const DARK_BACKGROUND = '#1b1b1f'
-const MAX_CHROMA = 0.24
+const TEXT_CONTRAST = 5.5
+const HOVER_CONTRAST = 4.5
+const SOLID_CONTRAST = 4.5
 
 useMode(modeRgb)
 useMode(modeLrgb)
 useMode(modeOklch)
 
 const toOklch = converter('oklch')
+const toRgb = converter('rgb')
 const mapToSrgb = toGamut('rgb', 'oklch')
 
 function normalizeColor(color: string | undefined): ThemeColor | undefined {
@@ -45,47 +49,47 @@ function normalizeColor(color: string | undefined): ThemeColor | undefined {
   return color.toLowerCase() as ThemeColor
 }
 
-function createCandidate(
-  seed: Oklch,
-  lightness: number,
-  chromaScale: number
-): Rgb {
+function createCandidate(seed: Oklch, lightness: number): Rgb {
   return mapToSrgb({
     mode: 'oklch',
-    l: lightness,
-    c: Math.min(seed.c, MAX_CHROMA) * chromaScale,
+    l: Math.min(1, Math.max(0, lightness)),
+    c: seed.c,
     h: seed.h
   })
 }
 
-function findTone(
+function ensureToneContrast(
   seed: Oklch,
+  lightness: number,
   background: string,
   targetContrast: number,
-  direction: 'darker' | 'lighter',
-  chromaScale: number
+  direction: 'darker' | 'lighter'
 ): Rgb {
-  let low = 0
-  let high = 1
-  let best = createCandidate(seed, direction === 'darker' ? low : high, chromaScale)
+  const resolvedLightness = Math.min(1, Math.max(0, lightness))
+  const initial = createCandidate(seed, resolvedLightness)
+  if (wcagContrast(initial, background) >= targetContrast) return initial
+
+  let low = direction === 'darker' ? 0 : resolvedLightness
+  let high = direction === 'darker' ? resolvedLightness : 1
+  let best = createCandidate(seed, direction === 'darker' ? low : high)
 
   for (let index = 0; index < 24; index += 1) {
-    const lightness = (low + high) / 2
-    const candidate = createCandidate(seed, lightness, chromaScale)
+    const candidateLightness = (low + high) / 2
+    const candidate = createCandidate(seed, candidateLightness)
     const passes = wcagContrast(candidate, background) >= targetContrast
 
     if (direction === 'darker') {
       if (passes) {
         best = candidate
-        low = lightness
+        low = candidateLightness
       } else {
-        high = lightness
+        high = candidateLightness
       }
     } else if (passes) {
       best = candidate
-      high = lightness
+      high = candidateLightness
     } else {
-      low = lightness
+      low = candidateLightness
     }
   }
 
@@ -96,8 +100,34 @@ function toHex(color: Rgb): string {
   return formatHex(color).toLowerCase()
 }
 
-function toSoftColor(seed: Oklch, lightness: number, alpha: number): string {
-  const color = createCandidate(seed, lightness, 0.9)
+function composite(color: Rgb, background: Rgb, alpha: number): Rgb {
+  return {
+    mode: 'rgb',
+    r: color.r * alpha + background.r * (1 - alpha),
+    g: color.g * alpha + background.g * (1 - alpha),
+    b: color.b * alpha + background.b * (1 - alpha)
+  }
+}
+
+function toSoftColor(
+  color: Rgb,
+  background: string,
+  foreground: Rgb,
+  maxAlpha: number
+): string {
+  const backgroundColor = toRgb(background)
+  let alpha = maxAlpha
+
+  if (backgroundColor) {
+    while (
+      alpha > 0 &&
+      wcagContrast(foreground, composite(color, backgroundColor, alpha)) < 4.5
+    ) {
+      alpha -= 0.001
+    }
+  }
+
+  alpha = Math.max(0, Math.floor(alpha * 1000) / 1000)
   const toChannel = (value: number) =>
     Math.round(Math.min(1, Math.max(0, value)) * 255)
   const red = toChannel(color.r)
@@ -114,37 +144,88 @@ export function createColorPalette(color: string | undefined): ThemeColorPalette
   const seed = toOklch(normalized)
   if (!seed) return undefined
 
-  const lightBrand1 = findTone(seed, LIGHT_BACKGROUND, 6.55, 'darker', 0.85)
-  const lightBrand2 = findTone(seed, LIGHT_BACKGROUND, 5.45, 'darker', 0.95)
-  const lightBrand3 = findTone(seed, LIGHT_BACKGROUND, 4.55, 'darker', 1)
-  const darkBrand1 = findTone(seed, DARK_BACKGROUND, 7.05, 'lighter', 0.55)
-  const darkBrand2 = findTone(seed, DARK_BACKGROUND, 4.55, 'lighter', 0.85)
-  const darkBrand3 = findTone(seed, LIGHT_BACKGROUND, 5.05, 'darker', 1)
+  const accent = createCandidate(seed, seed.l)
+  const buttonHover = ensureToneContrast(
+    seed,
+    seed.l - 0.06,
+    LIGHT_BACKGROUND,
+    5,
+    'darker'
+  )
+  const buttonActive = ensureToneContrast(
+    seed,
+    seed.l - 0.12,
+    LIGHT_BACKGROUND,
+    5.5,
+    'darker'
+  )
+  const buttonBackground = ensureToneContrast(
+    seed,
+    seed.l,
+    LIGHT_BACKGROUND,
+    4.5,
+    'darker'
+  )
+  const lightBrand1 = ensureToneContrast(
+    seed,
+    seed.l - 0.12,
+    LIGHT_BACKGROUND,
+    TEXT_CONTRAST,
+    'darker'
+  )
+  const lightBrand2 = ensureToneContrast(
+    seed,
+    seed.l - 0.06,
+    LIGHT_BACKGROUND,
+    HOVER_CONTRAST,
+    'darker'
+  )
+  const darkBrand1 = ensureToneContrast(
+    seed,
+    seed.l,
+    DARK_BACKGROUND,
+    TEXT_CONTRAST,
+    'lighter'
+  )
+  const darkBrand2 = ensureToneContrast(
+    seed,
+    seed.l - 0.06,
+    DARK_BACKGROUND,
+    HOVER_CONTRAST,
+    'lighter'
+  )
+  const darkBrand3 = ensureToneContrast(
+    seed,
+    seed.l - 0.12,
+    LIGHT_BACKGROUND,
+    SOLID_CONTRAST,
+    'darker'
+  )
+  const accentHex = toHex(accent)
+  const buttonBackgroundHex = toHex(buttonBackground)
+  const buttonHoverHex = toHex(buttonHover)
+  const buttonActiveHex = toHex(buttonActive)
 
   return {
     light: {
       brand1: toHex(lightBrand1),
       brand2: toHex(lightBrand2),
-      brand3: toHex(lightBrand3),
-      soft: toSoftColor(seed, 0.68, 0.14),
-      buttonBg: toHex(lightBrand3),
-      buttonHoverBg: toHex(lightBrand2),
-      buttonActiveBg: toHex(lightBrand1)
+      brand3: accentHex,
+      soft: toSoftColor(accent, LIGHT_BACKGROUND, lightBrand1, 0.14),
+      accent: accentHex,
+      buttonBg: buttonBackgroundHex,
+      buttonHoverBg: buttonHoverHex,
+      buttonActiveBg: buttonActiveHex
     },
     dark: {
       brand1: toHex(darkBrand1),
       brand2: toHex(darkBrand2),
       brand3: toHex(darkBrand3),
-      soft: toSoftColor(seed, 0.68, 0.16),
-      buttonBg: toHex(
-        findTone(seed, LIGHT_BACKGROUND, 5.05, 'darker', 1)
-      ),
-      buttonHoverBg: toHex(
-        findTone(seed, LIGHT_BACKGROUND, 4.55, 'darker', 1)
-      ),
-      buttonActiveBg: toHex(
-        findTone(seed, LIGHT_BACKGROUND, 6.05, 'darker', 0.9)
-      )
+      soft: toSoftColor(accent, DARK_BACKGROUND, darkBrand1, 0.16),
+      accent: accentHex,
+      buttonBg: buttonBackgroundHex,
+      buttonHoverBg: buttonHoverHex,
+      buttonActiveBg: buttonActiveHex
     }
   }
 }
@@ -155,6 +236,7 @@ function createDeclarations(scale: ThemeColorScale): string {
     `--vp-c-brand-2:${scale.brand2}`,
     `--vp-c-brand-3:${scale.brand3}`,
     `--vp-c-brand-soft:${scale.soft}`,
+    `--inpress-c-accent:${scale.accent}`,
     '--vp-button-brand-border:transparent',
     '--vp-button-brand-text:#ffffff',
     `--vp-button-brand-bg:${scale.buttonBg}`,

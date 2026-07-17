@@ -8,7 +8,7 @@ Build the package:
 pnpm --filter @inp146/inpress build
 ```
 
-The published package contains only `dist`. It exports the theme entry point and `@inp146/inpress/style.css`.
+The published package contains only `dist`. The theme and playground entries load their own split CSS automatically; `@inp146/inpress/style.css` remains available as a core CSS-only export.
 
 Consumers install the package alongside VitePress 2:
 
