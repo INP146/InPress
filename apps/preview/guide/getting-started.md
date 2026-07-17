@@ -17,30 +17,36 @@ The documentation site imports `@inp146/inpress`, but Vite aliases it to `packag
 
 `src/index.ts` extends `vitepress/theme`, which preserves the default theme while allowing CSS, app setup, or a wrapped layout.
 
-## Brand tokens
+## Brand color
 
-The package has no fixed brand colors. Configure VitePress variables directly in the consuming site's `themeConfig`:
+The package has no fixed brand colors. Provide one `#RGB` or `#RRGGBB` seed in the consuming site's `themeConfig`; InPress derives the light and dark brand and button tokens from it:
 
 ```ts
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    cssVars: {
-      root: {
-        '--vp-c-brand-1': '#2563eb',
-        '--vp-c-brand-2': '#3b82f6',
-        '--vp-c-brand-3': '#60a5fa'
-      },
-      dark: {
-        '--vp-c-brand-1': '#60a5fa'
-      }
-    }
+    color: '#2563eb'
   }
 })
 ```
 
-`cssVars` accepts any CSS custom property, including VitePress tokens and theme tokens documented by this package.
+The generated declarations have higher selector specificity than ordinary site CSS. Omit `color` when the site must manage its brand palette manually. Define other theme tokens in a site stylesheet:
+
+```ts
+// .vitepress/theme/index.ts
+import theme from '@inp146/inpress'
+import './custom.css'
+
+export default theme
+```
+
+```css
+/* .vitepress/theme/custom.css */
+:root {
+  --inpress-marker-thickness: 10px;
+}
+```
 
 ## Link underlines
 

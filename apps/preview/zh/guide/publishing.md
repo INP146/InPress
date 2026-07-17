@@ -18,11 +18,9 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    cssVars: {
-      root: {
-        '--vp-c-brand-1': '#2563eb'
-      }
-    }
+    color: '#2563eb'
   }
 })
 ```
+
+`color` 接受一个 `#RGB` 或 `#RRGGBB` 颜色种子，并生成浅色与深色模式的品牌和按钮 token。消费方需要在 CSS 中自行管理这些 token 时，请省略该配置。

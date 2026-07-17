@@ -16,8 +16,6 @@ When consuming the built package, import its styles alongside the theme entry:
 import '@inp146/inpress/style.css'
 ```
 
-`createTheme()` is also exported for programmatic composition and currently accepts no options. Site-specific settings belong directly in `themeConfig`.
-
 ## Theme settings
 
 ```ts
@@ -25,14 +23,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    cssVars: {
-      root: {
-        '--vp-c-brand-1': '#0f766e'
-      },
-      dark: {
-        '--vp-c-brand-1': '#2dd4bf'
-      }
-    },
+    color: '#0f766e',
     linkIcons: ['github', 'youtube'],
     hideLinkUnderline: false,
     appearanceTransition: false,
@@ -52,32 +43,40 @@ export default defineConfig({
 
 | Setting | Type | Default | Description |
 | --- | --- | --- | --- |
-| `cssVars.root` | `Record<\`--${string}\`, string \| number>` | - | CSS custom properties applied to `:root`. |
-| `cssVars.dark` | `Record<\`--${string}\`, string \| number>` | - | CSS custom properties applied to `:root.dark`. |
+| `color` | `ThemeColor` | - | A `#RGB` or `#RRGGBB` seed used to generate accessible light and dark brand and button tokens. |
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | Enables all provider icons by default. Set `false` to disable them, or pass a list to enable a subset. |
 | `autoLinkText` | `boolean` | `true` | Replaces bare GitHub and GitLab URLs with `user/repo`, and bare npm package URLs with the package name. Set `false` to keep the URL text. |
 | `hideLinkUnderline` | `boolean` | `true` | Hides text underlines for links inside `.vp-doc`. Set `false` to restore the VitePress default. |
 | `appearanceTransition` | `boolean \| 'spread' \| 'fade'` | `true` | Selects the light and dark mode transition when the browser supports View Transition API. `true` and `'spread'` expand from the switch position, `'fade'` crossfades the themes, and `false` disables animation. |
+| `playground` | `boolean \| { storageKey?: string }` | `false` | Enables local-storage persistence for `ThemeConfigPlayground`. Set `true` to use the default key, or provide `storageKey` to isolate the saved settings. |
 | `analytics` | `AnalyticsConfig \| false` | - | Enables Google Analytics, Microsoft Clarity, or both. Set `false` to disable them. |
 | `giscus` | `GiscusConfig \| false` | - | Enables Giscus below each document page. Set `false` to disable it. |
 
+Generated color declarations have higher selector specificity than ordinary site CSS. Omit `color` if the site needs to define the VitePress brand and button tokens manually in its theme stylesheet. Other CSS custom properties, including geometry and typography tokens, also belong in that stylesheet.
+
 ## Theme playground
 
-Import the optional playground component on a development or public demo page:
+Place the optional playground form directly in any development or public demo page:
 
 ```vue
 <script setup>
 import { ThemeConfigPlayground } from '@inp146/inpress/playground'
 </script>
 
-<ClientOnly>
-  <ThemeConfigPlayground persist />
-</ClientOnly>
+<ThemeConfigPlayground />
 ```
 
-The playground edits this theme's colors, marker tokens, provider-link presentation, link behavior, appearance transition, and Giscus visibility. It does not edit VitePress navigation or sidebar configuration. Giscus can only be enabled when the site already provides a valid `giscus` configuration. Analytics is intentionally excluded because a visitor-facing control must not load tracking scripts.
+The component takes no props and renders inline at its position in the page. Its edits update the shared runtime theme state, so the brand color, provider-link presentation, link behavior, appearance transition, and Giscus visibility change across the entire current SPA rather than inside a separate preview. It does not edit VitePress navigation, sidebar configuration, or arbitrary CSS custom properties. Giscus can only be enabled when the site already provides a valid `giscus` configuration. Analytics is intentionally excluded because a visitor-facing control must not load tracking scripts.
 
-Set `initially-open` to open the panel on first render. `persist` stores the current values in local storage; use `storage-key` when a site needs a custom key. The generated `themeConfig` output includes arbitrary custom CSS variables added through the advanced editor.
+Enable persistence through the site configuration:
+
+```ts
+themeConfig: {
+  playground: true
+}
+```
+
+`true` stores edits under InPress's default local-storage key and restores them after a reload. Use `playground: { storageKey: 'my-site-theme' }` when multiple sites or playgrounds on the same origin need separate saved settings. When `playground` is omitted or `false`, edits still apply site-wide for the current SPA session but are not restored after a reload. The generated `themeConfig` output contains the selected `color` seed and feature settings.
 
 ## Appearance transition
 
@@ -139,7 +138,7 @@ Use the underline marker for a short emphasis and the brush marker for highlight
 <mark class="highlight">Brush-style marker highlight</mark>
 ```
 
-By default, both markers derive their colors from the global VitePress brand colors. Override them with `--inpress-marker-color` or `--inpress-marker-highlight-color`; geometry can be adjusted with `--inpress-marker-thickness`, `--inpress-marker-offset`, and `--inpress-marker-highlight-radius`.
+By default, both markers use the global VitePress brand tokens, including the palette generated from `color`. Override the marker-specific colors with `--inpress-marker-color` or `--inpress-marker-highlight-color`; geometry can be adjusted with `--inpress-marker-thickness`, `--inpress-marker-offset`, and `--inpress-marker-highlight-radius`.
 
 ## Sidebar hierarchy
 
@@ -168,14 +167,13 @@ These CSS custom properties adjust every provider icon:
 | Export | Import path | Description |
 | --- | --- | --- |
 | Default theme | `@inp146/inpress` | Theme object for `.vitepress/theme/index.ts`. |
-| `createTheme()` | `@inp146/inpress` | Creates the same theme object for programmatic use. |
 | `linkIconProviders` | `@inp146/inpress` | Array containing every supported provider identifier. |
 | `LinkIconProvider` | `@inp146/inpress` | Union type for provider identifiers. |
-| `ThemeCssVars` | `@inp146/inpress` | Type for a CSS custom-property record. |
+| `ThemeColor` | `@inp146/inpress` | Type for the hexadecimal brand-color seed. |
 | `AnalyticsConfig` | `@inp146/inpress` | Google Analytics and Microsoft Clarity configuration. |
 | `GiscusConfig` | `@inp146/inpress` | Giscus widget configuration. |
 | `InPressThemeConfig` | `@inp146/inpress` | Type of the theme-specific fields in `themeConfig`. |
-| `ThemeConfigPlayground` | `@inp146/inpress/playground` | Runtime editor for this theme's settings and CSS variables. |
+| `ThemeConfigPlayground` | `@inp146/inpress/playground` | Inline runtime editor whose changes apply across the current site session. |
 
 ## Interface language
 

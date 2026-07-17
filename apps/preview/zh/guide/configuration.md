@@ -16,8 +16,6 @@ export default theme
 import '@inp146/inpress/style.css'
 ```
 
-同时导出的 `createTheme()` 用于程序化组合，目前不接收参数。站点相关设置直接放在 `themeConfig`。
-
 ## 主题设置
 
 ```ts
@@ -25,14 +23,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    cssVars: {
-      root: {
-        '--vp-c-brand-1': '#0f766e'
-      },
-      dark: {
-        '--vp-c-brand-1': '#2dd4bf'
-      }
-    },
+    color: '#0f766e',
     linkIcons: ['github', 'youtube'],
     hideLinkUnderline: false,
     appearanceTransition: false,
@@ -52,32 +43,40 @@ export default defineConfig({
 
 | 设置 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `cssVars.root` | `Record<\`--${string}\`, string \| number>` | - | 应用到 `:root` 的 CSS 自定义属性。 |
-| `cssVars.dark` | `Record<\`--${string}\`, string \| number>` | - | 应用到 `:root.dark` 的 CSS 自定义属性。 |
+| `color` | `ThemeColor` | - | 用于生成具有可读对比度的浅色与深色品牌、按钮 token；仅接受 `#RGB` 或 `#RRGGBB`。 |
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | 默认启用全部平台图标。设为 `false` 关闭，传入列表可只启用部分平台。 |
 | `autoLinkText` | `boolean` | `true` | 将无显式文案的 GitHub、GitLab URL 显示为 `user/repo`，npm 包 URL 显示为包名。设为 `false` 保留 URL 文本。 |
 | `hideLinkUnderline` | `boolean` | `true` | 隐藏 `.vp-doc` 内链接的文字下划线。设为 `false` 恢复 VitePress 默认样式。 |
 | `appearanceTransition` | `boolean \| 'spread' \| 'fade'` | `true` | 浏览器支持 View Transition API 时，选择深浅色切换动画。`true` 和 `'spread'` 表示从切换按钮位置扩散，`'fade'` 表示渐变，`false` 表示关闭。 |
+| `playground` | `boolean \| { storageKey?: string }` | `false` | 为 `ThemeConfigPlayground` 启用本地存储。设为 `true` 使用默认键名，也可通过 `storageKey` 隔离保存的设置。 |
 | `analytics` | `AnalyticsConfig \| false` | - | 启用 Google Analytics、Microsoft Clarity 或同时启用两者。设为 `false` 关闭。 |
 | `giscus` | `GiscusConfig \| false` | - | 在每篇文档页底部启用 Giscus。设为 `false` 关闭。 |
 
-## 主题调试面板
+生成的颜色声明具有高于普通站点 CSS 的选择器优先级。如果站点需要在主题样式表中手动定义 VitePress 的品牌与按钮 token，请省略 `color`。几何、排版等其他 CSS 自定义属性也应放在该样式表中。
 
-可在开发页面或公开演示页中导入可选的调试组件：
+## 主题 Playground
+
+可把 Playground 表单直接放在任意开发页面或公开演示页中：
 
 ```vue
 <script setup>
 import { ThemeConfigPlayground } from '@inp146/inpress/playground'
 </script>
 
-<ClientOnly>
-  <ThemeConfigPlayground persist />
-</ClientOnly>
+<ThemeConfigPlayground />
 ```
 
-面板可调整本主题的颜色、记号笔 token、平台链接样式、链接行为、深浅色切换动画和 Giscus 显示状态，不修改 VitePress 的导航或侧边栏配置。只有站点已经提供有效的 `giscus` 配置时才能开启 Giscus。面板刻意不提供 Analytics 控制，避免游客操作时加载追踪脚本。
+组件不接收 props，并会在插入位置直接渲染表单。表单修改的是共享的运行时主题状态，因此品牌颜色、平台链接样式、链接行为、深浅色切换动画和 Giscus 显示状态会作用于当前 SPA 的整个站点，而不是单独的预览区域。它不会修改 VitePress 的导航、侧边栏配置或任意 CSS 自定义属性。只有站点已经提供有效的 `giscus` 配置时才能开启 Giscus。表单刻意不提供 Analytics 控制，避免游客操作时加载追踪脚本。
 
-设置 `initially-open` 可在首次渲染时直接展开面板。`persist` 会把当前设置保存到本地存储；需要自定义键名时可传入 `storage-key`。通过高级编辑器添加的任意 CSS 变量也会包含在生成的 `themeConfig` 中。
+通过站点配置启用持久化：
+
+```ts
+themeConfig: {
+  playground: true
+}
+```
+
+`true` 会使用 InPress 的默认本地存储键名保存修改，并在刷新后恢复。若同一来源下的多个站点或 Playground 需要隔离设置，可使用 `playground: { storageKey: 'my-site-theme' }`。省略 `playground` 或设为 `false` 时，修改仍会在当前 SPA 会话中全站生效，但刷新后不会恢复。生成的 `themeConfig` 会包含所选的 `color` 种子和功能设置。
 
 ## 模式切换动画
 
@@ -139,7 +138,7 @@ theme: {
 <mark class="highlight">笔刷风格高亮文本</mark>
 ```
 
-两种记号笔默认跟随 VitePress 全局品牌色。可通过 `--inpress-marker-color` 或 `--inpress-marker-highlight-color` 覆盖颜色，通过 `--inpress-marker-thickness`、`--inpress-marker-offset` 和 `--inpress-marker-highlight-radius` 调整形态。
+两种记号笔默认使用 VitePress 全局品牌 token，包括由 `color` 生成的色板。可通过 `--inpress-marker-color` 或 `--inpress-marker-highlight-color` 覆盖记号笔专用颜色，通过 `--inpress-marker-thickness`、`--inpress-marker-offset` 和 `--inpress-marker-highlight-radius` 调整形态。
 
 ## 侧边栏层级
 
@@ -168,14 +167,13 @@ theme: {
 | 导出项 | 导入路径 | 说明 |
 | --- | --- | --- |
 | 默认主题 | `@inp146/inpress` | 用于 `.vitepress/theme/index.ts` 的主题对象。 |
-| `createTheme()` | `@inp146/inpress` | 用于程序化创建同一主题对象。 |
 | `linkIconProviders` | `@inp146/inpress` | 包含所有支持平台标识符的数组。 |
 | `LinkIconProvider` | `@inp146/inpress` | 平台标识符的联合类型。 |
-| `ThemeCssVars` | `@inp146/inpress` | CSS 自定义属性记录的类型。 |
+| `ThemeColor` | `@inp146/inpress` | 十六进制品牌颜色种子的类型。 |
 | `AnalyticsConfig` | `@inp146/inpress` | Google Analytics 与 Microsoft Clarity 的配置类型。 |
 | `GiscusConfig` | `@inp146/inpress` | Giscus 小组件的配置类型。 |
 | `InPressThemeConfig` | `@inp146/inpress` | `themeConfig` 中主题专属字段的类型。 |
-| `ThemeConfigPlayground` | `@inp146/inpress/playground` | 用于实时调整主题设置和 CSS 变量的组件。 |
+| `ThemeConfigPlayground` | `@inp146/inpress/playground` | 页面内运行时编辑器，修改会作用于当前站点会话。 |
 
 ## 界面语言
 

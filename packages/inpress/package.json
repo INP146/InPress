@@ -28,17 +28,22 @@
   "scripts": {
     "build": "vite build && vue-tsc --declaration --emitDeclarationOnly --outDir dist",
     "dev": "vite build --watch",
-    "check": "vue-tsc --noEmit"
+    "check": "vue-tsc --noEmit && tsx --test test/*.test.ts"
   },
   "peerDependencies": {
     "vitepress": "^2.0.0-alpha.18",
     "vue": "^3.5.39"
   },
   "devDependencies": {
+    "@types/culori": "^4.0.1",
     "@vitejs/plugin-vue": "^6.0.7",
+    "tsx": "^4.23.1",
     "typescript": "6.0.3",
     "vite": "^8.1.4",
     "vitepress": "2.0.0-alpha.18",
     "vue-tsc": "^3.3.7"
+  },
+  "dependencies": {
+    "culori": "^4.0.2"
   }
 }

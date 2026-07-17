@@ -3,36 +3,13 @@ import { defineConfig } from 'vitepress'
 import { themeI18n } from '@inp146/inpress/i18n'
 
 const sharedThemeConfig = {
-  cssVars: {
-    root: {
-      '--vp-c-brand-1': '#0f766e',
-      '--vp-c-brand-2': '#0d9488',
-      '--vp-c-brand-3': '#14b8a6',
-      '--vp-c-brand-soft': 'rgba(20, 184, 166, 0.14)',
-      '--vp-button-brand-border': 'transparent',
-      '--vp-button-brand-text': '#ffffff',
-      '--vp-button-brand-bg': 'var(--vp-c-brand-1)',
-      '--vp-button-brand-hover-border': 'transparent',
-      '--vp-button-brand-hover-text': '#ffffff',
-      '--vp-button-brand-hover-bg': '#115e59',
-      '--vp-home-hero-name-color': 'transparent',
-      '--vp-home-hero-name-background':
-        'linear-gradient(120deg, #0f766e 20%, #2563eb 80%)'
-    },
-    dark: {
-      '--vp-c-brand-1': '#2dd4bf',
-      '--vp-c-brand-2': '#5eead4',
-      '--vp-c-brand-3': '#99f6e4',
-      '--vp-c-brand-soft': 'rgba(45, 212, 191, 0.16)',
-      '--vp-button-brand-bg': '#0f766e',
-      '--vp-button-brand-hover-bg': '#14b8a6'
-    }
-  },
+  color: '#14b8a6',
+  playground: true,
   logo: '/logo.svg',
   socialLinks: [
     { icon: 'github' as const, link: 'https://github.com/INP146/inpress' }
   ],
-  "appearanceTransition": "fade"
+  appearanceTransition: 'fade'
 }
 
 export default defineConfig({

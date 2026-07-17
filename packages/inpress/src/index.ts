@@ -4,6 +4,7 @@ import {
   Fragment,
   h,
   nextTick,
+  onMounted,
   provide,
   watch
 } from 'vue'
@@ -11,28 +12,33 @@ import { useData, useRoute, type Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
 import { Analytics, type AnalyticsConfig } from './analytics'
+import { createColorStyle, type ThemeColor } from './color'
 import { Giscus, type GiscusConfig } from './giscus'
 import {
   createLinkIconStyle,
-  linkIconProviders,
-  resolveProviderLinkText,
-  type LinkIconProvider
+  resolveProviderLinkText
 } from './link-icons'
+import {
+  linkIconProviders,
+  type LinkIconProvider
+} from './link-icon-providers'
 import { createThemeRuntime, themeRuntimeKey } from './runtime'
 
-export { linkIconProviders } from './link-icons'
-export type { LinkIconProvider } from './link-icons'
+export { linkIconProviders } from './link-icon-providers'
+export type { LinkIconProvider } from './link-icon-providers'
 export type { AnalyticsConfig } from './analytics'
+export type { ThemeColor } from './color'
 export type { GiscusConfig, GiscusMapping, GiscusTheme } from './giscus'
 
-export type ThemeCssVars = Record<`--${string}`, string | number>
 export type AppearanceTransitionMode = 'spread' | 'fade'
 
+export interface ThemePlaygroundConfig {
+  storageKey?: string
+}
+
 export interface InPressThemeConfig {
-  cssVars?: {
-    root?: ThemeCssVars
-    dark?: ThemeCssVars
-  }
+  color?: ThemeColor
+  playground?: boolean | ThemePlaygroundConfig
   linkIcons?: boolean | readonly LinkIconProvider[]
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
@@ -47,36 +53,12 @@ declare module 'vitepress' {
   }
 }
 
-function createTokenStyle(cssVars: InPressThemeConfig['cssVars']): string {
-  const rules = [
-    [':root', cssVars?.root],
-    [':root.dark', cssVars?.dark]
-  ] as const
-
-  return rules
-    .filter(([, values]) => values && Object.keys(values).length > 0)
-    .map(([selector, values]) => {
-      const declarations = Object.entries(values!)
-        .map(([name, value]) => `${name}: ${value};`)
-        .join('')
-
-      return `${selector} {${declarations}}`
-    })
-    .join('')
-}
-
 function resolveLinkIcons(
   linkIcons: InPressThemeConfig['linkIcons']
 ): readonly LinkIconProvider[] {
   if (linkIcons === false) return []
   if (Array.isArray(linkIcons)) return linkIcons
   return linkIconProviders
-}
-
-function createLinkUnderlineStyle(hideLinkUnderline = true): string {
-  return hideLinkUnderline
-    ? '.vp-doc a,.vp-doc a:hover{text-decoration:none;}'
-    : ''
 }
 
 function hasUrlLinkText(link: HTMLAnchorElement): boolean {
@@ -217,55 +199,74 @@ function toggleAppearance(
   void transition.finished.then(finishTransition, finishTransition)
 }
 
-export function createTheme(): Theme {
-  const Layout = defineComponent({
-    name: 'InPressLayout',
-    setup() {
-      const { theme, frontmatter, isDark } = useData<InPressThemeConfig>()
-      const route = useRoute()
-      const runtime = createThemeRuntime(computed(() => theme.value))
-      const effectiveTheme = runtime.theme
+const Layout = defineComponent({
+  name: 'InPressLayout',
+  setup() {
+    const { theme, frontmatter, isDark } = useData<InPressThemeConfig>()
+    const route = useRoute()
+    const runtime = createThemeRuntime(computed(() => theme.value))
+    const effectiveTheme = runtime.theme
+    const themeStyle = computed(() =>
+      [
+        createColorStyle(effectiveTheme.value.color),
+        createLinkIconStyle(resolveLinkIcons(effectiveTheme.value.linkIcons))
+      ].join('')
+    )
 
-      provide(themeRuntimeKey, runtime)
+    provide(themeRuntimeKey, runtime)
 
-      provide('toggle-appearance', (event?: Event) =>
-        toggleAppearance(
-          isDark,
-          effectiveTheme.value.appearanceTransition ?? true,
-          event
+    onMounted(() => {
+      let storage: Storage | undefined
+
+      try {
+        storage = window.localStorage
+      } catch {
+        storage = undefined
+      }
+
+      runtime.restorePlayground(storage)
+    })
+
+    provide('toggle-appearance', (event?: Event) =>
+      toggleAppearance(
+        isDark,
+        effectiveTheme.value.appearanceTransition ?? true,
+        event
+      )
+    )
+
+    watch(
+      [() => route.path, () => effectiveTheme.value.autoLinkText],
+      () => {
+        if (typeof document === 'undefined') return
+
+        void nextTick(() =>
+          applyAutoLinkText(effectiveTheme.value.autoLinkText !== false)
         )
-      )
+      },
+      { flush: 'post', immediate: true }
+    )
 
-      watch(
-        [() => route.path, () => effectiveTheme.value.autoLinkText],
-        () => {
-          if (typeof document === 'undefined') return
-
-          void nextTick(() =>
-            applyAutoLinkText(effectiveTheme.value.autoLinkText !== false)
-          )
-        },
-        { flush: 'post', immediate: true }
-      )
-
-      return () => {
-        const themeStyle = [
-          createTokenStyle(effectiveTheme.value.cssVars),
-          createLinkIconStyle(resolveLinkIcons(effectiveTheme.value.linkIcons)),
-          createLinkUnderlineStyle(effectiveTheme.value.hideLinkUnderline)
-        ].join('')
-
-        return h(Fragment, null, [
-          effectiveTheme.value.analytics
-            ? h(Analytics, { config: effectiveTheme.value.analytics })
-            : null,
-          themeStyle
-            ? h('style', {
-                id: 'inpress-overrides',
-                innerHTML: themeStyle
-              })
-            : null,
-          h(DefaultTheme.Layout, null, {
+    return () => {
+      return h(Fragment, null, [
+        effectiveTheme.value.analytics
+          ? h(Analytics, { config: effectiveTheme.value.analytics })
+          : null,
+        themeStyle.value
+          ? h('style', {
+              id: 'inpress-overrides',
+              innerHTML: themeStyle.value
+            })
+          : null,
+        h(
+          DefaultTheme.Layout,
+          {
+            class:
+              effectiveTheme.value.hideLinkUnderline === false
+                ? undefined
+                : 'inpress-hide-link-underline'
+          },
+          {
             'doc-after': () => {
               const giscus = effectiveTheme.value.giscus
 
@@ -273,16 +274,16 @@ export function createTheme(): Theme {
                 ? h(Giscus, { config: giscus, key: route.path })
                 : null
             }
-          })
-        ])
-      }
+          }
+        )
+      ])
     }
-  })
-
-  return {
-    extends: DefaultTheme,
-    Layout
   }
+})
+
+const theme: Theme = {
+  extends: DefaultTheme,
+  Layout
 }
 
-export default createTheme()
+export default theme

@@ -16,6 +16,7 @@ import xiaohongshuIcon from './assets/xiaohongshu.svg?url'
 import youtubeIcon from './assets/youtube.svg?url'
 import zhihuIcon from './assets/zhihu.svg?url'
 import juejinIcon from './assets/juejin.svg?url'
+import type { LinkIconProvider } from './link-icon-providers'
 
 type ProviderIconDefinition = {
   icon: string
@@ -149,13 +150,7 @@ const providerIcons = {
       'https://b23.tv/'
     ]
   }
-} as const satisfies Record<string, ProviderIconDefinition>
-
-export const linkIconProviders = Object.keys(providerIcons) as Array<
-  keyof typeof providerIcons
->
-
-export type LinkIconProvider = keyof typeof providerIcons
+} as const satisfies Record<LinkIconProvider, ProviderIconDefinition>
 
 export function resolveProviderLinkText(href: string): string | undefined {
   let url: URL

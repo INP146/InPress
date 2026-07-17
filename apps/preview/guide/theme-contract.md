@@ -12,23 +12,26 @@ Keep documentation prose, demo data, and this site's visual identity under `apps
 
 Consumer-specific values, including color, typography, radius, and spacing, must be expressed as CSS custom properties. Every variable visual value must stay overridable.
 
-Configure tokens in the consuming site's `themeConfig`. Use `root` for shared values and `dark` for dark-mode overrides:
+For a generated brand palette, provide one `#RGB` or `#RRGGBB` seed through `themeConfig.color`:
 
 ```ts
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    cssVars: {
-      root: {
-        '--vp-c-brand-1': '#2563eb'
-      },
-      dark: {
-        '--vp-c-brand-1': '#60a5fa'
-      }
-    }
+    color: '#2563eb'
   }
 })
+```
+
+InPress derives the light and dark VitePress brand and button tokens from this seed. The generated declarations have higher selector specificity than ordinary site CSS. Omit `color` when a consumer needs to manage the palette manually.
+
+Typography, radius, spacing, and other custom tokens belong in the consuming site's theme stylesheet:
+
+```css
+:root {
+  --inpress-sidebar-indent: 20px;
+}
 ```
 
 ## Extending VitePress

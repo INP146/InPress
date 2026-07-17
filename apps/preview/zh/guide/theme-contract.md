@@ -12,23 +12,26 @@
 
 颜色、字体、圆角和间距等消费方特有的值都必须以 CSS 自定义属性表达，每一个可变的视觉值必须能够被覆盖。
 
-在消费站点的 `themeConfig` 中配置 token。`root` 用于共享值，`dark` 用于深色模式覆盖：
+需要自动生成品牌色板时，请通过 `themeConfig.color` 提供一个 `#RGB` 或 `#RRGGBB` 颜色种子：
 
 ```ts
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    cssVars: {
-      root: {
-        '--vp-c-brand-1': '#2563eb'
-      },
-      dark: {
-        '--vp-c-brand-1': '#60a5fa'
-      }
-    }
+    color: '#2563eb'
   }
 })
+```
+
+InPress 会根据该种子生成浅色与深色模式的 VitePress 品牌和按钮 token。生成声明的选择器优先级高于普通站点 CSS；消费方需要完全手动管理色板时，请省略 `color`。
+
+字体、圆角、间距及其他自定义 token 应放在消费站点的主题样式表中：
+
+```css
+:root {
+  --inpress-sidebar-indent: 20px;
+}
 ```
 
 ## 扩展 VitePress

@@ -18,11 +18,9 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    cssVars: {
-      root: {
-        '--vp-c-brand-1': '#2563eb'
-      }
-    }
+    color: '#2563eb'
   }
 })
 ```
+
+`color` accepts one `#RGB` or `#RRGGBB` seed and generates the light and dark brand and button tokens. Omit it when the consumer manages those tokens in CSS.

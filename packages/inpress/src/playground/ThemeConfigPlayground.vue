@@ -1,227 +1,76 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useData } from 'vitepress'
-import { linkIconProviders, type LinkIconProvider } from '../link-icons'
+import { createColorPalette } from '../color'
+import {
+  linkIconProviders,
+  type LinkIconProvider
+} from '../link-icon-providers'
+import {
+  createThemePlaygroundOverrides,
+  isThemeColor,
+  type ThemePlaygroundState
+} from '../playground-state'
 import { useThemeRuntime } from '../runtime'
 import ThemeSwitch from './ThemeSwitch.vue'
-import type {
-  AppearanceTransitionMode,
-  InPressThemeConfig,
-  ThemeCssVars
-} from '../index'
 
-interface PlaygroundState {
-  root: Record<string, string>
-  dark: Record<string, string>
-  linkIcons: boolean
-  providers: LinkIconProvider[]
-  autoLinkText: boolean
-  hideLinkUnderline: boolean
-  appearanceTransition: boolean
-  appearanceTransitionMode: AppearanceTransitionMode
-  giscus: boolean
-}
-
-const props = withDefaults(
-  defineProps<{
-    persist?: boolean
-    storageKey?: string
-    initiallyOpen?: boolean
-  }>(),
-  {
-    persist: false,
-    storageKey: 'inpress-playground',
-    initiallyOpen: false
-  }
-)
-
-const variableGroups = [
-  {
-    en: 'Brand colors',
-    zh: '品牌颜色',
-    fields: [
-      { key: '--vp-c-brand-1', en: 'Brand primary', zh: '主品牌色' },
-      { key: '--vp-c-brand-2', en: 'Brand hover', zh: '品牌悬停色' },
-      { key: '--vp-c-brand-3', en: 'Brand active', zh: '品牌激活色' },
-      { key: '--vp-c-brand-soft', en: 'Brand soft', zh: '品牌柔和色' },
-      { key: '--vp-button-brand-bg', en: 'Button background', zh: '按钮背景色' },
-      { key: '--vp-button-brand-text', en: 'Button text', zh: '按钮文字色' },
-      { key: '--vp-button-brand-border', en: 'Button border', zh: '按钮边框色' },
-      {
-        key: '--vp-button-brand-hover-bg',
-        en: 'Button hover background',
-        zh: '按钮悬停背景色'
-      },
-      {
-        key: '--vp-button-brand-hover-text',
-        en: 'Button hover text',
-        zh: '按钮悬停文字色'
-      },
-      {
-        key: '--vp-button-brand-hover-border',
-        en: 'Button hover border',
-        zh: '按钮悬停边框色'
-      },
-      {
-        key: '--vp-home-hero-name-color',
-        en: 'Hero name color',
-        zh: '首页标题颜色'
-      },
-      {
-        key: '--vp-home-hero-name-background',
-        en: 'Hero name background',
-        zh: '首页标题背景'
-      }
-    ]
-  },
-  {
-    en: 'Markers',
-    zh: '文本记号笔',
-    fields: [
-      { key: '--inpress-marker-color', en: 'Underline color', zh: '下划线颜色' },
-      {
-        key: '--inpress-marker-highlight-color',
-        en: 'Highlight color',
-        zh: '高亮颜色'
-      },
-      {
-        key: '--inpress-marker-thickness',
-        en: 'Underline thickness',
-        zh: '下划线粗细'
-      },
-      { key: '--inpress-marker-offset', en: 'Underline offset', zh: '下划线偏移' },
-      {
-        key: '--inpress-marker-highlight-radius',
-        en: 'Highlight radius',
-        zh: '高亮圆角'
-      }
-    ]
-  },
-  {
-    en: 'Provider icons',
-    zh: '平台链接图标',
-    fields: [
-      { key: '--inpress-provider-link-icon-size', en: 'Icon size', zh: '图标尺寸' },
-      {
-        key: '--inpress-provider-link-icon-threads-width',
-        en: 'Threads width',
-        zh: 'Threads 宽度'
-      },
-      { key: '--inpress-provider-link-icon-gap', en: 'Text gap', zh: '文字间距' },
-      {
-        key: '--inpress-provider-link-icon-align',
-        en: 'Vertical align',
-        zh: '垂直对齐'
-      },
-      {
-        key: '--inpress-provider-link-icon-offset',
-        en: 'Vertical offset',
-        zh: '垂直偏移'
-      }
-    ]
-  }
+const FALLBACK_PICKER_COLOR = '#3a5ccc'
+const paletteFields = [
+  { key: 'brand1', en: 'Text', zh: '文字' },
+  { key: 'brand2', en: 'Hover', zh: '悬停' },
+  { key: 'brand3', en: 'Solid', zh: '实色' },
+  { key: 'soft', en: 'Soft', zh: '柔和' }
 ] as const
-
-const themeVariableDefaults: Record<string, string> = {
-  '--inpress-marker-color': 'var(--vp-c-brand-soft)',
-  '--inpress-marker-highlight-color': 'var(--vp-c-brand-1)',
-  '--inpress-marker-thickness': '9px',
-  '--inpress-marker-offset': '-4px',
-  '--inpress-marker-highlight-radius': '5px',
-  '--inpress-provider-link-icon-size': '20px',
-  '--inpress-provider-link-icon-threads-width': '17.5px',
-  '--inpress-provider-link-icon-gap': '4px',
-  '--inpress-provider-link-icon-align': 'middle',
-  '--inpress-provider-link-icon-offset': '-1px'
-}
-
-const knownVariableNames = new Set<string>(
-  variableGroups.flatMap((group) => group.fields.map((field) => field.key))
-)
 
 const runtime = useThemeRuntime()
 const { lang } = useData()
-const open = ref(props.initiallyOpen)
-const mode = ref<'root' | 'dark'>('root')
 const copied = ref(false)
-const customVarName = ref('')
-const customVarValue = ref('')
 const isZh = computed(() => lang.value.toLowerCase().startsWith('zh'))
 const label = (en: string, zh: string) => (isZh.value ? zh : en)
+const state = reactive<ThemePlaygroundState>({
+  ...runtime.playgroundState.value,
+  providers: [...runtime.playgroundState.value.providers]
+})
+let syncingFromRuntime = false
 
-function stringVars(values: ThemeCssVars | undefined): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(values ?? {}).map(([key, value]) => [key, String(value)])
-  )
+function pickerColor(color: string): string {
+  if (/^#[\da-f]{6}$/i.test(color)) return color
+  if (/^#[\da-f]{3}$/i.test(color)) {
+    return `#${[...color.slice(1)].map((character) => character.repeat(2)).join('')}`
+  }
+  return FALLBACK_PICKER_COLOR
 }
 
-function createState(theme: InPressThemeConfig): PlaygroundState {
+function snapshotState(): ThemePlaygroundState {
   return {
-    root: {
-      ...themeVariableDefaults,
-      ...stringVars(theme.cssVars?.root)
-    },
-    dark: stringVars(theme.cssVars?.dark),
-    linkIcons: theme.linkIcons !== false,
-    providers: Array.isArray(theme.linkIcons)
-      ? [...theme.linkIcons]
-      : [...linkIconProviders],
-    autoLinkText: theme.autoLinkText !== false,
-    hideLinkUnderline: theme.hideLinkUnderline !== false,
-    appearanceTransition: theme.appearanceTransition !== false,
-    appearanceTransitionMode:
-      typeof theme.appearanceTransition === 'string'
-        ? theme.appearanceTransition
-        : 'spread',
-    giscus: Boolean(theme.giscus)
+    ...state,
+    providers: [...state.providers]
   }
 }
 
-const state = reactive(createState(runtime.baseTheme.value))
 const hasGiscusConfig = computed(() => Boolean(runtime.baseTheme.value.giscus))
-const activeVars = computed(() => state[mode.value])
-const customVariables = computed(() =>
-  Object.keys(activeVars.value)
-    .filter((name) => !knownVariableNames.has(name))
-    .sort()
-)
-const canAddCustomVariable = computed(
-  () =>
-    /^--[a-z0-9_-]+$/i.test(customVarName.value.trim()) &&
-    customVarValue.value.trim().length > 0
-)
-
-function normalizeState(value: Partial<PlaygroundState>): PlaygroundState {
-  const fallback = createState(runtime.baseTheme.value)
-  const providers = Array.isArray(value.providers)
-    ? value.providers.filter((provider): provider is LinkIconProvider =>
-        linkIconProviders.includes(provider as LinkIconProvider)
-      )
-    : fallback.providers
-  const appearanceTransitionMode =
-    value.appearanceTransitionMode === 'fade' ||
-    value.appearanceTransitionMode === 'spread'
-      ? value.appearanceTransitionMode
-      : fallback.appearanceTransitionMode
-
-  return {
-    root: { ...fallback.root, ...(value.root ?? {}) },
-    dark: { ...fallback.dark, ...(value.dark ?? {}) },
-    linkIcons: value.linkIcons ?? fallback.linkIcons,
-    providers,
-    autoLinkText: value.autoLinkText ?? fallback.autoLinkText,
-    hideLinkUnderline:
-      value.hideLinkUnderline ?? fallback.hideLinkUnderline,
-    appearanceTransition:
-      value.appearanceTransition ?? fallback.appearanceTransition,
-    appearanceTransitionMode,
-    giscus: hasGiscusConfig.value && (value.giscus ?? fallback.giscus)
+const giscusEnabled = computed({
+  get: () => hasGiscusConfig.value && state.giscus !== false,
+  set: (value: boolean) => {
+    state.giscus = value ? undefined : false
   }
-}
+})
+const palette = computed(() => createColorPalette(state.color))
+const pickerValue = computed(() => pickerColor(state.color))
+const colorIsValid = computed(
+  () => state.color.length === 0 || isThemeColor(state.color)
+)
+const paletteModes = computed(() => {
+  if (!palette.value) return []
 
-function assignState(value: PlaygroundState): void {
-  state.root = { ...value.root }
-  state.dark = { ...value.dark }
+  return [
+    { key: 'light', en: 'Light', zh: '浅色', scale: palette.value.light },
+    { key: 'dark', en: 'Dark', zh: '深色', scale: palette.value.dark }
+  ] as const
+})
+
+function assignState(value: ThemePlaygroundState): void {
+  state.color = value.color
   state.linkIcons = value.linkIcons
   state.providers = [...value.providers]
   state.autoLinkText = value.autoLinkText
@@ -231,37 +80,8 @@ function assignState(value: PlaygroundState): void {
   state.giscus = value.giscus
 }
 
-function cleanVars(values: Record<string, string>): ThemeCssVars {
-  return Object.fromEntries(
-    Object.entries(values)
-      .map(([name, value]) => [name.trim(), value.trim()] as const)
-      .filter(
-        ([name, value]) => /^--[a-z0-9_-]+$/i.test(name) && value.length > 0
-      )
-  ) as ThemeCssVars
-}
-
-function createOverrides(): Partial<InPressThemeConfig> {
-  return {
-    cssVars: {
-      root: cleanVars(state.root),
-      dark: cleanVars(state.dark)
-    },
-    linkIcons: state.linkIcons ? [...state.providers] : false,
-    autoLinkText: state.autoLinkText,
-    hideLinkUnderline: state.hideLinkUnderline,
-    appearanceTransition: state.appearanceTransition
-      ? state.appearanceTransitionMode
-      : false,
-    giscus: state.giscus ? runtime.baseTheme.value.giscus : false
-  }
-}
-
-function createExportConfig(): Partial<InPressThemeConfig> {
-  const config = createOverrides()
-
-  if (state.giscus) delete config.giscus
-  return config
+function createExportConfig() {
+  return createThemePlaygroundOverrides(snapshotState())
 }
 
 const output = computed(
@@ -269,40 +89,23 @@ const output = computed(
 )
 
 watch(
-  state,
-  () => {
-    runtime.setOverrides(createOverrides())
-
-    if (props.persist && typeof localStorage !== 'undefined') {
-      localStorage.setItem(props.storageKey, JSON.stringify(state))
-    }
+  runtime.playgroundState,
+  (value) => {
+    syncingFromRuntime = true
+    assignState(value)
+    syncingFromRuntime = false
   },
-  { deep: true, immediate: true }
+  { immediate: true, flush: 'sync' }
 )
 
-onMounted(() => {
-  window.addEventListener('keydown', handleKeydown)
-
-  if (!props.persist) return
-
-  const saved = localStorage.getItem(props.storageKey)
-  if (!saved) return
-
-  try {
-    assignState(normalizeState(JSON.parse(saved) as Partial<PlaygroundState>))
-  } catch {
-    localStorage.removeItem(props.storageKey)
-  }
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('keydown', handleKeydown)
-  runtime.reset()
-})
-
-function handleKeydown(event: KeyboardEvent): void {
-  if (event.key === 'Escape') open.value = false
-}
+watch(
+  state,
+  () => {
+    if (syncingFromRuntime || !runtime.playgroundReady.value) return
+    runtime.setPlaygroundState(snapshotState())
+  },
+  { deep: true, flush: 'sync' }
+)
 
 function toggleProvider(provider: LinkIconProvider): void {
   state.providers = state.providers.includes(provider)
@@ -310,22 +113,12 @@ function toggleProvider(provider: LinkIconProvider): void {
     : [...state.providers, provider]
 }
 
-function addCustomVariable(): void {
-  if (!canAddCustomVariable.value) return
-
-  activeVars.value[customVarName.value.trim()] = customVarValue.value.trim()
-  customVarName.value = ''
-  customVarValue.value = ''
-}
-
-function removeCustomVariable(name: string): void {
-  delete activeVars.value[name]
+function updateColorFromPicker(event: Event): void {
+  state.color = (event.target as HTMLInputElement).value
 }
 
 function reset(): void {
-  assignState(createState(runtime.baseTheme.value))
   runtime.reset()
-  if (props.persist) localStorage.removeItem(props.storageKey)
 }
 
 async function copyConfig(): Promise<void> {
@@ -350,250 +143,153 @@ async function copyConfig(): Promise<void> {
 </script>
 
 <template>
-  <Teleport to="body">
-    <button
-      class="inpress-playground-trigger"
-      type="button"
-      :aria-expanded="open"
-      aria-controls="inpress-config-playground"
-      :title="label('Open InPress playground', '打开 InPress 调试面板')"
-      @click="open = !open"
-    >
-      <span aria-hidden="true">◐</span>
-      <span>InPress</span>
-    </button>
+  <div
+    class="inpress-playground"
+    :aria-label="label('InPress configuration', 'InPress 配置')"
+  >
+    <div class="inpress-playground-body">
+      <section class="inpress-playground-section">
+        <h2>{{ label('Brand color', '品牌颜色') }}</h2>
+        <label class="inpress-playground-color-row">
+          <span>{{ label('Color seed', '颜色种子') }}</span>
+          <input
+            type="color"
+            :value="pickerValue"
+            :aria-label="label('Color seed', '颜色种子')"
+            @input="updateColorFromPicker"
+          />
+          <input
+            v-model.trim="state.color"
+            type="text"
+            spellcheck="false"
+            placeholder="#14b8a6"
+            :aria-label="label('Color seed', '颜色种子')"
+            :aria-invalid="!colorIsValid"
+          />
+        </label>
 
-    <Transition name="inpress-playground-backdrop">
-      <button
-        v-if="open"
-        class="inpress-playground-backdrop"
-        type="button"
-        :aria-label="label('Close InPress playground', '关闭 InPress 调试面板')"
-        @click="open = false"
-      />
-    </Transition>
-
-    <Transition name="inpress-playground-panel">
-      <aside
-        v-if="open"
-        id="inpress-config-playground"
-        class="inpress-playground-panel"
-        :aria-label="label('InPress configuration', 'InPress 配置')"
-      >
-        <header class="inpress-playground-header">
-          <div>
-            <strong>{{ label('InPress configuration', 'InPress 配置') }}</strong>
-            <span>{{ label('Changes apply to this page', '修改会实时应用到当前页面') }}</span>
+        <div v-if="paletteModes.length" class="inpress-playground-palette">
+          <div
+            v-for="paletteMode in paletteModes"
+            :key="paletteMode.key"
+            class="inpress-playground-palette-row"
+          >
+            <span>{{ label(paletteMode.en, paletteMode.zh) }}</span>
+            <div>
+              <span
+                v-for="field in paletteFields"
+                :key="field.key"
+                class="inpress-playground-swatch"
+                :style="{ backgroundColor: paletteMode.scale[field.key] }"
+                :title="`${label(field.en, field.zh)}: ${paletteMode.scale[field.key]}`"
+              />
+            </div>
           </div>
-          <button
-            class="inpress-playground-icon-button"
-            type="button"
-            :title="label('Close', '关闭')"
-            @click="open = false"
-          >
-            ×
-          </button>
-        </header>
+        </div>
+      </section>
 
-        <div class="inpress-playground-body">
-          <section class="inpress-playground-mode-section">
-            <div class="inpress-playground-segmented" role="tablist">
-              <button
-                type="button"
-                role="tab"
-                :aria-selected="mode === 'root'"
-                :class="{ active: mode === 'root' }"
-                @click="mode = 'root'"
-              >
-                {{ label('Light', '浅色') }}
-              </button>
-              <button
-                type="button"
-                role="tab"
-                :aria-selected="mode === 'dark'"
-                :class="{ active: mode === 'dark' }"
-                @click="mode = 'dark'"
-              >
-                {{ label('Dark', '深色') }}
-              </button>
-            </div>
-          </section>
+      <section class="inpress-playground-section">
+        <h2>{{ label('Features', '功能') }}</h2>
 
-          <section
-            v-for="group in variableGroups"
-            :key="group.en"
-            class="inpress-playground-section"
-          >
-            <h2>{{ label(group.en, group.zh) }}</h2>
-            <label
-              v-for="field in group.fields"
-              :key="field.key"
-              class="inpress-playground-color-row"
-            >
-              <span>{{ label(field.en, field.zh) }}</span>
-              <input
-                v-if="/^#[0-9a-f]{6}$/i.test(activeVars[field.key] ?? '')"
-                v-model="activeVars[field.key]"
-                type="color"
-                :aria-label="label(field.en, field.zh)"
-              />
-              <input
-                v-model="activeVars[field.key]"
-                type="text"
-                spellcheck="false"
-                :placeholder="mode === 'dark' ? state.root[field.key] : ''"
-              />
-            </label>
-          </section>
-
-          <section class="inpress-playground-section">
-            <h2>{{ label('Custom CSS variables', '自定义 CSS 变量') }}</h2>
-
-            <div
-              v-for="name in customVariables"
-              :key="name"
-              class="inpress-playground-custom-row"
-            >
-              <code>{{ name }}</code>
-              <input v-model="activeVars[name]" type="text" spellcheck="false" />
-              <button
-                type="button"
-                :title="label('Remove variable', '删除变量')"
-                @click="removeCustomVariable(name)"
-              >
-                ×
-              </button>
-            </div>
-
-            <form class="inpress-playground-custom-form" @submit.prevent="addCustomVariable">
-              <input
-                v-model="customVarName"
-                type="text"
-                spellcheck="false"
-                placeholder="--inpress-example"
-                :aria-label="label('Variable name', '变量名')"
-              />
-              <input
-                v-model="customVarValue"
-                type="text"
-                spellcheck="false"
-                placeholder="12px"
-                :aria-label="label('Variable value', '变量值')"
-              />
-              <button
-                type="submit"
-                :disabled="!canAddCustomVariable"
-                :title="label('Add variable', '添加变量')"
-              >
-                +
-              </button>
-            </form>
-          </section>
-
-          <section class="inpress-playground-section">
-            <h2>{{ label('Features', '功能') }}</h2>
-
-            <div class="inpress-playground-toggle-row">
-              <span>{{ label('Provider link icons', '平台链接图标') }}</span>
-              <ThemeSwitch
-                v-model="state.linkIcons"
-                :aria-label="label('Provider link icons', '平台链接图标')"
-              />
-            </div>
-
-            <div v-if="state.linkIcons" class="inpress-playground-provider-grid">
-              <label v-for="provider in linkIconProviders" :key="provider">
-                <input
-                  type="checkbox"
-                  :checked="state.providers.includes(provider)"
-                  @change="toggleProvider(provider)"
-                />
-                <span>{{ provider }}</span>
-              </label>
-            </div>
-
-            <div class="inpress-playground-toggle-row">
-              <span>{{ label('Automatic link text', '自动链接文案') }}</span>
-              <ThemeSwitch
-                v-model="state.autoLinkText"
-                :aria-label="label('Automatic link text', '自动链接文案')"
-              />
-            </div>
-
-            <div class="inpress-playground-toggle-row">
-              <span>{{ label('Hide link underline', '隐藏链接下划线') }}</span>
-              <ThemeSwitch
-                v-model="state.hideLinkUnderline"
-                :aria-label="label('Hide link underline', '隐藏链接下划线')"
-              />
-            </div>
-
-            <div class="inpress-playground-toggle-row">
-              <span>{{ label('Appearance transition', '深浅色切换动画') }}</span>
-              <ThemeSwitch
-                v-model="state.appearanceTransition"
-                :aria-label="label('Appearance transition', '深浅色切换动画')"
-              />
-            </div>
-
-            <div
-              v-if="state.appearanceTransition"
-              class="inpress-playground-segmented"
-              :aria-label="label('Appearance transition style', '深浅色切换动画样式')"
-            >
-              <button
-                type="button"
-                :aria-pressed="state.appearanceTransitionMode === 'spread'"
-                :class="{ active: state.appearanceTransitionMode === 'spread' }"
-                @click="state.appearanceTransitionMode = 'spread'"
-              >
-                {{ label('Spread', '扩散') }}
-              </button>
-              <button
-                type="button"
-                :aria-pressed="state.appearanceTransitionMode === 'fade'"
-                :class="{ active: state.appearanceTransitionMode === 'fade' }"
-                @click="state.appearanceTransitionMode = 'fade'"
-              >
-                {{ label('Fade', '渐变') }}
-              </button>
-            </div>
-
-            <div
-              class="inpress-playground-toggle-row"
-              :title="
-                hasGiscusConfig
-                  ? ''
-                  : label(
-                      'Configure Giscus in themeConfig before enabling it.',
-                      '请先在 themeConfig 中配置 Giscus。'
-                    )
-              "
-            >
-              <span>Giscus</span>
-              <ThemeSwitch
-                v-model="state.giscus"
-                :disabled="!hasGiscusConfig"
-                aria-label="Giscus"
-              />
-            </div>
-          </section>
-
-          <section class="inpress-playground-section">
-            <h2>{{ label('Generated configuration', '生成的配置') }}</h2>
-            <pre class="inpress-playground-output"><code>{{ output }}</code></pre>
-          </section>
+        <div class="inpress-playground-toggle-row">
+          <span>{{ label('Provider link icons', '平台链接图标') }}</span>
+          <ThemeSwitch
+            v-model="state.linkIcons"
+            :aria-label="label('Provider link icons', '平台链接图标')"
+          />
         </div>
 
-        <footer class="inpress-playground-footer">
-          <button type="button" class="alt" @click="reset">
-            {{ label('Reset', '重置') }}
+        <div v-if="state.linkIcons" class="inpress-playground-provider-grid">
+          <label v-for="provider in linkIconProviders" :key="provider">
+            <input
+              type="checkbox"
+              :checked="state.providers.includes(provider)"
+              @change="toggleProvider(provider)"
+            />
+            <span>{{ provider }}</span>
+          </label>
+        </div>
+
+        <div class="inpress-playground-toggle-row">
+          <span>{{ label('Automatic link text', '自动链接文案') }}</span>
+          <ThemeSwitch
+            v-model="state.autoLinkText"
+            :aria-label="label('Automatic link text', '自动链接文案')"
+          />
+        </div>
+
+        <div class="inpress-playground-toggle-row">
+          <span>{{ label('Hide link underline', '隐藏链接下划线') }}</span>
+          <ThemeSwitch
+            v-model="state.hideLinkUnderline"
+            :aria-label="label('Hide link underline', '隐藏链接下划线')"
+          />
+        </div>
+
+        <div class="inpress-playground-toggle-row">
+          <span>{{ label('Appearance transition', '深浅色切换动画') }}</span>
+          <ThemeSwitch
+            v-model="state.appearanceTransition"
+            :aria-label="label('Appearance transition', '深浅色切换动画')"
+          />
+        </div>
+
+        <div
+          v-if="state.appearanceTransition"
+          class="inpress-playground-segmented"
+          :aria-label="label('Appearance transition style', '深浅色切换动画样式')"
+        >
+          <button
+            type="button"
+            :aria-pressed="state.appearanceTransitionMode === 'spread'"
+            :class="{ active: state.appearanceTransitionMode === 'spread' }"
+            @click="state.appearanceTransitionMode = 'spread'"
+          >
+            {{ label('Spread', '扩散') }}
           </button>
-          <button type="button" class="brand" @click="copyConfig">
-            {{ copied ? label('Copied', '已复制') : label('Copy config', '复制配置') }}
+          <button
+            type="button"
+            :aria-pressed="state.appearanceTransitionMode === 'fade'"
+            :class="{ active: state.appearanceTransitionMode === 'fade' }"
+            @click="state.appearanceTransitionMode = 'fade'"
+          >
+            {{ label('Fade', '渐变') }}
           </button>
-        </footer>
-      </aside>
-    </Transition>
-  </Teleport>
+        </div>
+
+        <div
+          class="inpress-playground-toggle-row"
+          :title="
+            hasGiscusConfig
+              ? ''
+              : label(
+                  'Configure Giscus in themeConfig before enabling it.',
+                  '请先在 themeConfig 中配置 Giscus。'
+                )
+          "
+        >
+          <span>Giscus</span>
+          <ThemeSwitch
+            v-model="giscusEnabled"
+            :disabled="!hasGiscusConfig"
+            aria-label="Giscus"
+          />
+        </div>
+      </section>
+    </div>
+
+    <section class="inpress-playground-output-section">
+      <h2>{{ label('Generated configuration', '生成的配置') }}</h2>
+      <pre class="inpress-playground-output"><code>{{ output }}</code></pre>
+    </section>
+
+    <footer class="inpress-playground-footer">
+      <button type="button" class="alt" @click="reset">
+        {{ label('Reset', '重置') }}
+      </button>
+      <button type="button" class="brand" @click="copyConfig">
+        {{ copied ? label('Copied', '已复制') : label('Copy config', '复制配置') }}
+      </button>
+    </footer>
+  </div>
 </template>
