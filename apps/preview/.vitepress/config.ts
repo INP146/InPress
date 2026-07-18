@@ -17,7 +17,8 @@ const useBuiltPackage = process.env.INPRESS_USE_DIST === '1'
 
 export default defineConfig({
   title: 'InPress',
-  description: 'Documentation and development site for InPress',
+  description:
+    'A reusable VitePress theme with brand customization and documentation-focused enhancements.',
   cleanUrls: true,
   themeConfig: {
     search: {
@@ -32,13 +33,13 @@ export default defineConfig({
         ...themeI18n.en,
         ...sharedThemeConfig,
         nav: [
-          { text: 'Docs', link: '/guide/getting-started' },
+          { text: 'Guide', link: '/guide/getting-started' },
           { text: 'Components', link: '/showcase/components' },
-          { text: 'Playground', link: '/playground' }
+          { text: 'Theme playground', link: '/playground' }
         ],
         sidebar: [
           {
-            text: 'Theme development',
+            text: 'Guide',
             items: [
               { text: 'Getting started', link: '/guide/getting-started' },
               { text: 'Configuration & API', link: '/guide/configuration' },
@@ -52,8 +53,8 @@ export default defineConfig({
           }
         ],
         footer: {
-          message: 'Built on VitePress 2.0 alpha.',
-          copyright: 'Copyright 2026'
+          message: 'Released under the MIT License.',
+          copyright: 'Copyright © 2026 INP146'
         },
         giscus: {
           repo: 'INP146/inpress',
@@ -66,8 +67,8 @@ export default defineConfig({
           emitMetadata: false,
           inputPosition: 'top',
           theme: {
-            light: 'light',
-            dark: 'dark'
+            light: '/giscus/light.css',
+            dark: '/giscus/dark.css'
           },
           lang: 'en',
           loading: 'lazy'
@@ -79,18 +80,18 @@ export default defineConfig({
       lang: 'zh-CN',
       link: '/zh/',
       title: 'InPress',
-      description: 'InPress 的文档与开发站',
+      description: '提供品牌配置与文档增强能力的可复用 VitePress 主题。',
       themeConfig: {
         ...themeI18n.zh,
         ...sharedThemeConfig,
         nav: [
-          { text: '文档', link: '/zh/guide/getting-started' },
+          { text: '指南', link: '/zh/guide/getting-started' },
           { text: '组件', link: '/zh/showcase/components' },
-          { text: '主题调试', link: '/zh/playground' }
+          { text: 'Playground', link: '/zh/playground' }
         ],
         sidebar: [
           {
-            text: '主题开发',
+            text: '使用指南',
             items: [
               { text: '快速开始', link: '/zh/guide/getting-started' },
               { text: '配置与 API', link: '/zh/guide/configuration' },
@@ -104,8 +105,8 @@ export default defineConfig({
           }
         ],
         footer: {
-          message: '基于 VitePress 2.0 alpha 构建。',
-          copyright: 'Copyright 2026'
+          message: '基于 MIT 许可证发布。',
+          copyright: 'Copyright © 2026 INP146'
         },
         giscus: {
           repo: 'INP146/inpress',
@@ -118,8 +119,8 @@ export default defineConfig({
           emitMetadata: false,
           inputPosition: 'top',
           theme: {
-            light: 'light',
-            dark: 'dark'
+            light: '/giscus/light.css',
+            dark: '/giscus/dark.css'
           },
           lang: 'zh-CN',
           loading: 'lazy'

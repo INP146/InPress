@@ -1,0 +1,13 @@
+@import url('https://giscus.app/themes/light.css');
+
+main {
+  --color-btn-primary-bg: #d6396f;
+  --color-btn-primary-hover-bg: #cd2f67;
+  --color-btn-primary-selected-bg: #c52561;
+  --color-btn-primary-disabled-bg: rgb(214 57 111 / 60%);
+  --color-accent-fg: #c52561;
+  --color-accent-emphasis: #d6396f;
+  --color-accent-muted: rgb(255 96 144 / 40%);
+  --color-accent-subtle: rgb(255 96 144 / 14%);
+  --color-scale-blue-1: rgb(255 96 144 / 24%);
+}

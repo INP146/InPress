@@ -2,3 +2,8 @@
   --inpress-favicon-offset-y: 4.5%;
   --vp-nav-logo-height: 22px;
 }
+
+.VPHomeFeatures .VPFeature .icon {
+  color: var(--vp-c-brand-1);
+  background-color: var(--vp-c-brand-soft);
+}

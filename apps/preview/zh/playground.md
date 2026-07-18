@@ -2,8 +2,8 @@
 import { ThemeConfigPlayground } from '@inp146/inpress/playground'
 </script>
 
-# 主题调试面板
+# Playground
 
-设置会应用到整个文档站，并在刷新后恢复。
+在页面中实时查看 InPress 的主题配置效果。更改会应用到整个文档站，并在刷新页面后继续保留。
 
 <ThemeConfigPlayground />

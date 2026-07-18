@@ -4,6 +4,6 @@ import { ThemeConfigPlayground } from '@inp146/inpress/playground'
 
 # Theme playground
 
-Settings apply across the entire documentation site and are restored after a reload.
+Explore InPress theme options in real time. Changes apply across this documentation site and persist across page reloads.
 
 <ThemeConfigPlayground />

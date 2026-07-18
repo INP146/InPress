@@ -91,7 +91,7 @@ themeConfig: {
 }
 ```
 
-`true` stores edits under InPress's default local-storage key and restores them after a reload. Use `playground: { storageKey: 'my-site-theme' }` when multiple sites or playgrounds on the same origin need separate saved settings. When `playground` is omitted or `false`, edits still apply site-wide for the current SPA session but are not restored after a reload. The generated `themeConfig` output contains the selected `color` seed and feature settings.
+`true` stores edits under InPress's default local-storage key so they persist across page reloads. Use `playground: { storageKey: 'my-site-theme' }` when multiple sites or playgrounds on the same origin need separate saved settings. When `playground` is omitted or `false`, edits still apply site-wide for the current SPA session but are lost after a page reload. The generated `themeConfig` output contains the selected `color` seed and feature settings.
 
 ## Appearance transition
 
@@ -130,14 +130,16 @@ giscus: {
 }
 ```
 
-Comments render after the document footer. Use the mapping selected at giscus.app; `pathname` creates a separate discussion for each page, while `url` includes the full page URL. The widget follows the VitePress light or dark appearance by default. `preferred_color_scheme` follows the operating system setting, so use a two-theme object when it must track VitePress's appearance switch. To use a custom Giscus theme, provide `theme: 'https://example.com/giscus-theme.css'`, or specify a theme for each appearance:
+Comments render after the document footer. Use the mapping selected at giscus.app; `pathname` creates a separate discussion for each page, while `url` includes the full page URL. The widget follows the VitePress light or dark appearance by default. `preferred_color_scheme` follows the operating system setting, so use a two-theme object when it must track VitePress's appearance switch. To use a custom Giscus theme, provide an HTTPS URL or a root-relative CSS path. InPress resolves root-relative paths against the current site before passing them to Giscus:
 
 ```ts
 theme: {
-  light: 'light',
-  dark: 'dark_dimmed'
+  light: '/giscus/light.css',
+  dark: '/giscus/dark.css'
 }
 ```
+
+Because Giscus loads the stylesheet from its iframe, the CSS response must allow cross-origin requests from `https://giscus.app`. For Cloudflare Workers Static Assets, add an `_headers` rule such as `Access-Control-Allow-Origin: https://giscus.app`. HTTPS iframes cannot load plain HTTP stylesheets, so InPress automatically falls back to the matching built-in `light` or `dark` theme during ordinary local development.
 
 Set `giscus: false` in a page's frontmatter to hide comments on that page.
 

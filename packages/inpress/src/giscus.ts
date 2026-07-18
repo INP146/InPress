@@ -7,6 +7,12 @@ import {
   type PropType
 } from 'vue'
 import { useData } from 'vitepress'
+import {
+  resolveGiscusTheme,
+  type GiscusThemeValue
+} from './giscus-theme'
+
+export type { GiscusTheme } from './giscus-theme'
 
 export type GiscusMapping =
   | 'pathname'
@@ -15,11 +21,6 @@ export type GiscusMapping =
   | 'og:title'
   | 'specific'
   | 'number'
-
-export interface GiscusTheme {
-  light: string
-  dark: string
-}
 
 export interface GiscusConfig {
   repo: string
@@ -32,15 +33,9 @@ export interface GiscusConfig {
   reactionsEnabled?: boolean
   emitMetadata?: boolean
   inputPosition?: 'top' | 'bottom'
-  theme?: string | GiscusTheme
+  theme?: GiscusThemeValue
   lang?: string
   loading?: 'lazy'
-}
-
-function resolveTheme(theme: GiscusConfig['theme'], isDark: boolean): string {
-  if (typeof theme === 'string') return theme
-
-  return theme ? (isDark ? theme.dark : theme.light) : isDark ? 'dark' : 'light'
 }
 
 export const Giscus = defineComponent({
@@ -64,7 +59,7 @@ export const Giscus = defineComponent({
         {
           giscus: {
             setConfig: {
-              theme: resolveTheme(props.config.theme, isDark.value)
+              theme: resolveGiscusTheme(props.config.theme, isDark.value)
             }
           }
         },
@@ -102,7 +97,7 @@ export const Giscus = defineComponent({
       )
       script.setAttribute(
         'data-theme',
-        resolveTheme(props.config.theme, isDark.value)
+        resolveGiscusTheme(props.config.theme, isDark.value)
       )
       script.setAttribute('data-lang', props.config.lang ?? lang.value)
       if (props.config.term) script.setAttribute('data-term', props.config.term)

@@ -91,7 +91,7 @@ themeConfig: {
 }
 ```
 
-`true` 会使用 InPress 的默认本地存储键名保存修改，并在刷新后恢复。若同一来源下的多个站点或 Playground 需要隔离设置，可使用 `playground: { storageKey: 'my-site-theme' }`。省略 `playground` 或设为 `false` 时，修改仍会在当前 SPA 会话中全站生效，但刷新后不会恢复。生成的 `themeConfig` 会包含所选的 `color` 种子和功能设置。
+`true` 会使用 InPress 的默认本地存储键名保存修改，因此刷新页面后设置仍会保留。若同一来源下的多个站点或 Playground 需要隔离设置，可使用 `playground: { storageKey: 'my-site-theme' }`。省略 `playground` 或设为 `false` 时，修改仍会在当前 SPA 会话中全站生效，但刷新页面后会丢失。生成的 `themeConfig` 会包含所选的 `color` 种子和功能设置。
 
 ## 模式切换动画
 
@@ -130,14 +130,16 @@ giscus: {
 }
 ```
 
-评论显示在文档页脚后。应使用 giscus.app 中选择的映射方式：`pathname` 会为每个页面创建独立的讨论，`url` 则会使用完整页面 URL。组件默认跟随 VitePress 的浅色或深色模式。`preferred_color_scheme` 只跟随操作系统设置；若需要跟随 VitePress 的模式切换，请使用分别指定浅色和深色主题的对象。需要自定义 Giscus 主题时，传入 `theme: 'https://example.com/giscus-theme.css'`；也可以分别配置两种模式：
+评论显示在文档页脚后。应使用 giscus.app 中选择的映射方式：`pathname` 会为每个页面创建独立的讨论，`url` 则会使用完整页面 URL。组件默认跟随 VitePress 的浅色或深色模式。`preferred_color_scheme` 只跟随操作系统设置；若需要跟随 VitePress 的模式切换，请使用分别指定浅色和深色主题的对象。需要自定义 Giscus 主题时，可以传入 HTTPS URL 或站点根相对 CSS 路径。InPress 会先把根相对路径解析为当前站点的绝对 URL，再传给 Giscus：
 
 ```ts
 theme: {
-  light: 'light',
-  dark: 'dark_dimmed'
+  light: '/giscus/light.css',
+  dark: '/giscus/dark.css'
 }
 ```
+
+Giscus 会从 iframe 中加载这份样式，因此 CSS 响应必须允许 `https://giscus.app` 跨域访问。使用 Cloudflare Workers Static Assets 时，可在 `_headers` 中加入 `Access-Control-Allow-Origin: https://giscus.app`。HTTPS iframe 无法加载普通 HTTP 样式，因此 InPress 会在常规本地开发环境中自动回退到对应的内置 `light` 或 `dark` 主题。
 
 在单篇文档的 frontmatter 中设置 `giscus: false`，可隐藏该页评论。
 
