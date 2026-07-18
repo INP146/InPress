@@ -9,12 +9,20 @@ import {
   provide,
   watch
 } from 'vue'
-import { useData, useRoute, type Theme } from 'vitepress'
-import DefaultTheme from 'vitepress/theme'
+import { useData, useRoute, withBase, type Theme } from 'vitepress'
+import DefaultTheme, {
+  type DefaultTheme as VitePressDefaultTheme
+} from 'vitepress/theme'
 import './style.css'
 import { Analytics, type AnalyticsConfig } from './analytics'
 import { applyAutoLinkText, observeAutoLinkText } from './auto-link-text'
 import { createColorStyle, type ThemeColor } from './color'
+import {
+  applyFavicon,
+  readFaviconTransform,
+  resolveFaviconSource,
+  type FaviconConfig
+} from './favicon'
 import { Giscus, type GiscusConfig } from './giscus'
 import { applyHomeLogoMonochrome } from './home-logo'
 import { createLinkIconStyle } from './link-icons'
@@ -30,6 +38,7 @@ export { default as ThemeCheckbox } from './components/ThemeCheckbox.vue'
 export { default as ThemeSwitch } from './components/ThemeSwitch.vue'
 export type { LinkIconProvider } from './link-icon-providers'
 export type { AnalyticsConfig } from './analytics'
+export type { FaviconConfig } from './favicon'
 export type { ThemeColor } from './color'
 export type { GiscusConfig, GiscusMapping, GiscusTheme } from './giscus'
 
@@ -42,6 +51,7 @@ export interface ThemePlaygroundConfig {
 export interface InPressThemeConfig {
   color?: ThemeColor
   playground?: boolean | ThemePlaygroundConfig
+  favicon?: FaviconConfig
   logoMonochrome?: boolean
   homeLogoMonochrome?: boolean
   linkIcons?: boolean | readonly LinkIconProvider[]
@@ -172,7 +182,9 @@ function toggleAppearance(
 const Layout = defineComponent({
   name: 'InPressLayout',
   setup() {
-    const { theme, frontmatter, isDark } = useData<InPressThemeConfig>()
+    const { theme, frontmatter, isDark } = useData<
+      VitePressDefaultTheme.Config & InPressThemeConfig
+    >()
     const route = useRoute()
     const runtime = createThemeRuntime(computed(() => theme.value))
     const effectiveTheme = runtime.theme
@@ -208,12 +220,37 @@ const Layout = defineComponent({
 
     onUnmounted(() => autoLinkTextObserver?.disconnect())
 
+    onUnmounted(() => applyFavicon(undefined))
+
     provide('toggle-appearance', (event?: Event) =>
       toggleAppearance(
         isDark,
         effectiveTheme.value.appearanceTransition ?? true,
         event
       )
+    )
+
+    watch(
+      [
+        () => route.path,
+        () => isDark.value,
+        () => theme.value.logo,
+        () => effectiveTheme.value.favicon
+      ],
+      () => {
+        if (typeof document === 'undefined') return
+
+        const source = resolveFaviconSource(
+          effectiveTheme.value.favicon,
+          theme.value.logo,
+          isDark.value
+        )
+        applyFavicon(
+          source ? withBase(source) : undefined,
+          readFaviconTransform()
+        )
+      },
+      { flush: 'sync', immediate: true }
     )
 
     watch(

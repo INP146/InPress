@@ -42,6 +42,7 @@ export default defineConfig({
 | Setting | Type | Default | Description |
 | --- | --- | --- | --- |
 | `color` | `ThemeColor` | - | A `#RGB` or `#RRGGBB` seed used to generate accessible light and dark brand and button tokens. |
+| `favicon` | `boolean \| ThemeableImage` | `true` | Uses the navigation Logo as the favicon. Set `false` to disable it or provide a separate image. An explicit favicon in VitePress `head` takes precedence. |
 | `logoMonochrome` | `boolean` | `false` | Renders the navigation logo in the same color as the adjacent site title. |
 | `homeLogoMonochrome` | `boolean` | `false` | Uses the home Hero image as a monochrome mask colored with the current brand token. |
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | Enables all provider icons by default. Set `false` to disable them, or pass a list to enable a subset. |
@@ -53,6 +54,20 @@ export default defineConfig({
 | `giscus` | `GiscusConfig \| false` | - | Enables Giscus below each document page. Set `false` to disable it. |
 
 Generated color declarations have higher selector specificity than ordinary site CSS. Omit `color` if the site needs to define the VitePress brand and button tokens manually in its theme stylesheet. Other CSS custom properties, including geometry and typography tokens, also belong in that stylesheet.
+
+### Favicon geometry
+
+Adjust a theme-managed favicon from the consuming site's stylesheet:
+
+```css
+:root {
+  --inpress-favicon-size: 100%;
+  --inpress-favicon-offset-x: 0%;
+  --inpress-favicon-offset-y: 0%;
+}
+```
+
+The values are percentages of the favicon viewport. `size` scales around the center, while the offsets move the image without changing its size. These variables do not affect a favicon explicitly declared in VitePress `head`.
 
 ## Theme playground
 

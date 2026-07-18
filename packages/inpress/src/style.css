@@ -1,4 +1,7 @@
 :root {
+  --inpress-favicon-size: 100%;
+  --inpress-favicon-offset-x: 0%;
+  --inpress-favicon-offset-y: 0%;
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(
     120deg,

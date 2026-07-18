@@ -5,8 +5,15 @@
  viewBox="564 533 2373 2373" preserveAspectRatio="xMidYMid meet"
  role="img" aria-label="InPress">
 
+<style>
+g { fill: #3c3c43; }
+@media (prefers-color-scheme: dark) {
+  g { fill: #dfdfd6; }
+}
+</style>
+
 <g transform="translate(0.000000,3464.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
+stroke="none">
 <path d="M24765 27175 c-127 -17 -321 -72 -489 -140 -234 -95 -594 -289 -798
 -432 -26 -18 -50 -33 -53 -33 -4 0 -26 -15 -50 -32 -25 -18 -68 -50 -97 -71
 -29 -21 -76 -54 -105 -75 -28 -20 -61 -44 -73 -52 -94 -64 -500 -385 -570

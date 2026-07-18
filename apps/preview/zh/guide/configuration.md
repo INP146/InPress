@@ -42,6 +42,7 @@ export default defineConfig({
 | 设置 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `color` | `ThemeColor` | - | 用于生成具有可读对比度的浅色与深色品牌、按钮 token；仅接受 `#RGB` 或 `#RRGGBB`。 |
+| `favicon` | `boolean \| ThemeableImage` | `true` | 默认使用导航栏 Logo。设为 `false` 可关闭，也可传入独立图片；VitePress `head` 中显式配置的 favicon 优先。 |
 | `logoMonochrome` | `boolean` | `false` | 导航栏 Logo 使用与旁边站点标题相同的颜色。 |
 | `homeLogoMonochrome` | `boolean` | `false` | 将主页 Hero 图片作为单色蒙版，并使用当前品牌色 token 着色。 |
 | `linkIcons` | `boolean \| LinkIconProvider[]` | `true` | 默认启用全部平台图标。设为 `false` 关闭，传入列表可只启用部分平台。 |
@@ -53,6 +54,20 @@ export default defineConfig({
 | `giscus` | `GiscusConfig \| false` | - | 在每篇文档页底部启用 Giscus。设为 `false` 关闭。 |
 
 生成的颜色声明具有高于普通站点 CSS 的选择器优先级。如果站点需要在主题样式表中手动定义 VitePress 的品牌与按钮 token，请省略 `color`。几何、排版等其他 CSS 自定义属性也应放在该样式表中。
+
+### Favicon 几何设置
+
+消费站可在自己的主题样式表中调整由主题管理的 favicon：
+
+```css
+:root {
+  --inpress-favicon-size: 100%;
+  --inpress-favicon-offset-x: 0%;
+  --inpress-favicon-offset-y: 0%;
+}
+```
+
+数值是 favicon 视口的百分比。`size` 以中心为基准缩放，两个 offset 只移动图像，不改变尺寸。通过 VitePress `head` 显式声明的 favicon 不受这些变量影响。
 
 ## 主题 Playground
 
