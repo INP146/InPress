@@ -37,7 +37,7 @@ export default defineConfig({
           { text: 'Configuration', link: '/config/color' },
           { text: 'API', link: '/api/default-theme' },
           { text: 'Components', link: '/showcase/components' },
-          { text: 'Theme playground', link: '/playground' }
+          { text: 'Playground', link: '/playground' }
         ],
         sidebar: [
           {

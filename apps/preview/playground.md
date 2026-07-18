@@ -2,7 +2,7 @@
 import { ThemeConfigPlayground } from '@inp146/inpress/playground'
 </script>
 
-# Theme playground
+# Playground
 
 Explore InPress theme options in real time. Changes apply across this documentation site and persist across page reloads.
 
