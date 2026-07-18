@@ -12,7 +12,7 @@ Keep documentation prose, demo data, and this site's visual identity under `apps
 
 Consumer-specific values, including color, typography, radius, and spacing, must be expressed as CSS custom properties. Every variable visual value must stay overridable.
 
-For a generated brand palette, provide one `#RGB` or `#RRGGBB` seed through `themeConfig.color`:
+For a generated brand palette, configure [`themeConfig.color`](/config/color):
 
 ```ts
 import { defineConfig } from 'vitepress'
@@ -40,28 +40,4 @@ Prefer the documented VitePress extension points: CSS variables, slots, a wrappe
 
 ## Interface language
 
-The package exports `themeI18n` for default-theme interface strings. Import and spread the matching preset in the VitePress configuration; keep site navigation, documentation, and footer copy in the consuming site:
-
-```ts
-import { defineConfig } from 'vitepress'
-import { themeI18n } from '@inp146/inpress/i18n'
-
-export default defineConfig({
-  locales: {
-    root: {
-      label: 'English',
-      lang: 'en',
-      themeConfig: {
-        ...themeI18n.en
-      }
-    },
-    zh: {
-      label: '简体中文',
-      lang: 'zh-CN',
-      themeConfig: {
-        ...themeI18n.zh
-      }
-    }
-  }
-})
-```
+The package exports [`themeI18n`](/api/theme-i18n) for default-theme interface strings. Site navigation, documentation, and footer copy remain in the consuming site.

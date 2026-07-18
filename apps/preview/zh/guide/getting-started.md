@@ -17,11 +17,11 @@ pnpm dev
 
 ## 主题入口
 
-`src/index.ts` 扩展 `vitepress/theme`，保留默认主题，同时允许添加 CSS、应用初始化逻辑或布局包装层。
+在 `.vitepress/theme/index.ts` 中使用 InPress 的[默认主题导出](/zh/api/default-theme)。
 
 ## 品牌颜色
 
-主题包不包含固定品牌色。请在消费站点的 `themeConfig` 中提供一个 `#RGB` 或 `#RRGGBB` 颜色种子，InPress 会据此生成浅色与深色模式的品牌和按钮 token：
+主题包不包含固定品牌色。请在消费站点的 `themeConfig` 中配置 [`color`](/zh/config/color) 种子：
 
 ```ts
 import { defineConfig } from 'vitepress'
@@ -33,7 +33,7 @@ export default defineConfig({
 })
 ```
 
-生成的颜色声明具有高于普通站点 CSS 的选择器优先级。需要完全手动管理品牌色板时，请省略 `color`。其他主题 token 应定义在站点样式表中：
+其他主题 token 应定义在站点样式表中：
 
 ```ts
 // .vitepress/theme/index.ts
@@ -52,12 +52,4 @@ export default theme
 
 ## 链接下划线
 
-文档正文链接默认不显示下划线。需要恢复 VitePress 默认下划线时，配置：
-
-```ts
-export default defineConfig({
-  themeConfig: {
-    hideLinkUnderline: false
-  }
-})
-```
+文档正文链接默认不显示下划线。需要恢复 VitePress 样式时，请查看 [`hideLinkUnderline`](/zh/config/hide-link-underline)。

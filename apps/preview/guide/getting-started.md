@@ -17,11 +17,11 @@ The repository check also builds this site against the generated `dist` package 
 
 ## Theme entry
 
-`src/index.ts` extends `vitepress/theme`, which preserves the default theme while allowing CSS, app setup, or a wrapped layout.
+Use InPress's [default theme export](/api/default-theme) from `.vitepress/theme/index.ts`.
 
 ## Brand color
 
-The package has no fixed brand colors. Provide one `#RGB` or `#RRGGBB` seed in the consuming site's `themeConfig`; InPress derives the light and dark brand and button tokens from it:
+The package has no fixed brand colors. Configure the [`color`](/config/color) seed in the consuming site's `themeConfig`:
 
 ```ts
 import { defineConfig } from 'vitepress'
@@ -33,7 +33,7 @@ export default defineConfig({
 })
 ```
 
-The generated declarations have higher selector specificity than ordinary site CSS. Omit `color` when the site must manage its brand palette manually. Define other theme tokens in a site stylesheet:
+Define other theme tokens in a site stylesheet:
 
 ```ts
 // .vitepress/theme/index.ts
@@ -52,12 +52,4 @@ export default theme
 
 ## Link underlines
 
-Document links have no underline by default. Restore the VitePress underline with:
-
-```ts
-export default defineConfig({
-  themeConfig: {
-    hideLinkUnderline: false
-  }
-})
-```
+Document links have no underline by default. See [`hideLinkUnderline`](/config/hide-link-underline) to restore the VitePress style.
