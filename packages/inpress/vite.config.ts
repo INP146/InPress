@@ -29,13 +29,20 @@ export default defineConfig({
         i18n: fileURLToPath(new URL('./src/i18n.ts', import.meta.url)),
         playground: fileURLToPath(
           new URL('./src/playground.ts', import.meta.url)
-        )
+        ),
+        sidebar: fileURLToPath(new URL('./src/sidebar.ts', import.meta.url))
       },
       formats: ['es'],
       fileName: (_format, entryName) => `${entryName}.js`
     },
     rollupOptions: {
-      external: ['vue', 'vitepress', 'vitepress/theme']
+      external: [
+        'vue',
+        'vitepress',
+        'vitepress/theme',
+        'vitepress-sidebar',
+        'vitepress-sidebar/types'
+      ]
     }
   }
 })

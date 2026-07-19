@@ -19,6 +19,10 @@
       "types": "./dist/playground.d.ts",
       "import": "./dist/playground.js"
     },
+    "./sidebar": {
+      "types": "./dist/sidebar.d.ts",
+      "import": "./dist/sidebar.js"
+    },
     "./style.css": "./dist/index.css",
     "./package.json": "./package.json"
   },
@@ -44,6 +48,7 @@
     "vue-tsc": "^3.3.7"
   },
   "dependencies": {
-    "culori": "^4.0.2"
+    "culori": "^4.0.2",
+    "vitepress-sidebar": "^1.36.1"
   }
 }
