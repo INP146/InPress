@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "description": "InPress, a reusable theme extending the VitePress default theme.",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/INP146/InPress.git",
+    "directory": "packages/inpress"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "files": [
     "dist"
   ],
