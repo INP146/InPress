@@ -2,6 +2,11 @@
   "name": "@inp146/inpress",
   "version": "0.1.0",
   "description": "InPress, a reusable theme extending the VitePress default theme.",
+  "license": "MIT",
+  "homepage": "https://github.com/INP146/InPress#readme",
+  "bugs": {
+    "url": "https://github.com/INP146/InPress/issues"
+  },
   "type": "module",
   "repository": {
     "type": "git",
