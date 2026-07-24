@@ -34,9 +34,11 @@ function getRepositoryLinkText(url: URL): string | undefined {
 function getNpmPackageLinkText(url: URL): string | undefined {
   const path = url.pathname.split('/').filter(Boolean).map(decodePathSegment)
 
-  return path[0] === 'package' && path.length > 1
-    ? path.slice(1).join('/')
-    : undefined
+  if (path[0] !== 'package' || !path[1]) return undefined
+
+  return path[1].startsWith('@') && path[2]
+    ? `${path[1]}/${path[2]}`
+    : path[1]
 }
 
 const linkTextRules = [

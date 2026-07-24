@@ -29,6 +29,18 @@ test('resolves repository and npm package labels', () => {
   assert.equal(resolveProviderLinkText('https://example.com/package/test'), undefined)
 })
 
+test('omits npm package subpages from generated labels', () => {
+  assert.equal(
+    resolveProviderLinkText('https://www.npmjs.com/package/vite/v/7.0.0'),
+    'vite'
+  )
+  assert.equal(
+    resolveProviderLinkText('https://www.npmjs.com/package/@vueuse/core?activeTab=versions'),
+    '@vueuse/core'
+  )
+  assert.equal(resolveProviderLinkText('https://www.npmjs.com/package'), undefined)
+})
+
 test('updates and restores bare provider links', () => {
   const link = createLink(
     'https://github.com/vuejs/vitepress',
