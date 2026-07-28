@@ -24,23 +24,23 @@ pnpm dev
 主题包不包含固定品牌色。请在消费站点的 `themeConfig` 中配置 [`color`](/zh/config/color) 种子：
 
 ```ts
-import { defineConfig } from 'vitepress'
+import { defineConfig } from "vitepress";
 
 export default defineConfig({
   themeConfig: {
-    color: '#2563eb'
-  }
-})
+    color: "#2563eb",
+  },
+});
 ```
 
 其他主题 token 应定义在站点样式表中：
 
 ```ts
 // .vitepress/theme/index.ts
-import theme from '@inp146/inpress'
-import './custom.css'
+import theme from "@inp146/inpress";
+import "./custom.css";
 
-export default theme
+export default theme;
 ```
 
 ```css

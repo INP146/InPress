@@ -9,6 +9,10 @@ const sharedThemeConfig = {
   logo: '/logo.svg',
   logoMonochrome: true,
   homeLogoMonochrome: true,
+  docMeta: {
+    author: 'INP146',
+    timeZone: 'Asia/Shanghai'
+  },
   socialLinks: [
     { icon: 'github' as const, link: 'https://github.com/INP146/inpress' }
   ],
@@ -21,6 +25,7 @@ export default defineConfig({
   description:
     'A reusable VitePress theme with brand customization and documentation-focused enhancements.',
   cleanUrls: true,
+  lastUpdated: true,
   themeConfig: {
     search: {
       provider: 'local'

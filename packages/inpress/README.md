@@ -30,10 +30,17 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   themeConfig: {
-    color: '#2563eb'
+    color: '#2563eb',
+    docMeta: {
+      author: 'Documentation team'
+    }
   }
 })
 ```
+
+When `docMeta` is enabled, InPress derives breadcrumbs from the active sidebar
+and calculates word count and reading time from each document. Page frontmatter
+may provide `author`, `date`, `views`, `wordCount`, and `readingTime` overrides.
 
 The main theme entry loads its styles automatically. The package also exposes
 `@inp146/inpress/i18n`, `@inp146/inpress/playground`,

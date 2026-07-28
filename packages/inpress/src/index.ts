@@ -27,6 +27,8 @@ import { Giscus, type GiscusConfig } from './giscus'
 import { applyHomeLogoMonochrome } from './home-logo'
 import { createLinkIconStyle } from './link-icons'
 import { applyNavLogoMonochrome } from './nav-logo'
+import DocMeta from './components/DocMeta.vue'
+import type { DocMetaConfig } from './doc-meta'
 import {
   linkIconProviders,
   type LinkIconProvider
@@ -41,6 +43,7 @@ export type { AnalyticsConfig } from './analytics'
 export type { FaviconConfig } from './favicon'
 export type { ThemeColor } from './color'
 export type { GiscusConfig, GiscusMapping, GiscusTheme } from './giscus'
+export type { DocMetaConfig, DocMetaPageConfig } from './doc-meta'
 
 export type AppearanceTransitionMode = 'spread' | 'fade'
 
@@ -58,6 +61,7 @@ export interface InPressThemeConfig {
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
   appearanceTransition?: boolean | AppearanceTransitionMode
+  docMeta?: boolean | DocMetaConfig
   analytics?: AnalyticsConfig | false
   giscus?: GiscusConfig | false
 }
@@ -324,6 +328,16 @@ const Layout = defineComponent({
             }
           },
           {
+            'doc-top': () => {
+              const docMeta = effectiveTheme.value.docMeta
+
+              return docMeta && frontmatter.value.docMeta !== false
+                ? h(DocMeta, {
+                    config: docMeta === true ? {} : docMeta,
+                    key: route.path
+                  })
+                : null
+            },
             'doc-after': () => {
               const giscus = effectiveTheme.value.giscus
 

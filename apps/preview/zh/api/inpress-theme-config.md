@@ -16,10 +16,10 @@ interface InPressThemeConfig {
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
   appearanceTransition?: boolean | AppearanceTransitionMode
+  docMeta?: boolean | DocMetaConfig
   analytics?: AnalyticsConfig | false
   giscus?: GiscusConfig | false
 }
 ```
 
 InPress 会扩展 VitePress 的 `DefaultTheme.Config`，正常使用 `defineConfig` 时即可获得这些字段，无需手动类型断言。
-

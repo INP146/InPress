@@ -19,6 +19,7 @@ assert.match(indexJs, /import "\.\/index\.css";/)
 assert.match(playgroundJs, /import "\.\/playground\.css";/)
 assert.match(sidebarJs, /from "vitepress-sidebar"/)
 assert.doesNotMatch(indexCss, /\.inpress-playground/)
+assert.match(indexCss, /\.inpress-doc-meta/)
 assert.match(playgroundCss, /\.inpress-playground/)
 
 const componentCssFiles = files.filter(

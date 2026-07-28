@@ -16,10 +16,10 @@ interface InPressThemeConfig {
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
   appearanceTransition?: boolean | AppearanceTransitionMode
+  docMeta?: boolean | DocMetaConfig
   analytics?: AnalyticsConfig | false
   giscus?: GiscusConfig | false
 }
 ```
 
 InPress augments VitePress's `DefaultTheme.Config`, so normal `defineConfig` usage receives these fields without a manual type assertion.
-
