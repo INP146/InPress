@@ -5,113 +5,113 @@ import {
   Clock3,
   Eye,
   House,
-  UserRound
-} from '@lucide/vue'
-import { computed, nextTick, onMounted, ref } from 'vue'
-import { useData, useRoute, withBase, type DefaultTheme } from 'vitepress'
+  UserRound,
+} from "@lucide/vue";
+import { computed, nextTick, onMounted, ref } from "vue";
+import { useData, useRoute, withBase, type DefaultTheme } from "vitepress";
 import {
   countDocWords,
   formatDocMetaDate,
   resolveDocMetaBreadcrumbs,
   resolveReadingTime,
   type DocMetaConfig,
-  type DocMetaPageConfig
-} from '../doc-meta'
-import type { InPressThemeConfig } from '../index'
+  type DocMetaPageConfig,
+} from "../doc-meta";
+import type { InPressThemeConfig } from "../index";
 
 const props = defineProps<{
-  config: DocMetaConfig
-}>()
+  config: DocMetaConfig;
+}>();
 
-const route = useRoute()
+const route = useRoute();
 const { frontmatter, lang, localeIndex, page, site, theme } = useData<
   DefaultTheme.Config & InPressThemeConfig
->()
-const measuredWordCount = ref(0)
-const isZh = computed(() => lang.value.toLowerCase().startsWith('zh'))
+>();
+const measuredWordCount = ref(0);
+const isZh = computed(() => lang.value.toLowerCase().startsWith("zh"));
 const pageConfig = computed<DocMetaPageConfig>(() =>
   frontmatter.value.docMeta &&
-  typeof frontmatter.value.docMeta === 'object' &&
+  typeof frontmatter.value.docMeta === "object" &&
   !Array.isArray(frontmatter.value.docMeta)
     ? frontmatter.value.docMeta
-    : {}
-)
+    : {},
+);
 const homeLink = computed(
   () =>
     site.value.locales[localeIndex.value]?.link ||
-    (localeIndex.value === 'root' ? '/' : `/${localeIndex.value}/`)
-)
+    (localeIndex.value === "root" ? "/" : `/${localeIndex.value}/`),
+);
 const homeLabel = computed(
-  () => props.config.homeLabel || (isZh.value ? '首页' : 'Home')
-)
+  () => props.config.homeLabel || (isZh.value ? "首页" : "Home"),
+);
 const breadcrumbs = computed(() =>
-  resolveDocMetaBreadcrumbs(theme.value.sidebar, route.path, page.value.title)
-)
+  resolveDocMetaBreadcrumbs(theme.value.sidebar, route.path, page.value.title),
+);
 const author = computed(() =>
   String(
     pageConfig.value.author ??
       frontmatter.value.author ??
       props.config.author ??
-      ''
-  ).trim()
-)
+      "",
+  ).trim(),
+);
 const configuredDate = computed(
-  () => pageConfig.value.date ?? frontmatter.value.date
-)
+  () => pageConfig.value.date ?? frontmatter.value.date,
+);
 const dateUsesGit = computed(
-  () => configuredDate.value === undefined && page.value.lastUpdated !== undefined
-)
+  () =>
+    configuredDate.value === undefined && page.value.lastUpdated !== undefined,
+);
 const date = computed(() => {
-  const value = configuredDate.value ?? page.value.lastUpdated
+  const value = configuredDate.value ?? page.value.lastUpdated;
   return value === undefined
     ? undefined
-    : formatDocMetaDate(value, props.config.timeZone)
-})
+    : formatDocMetaDate(value, props.config.timeZone);
+});
 const wordCount = computed(() => {
-  const configured =
-    pageConfig.value.wordCount ?? frontmatter.value.wordCount
-  return typeof configured === 'number' && configured >= 0
+  const configured = pageConfig.value.wordCount ?? frontmatter.value.wordCount;
+  return typeof configured === "number" && configured >= 0
     ? Math.round(configured)
-    : measuredWordCount.value
-})
+    : measuredWordCount.value;
+});
 const readingTime = computed(() => {
   const configured =
-    pageConfig.value.readingTime ?? frontmatter.value.readingTime
-  return typeof configured === 'number' && configured > 0
+    pageConfig.value.readingTime ?? frontmatter.value.readingTime;
+  return typeof configured === "number" && configured > 0
     ? configured
-    : resolveReadingTime(wordCount.value, props.config.readingSpeed)
-})
+    : resolveReadingTime(wordCount.value, props.config.readingSpeed);
+});
 const views = computed(() =>
-  String(pageConfig.value.views ?? frontmatter.value.views ?? '').trim()
-)
-const numberFormatter = computed(() => new Intl.NumberFormat(lang.value))
+  String(pageConfig.value.views ?? frontmatter.value.views ?? "").trim(),
+);
+const numberFormatter = computed(() => new Intl.NumberFormat(lang.value));
 
 const labels = computed(() =>
   isZh.value
     ? {
-        author: '作者',
-        breadcrumb: '面包屑导航',
-        date: dateUsesGit.value ? '最后更新' : '发布时间',
-        readingTime: '预计阅读时间',
-        views: '浏览量',
-        wordCount: '字数'
+        author: "作者",
+        breadcrumb: "面包屑导航",
+        date: dateUsesGit.value ? "最后更新" : "发布时间",
+        readingTime: "预计阅读时间",
+        views: "浏览量",
+        wordCount: "字数",
       }
     : {
-        author: 'Author',
-        breadcrumb: 'Breadcrumb',
-        date: dateUsesGit.value ? 'Last updated' : 'Published',
-        readingTime: 'Estimated reading time',
-        views: 'Views',
-        wordCount: 'Word count'
-      }
-)
+        author: "Author",
+        breadcrumb: "Breadcrumb",
+        date: dateUsesGit.value ? "Last updated" : "Published",
+        readingTime: "Estimated reading time",
+        views: "Views",
+        wordCount: "Word count",
+      },
+);
 
 onMounted(async () => {
-  if (pageConfig.value.wordCount !== undefined) return
-  await nextTick()
-  const content = document.querySelector<HTMLElement>('.vp-doc')
-  measuredWordCount.value = countDocWords(content?.innerText ?? '')
-})
+  if (pageConfig.value.wordCount !== undefined) return;
+  await nextTick();
+  const content = document.querySelector<HTMLElement>(".vp-doc");
+  measuredWordCount.value = countDocWords(content?.innerText ?? "");
+});
 </script>
 
 <template>
@@ -176,7 +176,7 @@ onMounted(async () => {
   width: calc(100% + 64px);
   min-width: 0;
   margin: -48px -32px var(--inpress-doc-meta-margin-bottom, 24px);
-  padding: var(--inpress-doc-meta-padding-top, 20px) 32px
+  padding: var(--inpress-doc-meta-padding-top, 28px) 32px
     var(--inpress-doc-meta-padding-bottom, 12px);
   color: var(--inpress-doc-meta-color, var(--vp-c-text-2));
   font-size: var(--inpress-doc-meta-font-size, 14px);
@@ -288,7 +288,7 @@ svg {
   .inpress-doc-meta {
     width: calc(100% + 48px);
     margin: -32px -24px var(--inpress-doc-meta-mobile-margin-bottom, 24px);
-    padding: var(--inpress-doc-meta-mobile-padding-top, 16px) 24px 12px;
+    padding: var(--inpress-doc-meta-mobile-padding-top, 24px) 24px 12px;
   }
 }
 
