@@ -192,9 +192,10 @@ onMounted(async () => {
 }
 
 .breadcrumbs {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   gap: var(--inpress-doc-meta-breadcrumb-gap, 10px);
   min-width: 0;
+  overflow: hidden;
   white-space: nowrap;
 }
 
@@ -231,9 +232,9 @@ onMounted(async () => {
 }
 
 .details {
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--inpress-doc-meta-row-gap, 6px)
     var(--inpress-doc-meta-item-gap, 16px);
   min-width: 0;
@@ -274,12 +275,15 @@ svg {
   }
 
   .breadcrumbs {
+    flex: none;
     width: 100%;
-    overflow: hidden;
   }
 
   .details {
+    flex: none;
+    flex-wrap: wrap;
     justify-content: flex-start;
+    width: 100%;
     gap: 5px 12px;
   }
 }
