@@ -73,7 +73,8 @@ export function normalizeThemePlaygroundState(
     : fallback.providers
   const appearanceTransitionMode =
     value.appearanceTransitionMode === 'fade' ||
-    value.appearanceTransitionMode === 'spread'
+    value.appearanceTransitionMode === 'spread' ||
+    value.appearanceTransitionMode === 'spread-light'
       ? value.appearanceTransitionMode
       : fallback.appearanceTransitionMode
   const color =

@@ -45,7 +45,7 @@ export type { ThemeColor } from './color'
 export type { GiscusConfig, GiscusMapping, GiscusTheme } from './giscus'
 export type { DocMetaConfig, DocMetaPageConfig } from './doc-meta'
 
-export type AppearanceTransitionMode = 'spread' | 'fade'
+export type AppearanceTransitionMode = 'spread' | 'spread-light' | 'fade'
 
 export interface ThemePlaygroundConfig {
   storageKey?: string
@@ -119,30 +119,38 @@ function toggleAppearance(
   const fallbackX = pointerEvent ? event.clientX : window.innerWidth / 2
   const fallbackY = pointerEvent ? event.clientY : window.innerHeight / 2
   document.documentElement.classList.add('inpress-appearance-transition-running')
+  if (mode === 'spread-light') {
+    document.documentElement.classList.add(
+      'inpress-appearance-transition-light'
+    )
+  }
   flyout?.classList.add('inpress-appearance-transition')
   const transition = document.startViewTransition(updateAppearance)
   let appearanceAnimation: Animation | undefined
 
   void transition.ready.then(() => {
-    const lightThumbBounds = startsDark
-      ? thumb?.getBoundingClientRect()
-      : undefined
-    const x = lightThumbBounds
-      ? lightThumbBounds.left + lightThumbBounds.width / 2
+    const anchorsDarkThumb = mode === 'spread-light'
+    const anchorThumbStartsAtInitialPosition = anchorsDarkThumb === startsDark
+    const anchorThumbBounds = anchorThumbStartsAtInitialPosition
+      ? initialThumbBounds
+      : thumb?.getBoundingClientRect()
+    const x = anchorThumbBounds
+      ? anchorThumbBounds.left + anchorThumbBounds.width / 2
       : (initialThumbCenter?.x ?? fallbackX)
-    const y = lightThumbBounds
-      ? lightThumbBounds.top + lightThumbBounds.height / 2
+    const y = anchorThumbBounds
+      ? anchorThumbBounds.top + anchorThumbBounds.height / 2
       : (initialThumbCenter?.y ?? fallbackY)
     const radius = Math.hypot(
       Math.max(x, window.innerWidth - x),
       Math.max(y, window.innerHeight - y)
     )
-    const revealsDark = isDark.value
+    const revealsAnimatedTheme =
+      mode === 'spread-light' ? !isDark.value : isDark.value
     const keyframes =
       mode === 'fade'
-        ? { opacity: revealsDark ? [0, 1] : [1, 0] }
+        ? { opacity: revealsAnimatedTheme ? [0, 1] : [1, 0] }
         : {
-            clipPath: revealsDark
+            clipPath: revealsAnimatedTheme
               ? [
                   `circle(0px at ${x}px ${y}px)`,
                   `circle(${radius}px at ${x}px ${y}px)`
@@ -159,7 +167,7 @@ function toggleAppearance(
         duration: 420,
         easing: 'ease-in-out',
         fill: 'forwards',
-        pseudoElement: revealsDark
+        pseudoElement: revealsAnimatedTheme
           ? '::view-transition-new(root)'
           : '::view-transition-old(root)'
       }
@@ -169,7 +177,8 @@ function toggleAppearance(
   const finishTransition = async () => {
     appearanceAnimation?.cancel()
     document.documentElement.classList.remove(
-      'inpress-appearance-transition-running'
+      'inpress-appearance-transition-running',
+      'inpress-appearance-transition-light'
     )
     if (!flyout) return
 

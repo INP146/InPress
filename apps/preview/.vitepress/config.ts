@@ -16,7 +16,7 @@ const sharedThemeConfig = {
   socialLinks: [
     { icon: "github" as const, link: "https://github.com/INP146/inpress" },
   ],
-  appearanceTransition: "spread",
+  appearanceTransition: "spread-light",
 } satisfies DefaultTheme.Config;
 const useBuiltPackage = process.env.INPRESS_USE_DIST === "1";
 

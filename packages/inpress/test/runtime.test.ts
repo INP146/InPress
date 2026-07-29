@@ -3,8 +3,10 @@ import test from 'node:test'
 import { computed, ref } from 'vue'
 import type { GiscusConfig, InPressThemeConfig } from '../src/index'
 import {
+  createThemePlaygroundOverrides,
   createThemePlaygroundState,
-  defaultThemePlaygroundStorageKey
+  defaultThemePlaygroundStorageKey,
+  normalizeThemePlaygroundState
 } from '../src/playground-state'
 import {
   createThemeRuntime,
@@ -51,6 +53,22 @@ function createBaseTheme(): InPressThemeConfig {
     giscus: englishGiscus
   }
 }
+
+test('preserves the light spread appearance transition mode', () => {
+  const state = createThemePlaygroundState({
+    appearanceTransition: 'spread-light'
+  })
+
+  assert.equal(state.appearanceTransitionMode, 'spread-light')
+  assert.equal(
+    normalizeThemePlaygroundState(state, {}).appearanceTransitionMode,
+    'spread-light'
+  )
+  assert.equal(
+    createThemePlaygroundOverrides(state).appearanceTransition,
+    'spread-light'
+  )
+})
 
 test('restores global playground settings and resolves locale config dynamically', () => {
   const storage = new MemoryStorage()

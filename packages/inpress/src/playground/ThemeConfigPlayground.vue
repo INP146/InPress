@@ -264,7 +264,17 @@ async function copyConfig(): Promise<void> {
             :class="{ active: state.appearanceTransitionMode === 'spread' }"
             @click="state.appearanceTransitionMode = 'spread'"
           >
-            {{ label('Spread', '扩散') }}
+            {{ label('Dark spread', '深色扩散') }}
+          </button>
+          <button
+            type="button"
+            :aria-pressed="state.appearanceTransitionMode === 'spread-light'"
+            :class="{
+              active: state.appearanceTransitionMode === 'spread-light'
+            }"
+            @click="state.appearanceTransitionMode = 'spread-light'"
+          >
+            {{ label('Light spread', '白色扩散') }}
           </button>
           <button
             type="button"
@@ -352,7 +362,7 @@ async function copyConfig(): Promise<void> {
 
 .inpress-playground-segmented {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 2px;
   padding: 2px;
   border-radius: 6px;
@@ -367,6 +377,7 @@ async function copyConfig(): Promise<void> {
   background: transparent;
   font: inherit;
   font-weight: 600;
+  overflow-wrap: anywhere;
   cursor: pointer;
 }
 

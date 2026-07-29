@@ -6,8 +6,7 @@
 Names the animated modes accepted by [`appearanceTransition`](/config/appearance-transition).
 
 ```ts
-type AppearanceTransitionMode = 'spread' | 'fade'
+type AppearanceTransitionMode = 'spread' | 'spread-light' | 'fade'
 ```
 
-The configuration also accepts booleans: `true` is an alias for `'spread'`, while `false` disables animation.
-
+`'spread'` animates the dark theme layer, while `'spread-light'` animates the light theme layer. The configuration also accepts booleans: `true` is an alias for `'spread'`, while `false` disables animation.

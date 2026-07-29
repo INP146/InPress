@@ -182,3 +182,13 @@ mark.highlight {
 :root::view-transition-old(root) {
   z-index: 9999;
 }
+
+:root.inpress-appearance-transition-light.dark::view-transition-new(root),
+:root.inpress-appearance-transition-light::view-transition-old(root) {
+  z-index: 1;
+}
+
+:root.inpress-appearance-transition-light.dark::view-transition-old(root),
+:root.inpress-appearance-transition-light::view-transition-new(root) {
+  z-index: 9999;
+}
