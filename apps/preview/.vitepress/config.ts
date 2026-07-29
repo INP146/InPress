@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from "node:url";
-import { defineConfig } from "vitepress";
+import { defineConfig, type DefaultTheme } from "vitepress";
 import { themeI18n } from "@inp146/inpress/i18n";
 import { createSidebar, sidebarHmrPlugin } from "./sidebar";
 
@@ -17,7 +17,7 @@ const sharedThemeConfig = {
     { icon: "github" as const, link: "https://github.com/INP146/inpress" },
   ],
   appearanceTransition: "spread",
-};
+} satisfies DefaultTheme.Config;
 const useBuiltPackage = process.env.INPRESS_USE_DIST === "1";
 
 export default defineConfig({
