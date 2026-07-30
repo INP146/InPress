@@ -562,6 +562,18 @@ async function copyConfig(): Promise<void> {
   background: var(--vp-button-brand-bg, var(--vp-c-brand-1));
 }
 
+@media (min-width: 769px) {
+  .inpress-playground-output-section {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .inpress-playground-output {
+    min-height: 0;
+    max-height: none;
+    height: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .inpress-playground {
     grid-template-columns: minmax(0, 1fr);
