@@ -66,6 +66,14 @@
   }
 }
 
+:root.dark .VPNavBar:not(.home) .divider-line {
+  background-color: var(--vp-c-divider);
+}
+
+:root.dark .VPLocalNav {
+  border-bottom-color: var(--vp-c-divider);
+}
+
 .inpress-logo-monochrome .VPNavBarTitle .logo {
   filter: brightness(0) saturate(100%);
   transition: filter 0.25s;
