@@ -75,10 +75,7 @@ export default defineConfig({
           reactionsEnabled: true,
           emitMetadata: false,
           inputPosition: "top",
-          theme: {
-            light: "/giscus/light.css",
-            dark: "/giscus/dark.css",
-          },
+          theme: "inpress",
           lang: "en",
         },
       },
@@ -122,10 +119,7 @@ export default defineConfig({
           reactionsEnabled: true,
           emitMetadata: false,
           inputPosition: "top",
-          theme: {
-            light: "/giscus/light.css",
-            dark: "/giscus/dark.css",
-          },
+          theme: "inpress",
           lang: "zh-CN",
         },
       },
