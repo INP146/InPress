@@ -18,6 +18,8 @@ const sharedThemeConfig = {
   ],
   appearanceTransition: "spread-light",
 } satisfies DefaultTheme.Config;
+const editLinkPattern =
+  "https://github.com/INP146/inpress/edit/main/apps/preview/:path";
 const useBuiltPackage = process.env.INPRESS_USE_DIST === "1";
 
 export default defineConfig({
@@ -38,6 +40,10 @@ export default defineConfig({
       themeConfig: {
         ...themeI18n.en,
         ...sharedThemeConfig,
+        editLink: {
+          pattern: editLinkPattern,
+          text: "Edit this page on GitHub",
+        },
         nav: [
           { text: "Guide", link: "/guide/getting-started" },
           { text: "Configuration", link: "/config/color" },
@@ -78,6 +84,10 @@ export default defineConfig({
       themeConfig: {
         ...themeI18n.zh,
         ...sharedThemeConfig,
+        editLink: {
+          pattern: editLinkPattern,
+          text: "在 GitHub 上编辑此页",
+        },
         nav: [
           { text: "指南", link: "/zh/guide/getting-started" },
           { text: "配置", link: "/zh/config/color" },
