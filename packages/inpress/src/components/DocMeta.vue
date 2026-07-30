@@ -240,9 +240,10 @@ onMounted(async () => {
 
 .home {
   flex: none;
-  justify-content: center;
+  justify-content: flex-start;
   width: 22px;
   height: 22px;
+  margin-inline-end: calc(var(--inpress-doc-meta-icon-size, 17px) - 22px);
   color: var(--inpress-doc-meta-strong-color, var(--vp-c-text-1));
 }
 
