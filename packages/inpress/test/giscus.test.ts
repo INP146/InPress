@@ -76,4 +76,5 @@ test('creates a Giscus data theme from runtime VitePress tokens', () => {
   assert.match(css, /--color-btn-primary-disabled-bg:color-mix/)
   assert.match(css, /--color-scale-gray-7:rgb\(101 117 133 \/ 16%\)/)
   assert.match(css, /--color-scale-blue-8:rgb\(255 96 144 \/ 16%\)/)
+  assert.match(css, /\.gsc-comment-box-textarea:disabled\{opacity:1\}/)
 })

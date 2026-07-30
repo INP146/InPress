@@ -106,7 +106,7 @@ export function createInPressGiscusTheme(
   )
 
   const baseTheme = isDark ? 'dark' : 'light'
-  const css = `@import url('https://giscus.app/themes/${baseTheme}.css');main{${declarations.join(';')}}`
+  const css = `@import url('https://giscus.app/themes/${baseTheme}.css');main{${declarations.join(';')}}main .gsc-comment-box-textarea:disabled{opacity:1}`
 
   return `data:text/css;charset=utf-8,${encodeURIComponent(css)}`
 }
