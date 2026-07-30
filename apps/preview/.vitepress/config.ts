@@ -15,6 +15,7 @@ const sharedThemeConfig = {
   socialLinks: [
     { icon: "github" as const, link: "https://github.com/INP146/inpress" },
   ],
+  routeProgress: true,
   appearanceTransition: "spread-light",
 } satisfies DefaultTheme.Config;
 const editLinkPattern =
@@ -79,7 +80,6 @@ export default defineConfig({
             dark: "/giscus/dark.css",
           },
           lang: "en",
-          loading: "lazy",
         },
       },
     },
@@ -127,7 +127,6 @@ export default defineConfig({
             dark: "/giscus/dark.css",
           },
           lang: "zh-CN",
-          loading: "lazy",
         },
       },
     },

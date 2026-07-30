@@ -9,7 +9,13 @@ import {
   provide,
   watch
 } from 'vue'
-import { useData, useRoute, withBase, type Theme } from 'vitepress'
+import {
+  inBrowser,
+  useData,
+  useRoute,
+  withBase,
+  type Theme
+} from 'vitepress'
 import DefaultTheme, {
   type DefaultTheme as VitePressDefaultTheme
 } from 'vitepress/theme'
@@ -34,6 +40,11 @@ import {
   type LinkIconProvider
 } from './link-icon-providers'
 import { createThemeRuntime, themeRuntimeKey } from './runtime'
+import {
+  finishRouteProgress,
+  routeProgressPhase,
+  startRouteProgress
+} from './route-progress'
 
 export { linkIconProviders } from './link-icon-providers'
 export { default as ThemeCheckbox } from './components/ThemeCheckbox.vue'
@@ -60,6 +71,7 @@ export interface InPressThemeConfig {
   linkIcons?: boolean | readonly LinkIconProvider[]
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
+  routeProgress?: boolean
   appearanceTransition?: boolean | AppearanceTransitionMode
   docMeta?: boolean | DocMetaConfig
   analytics?: AnalyticsConfig | false
@@ -327,6 +339,15 @@ const Layout = defineComponent({
 
     return () => {
       return h(Fragment, null, [
+        effectiveTheme.value.routeProgress !== false
+          ? h('div', {
+              'aria-hidden': 'true',
+              class: [
+                'inpress-route-progress',
+                `is-${routeProgressPhase.value}`
+              ]
+            })
+          : null,
         effectiveTheme.value.analytics
           ? h(Analytics, { config: effectiveTheme.value.analytics })
           : null,
@@ -375,7 +396,28 @@ const Layout = defineComponent({
 
 const theme: Theme = {
   extends: DefaultTheme,
-  Layout
+  Layout,
+  enhanceApp({ router }) {
+    if (!inBrowser) return
+
+    const onBeforePageLoad = router.onBeforePageLoad
+    const onAfterRouteChange = router.onAfterRouteChange
+
+    router.onBeforePageLoad = async (to) => {
+      const result = await onBeforePageLoad?.(to)
+      if (result === false) return false
+
+      if (router.route.component !== null) startRouteProgress(to)
+    }
+
+    router.onAfterRouteChange = async (to) => {
+      try {
+        await onAfterRouteChange?.(to)
+      } finally {
+        finishRouteProgress(to)
+      }
+    }
+  }
 }
 
 export default theme

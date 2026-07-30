@@ -15,6 +15,7 @@ interface InPressThemeConfig {
   linkIcons?: boolean | readonly LinkIconProvider[]
   autoLinkText?: boolean
   hideLinkUnderline?: boolean
+  routeProgress?: boolean
   appearanceTransition?: boolean | AppearanceTransitionMode
   docMeta?: boolean | DocMetaConfig
   analytics?: AnalyticsConfig | false

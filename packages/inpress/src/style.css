@@ -2,12 +2,68 @@
   --inpress-favicon-size: 100%;
   --inpress-favicon-offset-x: 0%;
   --inpress-favicon-offset-y: 0%;
+  --inpress-route-progress-height: 3px;
+  --inpress-route-progress-color: var(--vp-c-brand-1);
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: linear-gradient(
     120deg,
     var(--vp-c-brand-1) 20%,
     var(--inpress-c-accent, var(--vp-c-brand-3)) 80%
   );
+}
+
+.inpress-route-progress {
+  position: fixed;
+  z-index: 10001;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--inpress-route-progress-height);
+  background: var(--inpress-route-progress-color);
+  box-shadow: 0 0 8px var(--inpress-route-progress-color);
+  opacity: 0;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.inpress-route-progress.is-loading {
+  opacity: 1;
+  animation: inpress-route-progress-loading 8s cubic-bezier(0.1, 0.05, 0, 1)
+    forwards;
+}
+
+.inpress-route-progress.is-finishing {
+  opacity: 0;
+  transform: scaleX(1);
+  transition:
+    transform 160ms ease-out,
+    opacity 160ms ease-out 140ms;
+}
+
+@keyframes inpress-route-progress-loading {
+  0% {
+    transform: scaleX(0.06);
+  }
+
+  18% {
+    transform: scaleX(0.48);
+  }
+
+  100% {
+    transform: scaleX(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inpress-route-progress.is-loading {
+    animation: none;
+    transform: scaleX(0.72);
+  }
+
+  .inpress-route-progress.is-finishing {
+    transition: none;
+  }
 }
 
 .inpress-logo-monochrome .VPNavBarTitle .logo {

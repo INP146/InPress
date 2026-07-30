@@ -78,6 +78,7 @@ function assignState(value: ThemePlaygroundState): void {
   state.providers = [...value.providers]
   state.autoLinkText = value.autoLinkText
   state.hideLinkUnderline = value.hideLinkUnderline
+  state.routeProgress = value.routeProgress
   state.appearanceTransition = value.appearanceTransition
   state.appearanceTransitionMode = value.appearanceTransitionMode
   state.giscus = value.giscus
@@ -242,6 +243,14 @@ async function copyConfig(): Promise<void> {
           <ThemeSwitch
             v-model="state.hideLinkUnderline"
             :aria-label="label('Hide link underline', '隐藏链接下划线')"
+          />
+        </div>
+
+        <div class="inpress-playground-toggle-row">
+          <span>{{ label('Route progress', '路由进度条') }}</span>
+          <ThemeSwitch
+            v-model="state.routeProgress"
+            :aria-label="label('Route progress', '路由进度条')"
           />
         </div>
 

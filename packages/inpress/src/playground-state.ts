@@ -19,6 +19,7 @@ export interface ThemePlaygroundState {
   providers: LinkIconProvider[]
   autoLinkText: boolean
   hideLinkUnderline: boolean
+  routeProgress: boolean
   appearanceTransition: boolean
   appearanceTransitionMode: AppearanceTransitionMode
   giscus: boolean | undefined
@@ -52,6 +53,7 @@ export function createThemePlaygroundState(
       : [...linkIconProviders],
     autoLinkText: theme.autoLinkText !== false,
     hideLinkUnderline: theme.hideLinkUnderline !== false,
+    routeProgress: theme.routeProgress !== false,
     appearanceTransition: theme.appearanceTransition !== false,
     appearanceTransitionMode:
       typeof theme.appearanceTransition === 'string'
@@ -106,6 +108,10 @@ export function normalizeThemePlaygroundState(
       typeof value.hideLinkUnderline === 'boolean'
         ? value.hideLinkUnderline
         : fallback.hideLinkUnderline,
+    routeProgress:
+      typeof value.routeProgress === 'boolean'
+        ? value.routeProgress
+        : fallback.routeProgress,
     appearanceTransition:
       typeof value.appearanceTransition === 'boolean'
         ? value.appearanceTransition
@@ -129,6 +135,7 @@ export function createThemePlaygroundOverrides(
     linkIcons: state.linkIcons ? [...state.providers] : false,
     autoLinkText: state.autoLinkText,
     hideLinkUnderline: state.hideLinkUnderline,
+    routeProgress: state.routeProgress,
     appearanceTransition: state.appearanceTransition
       ? state.appearanceTransitionMode
       : false

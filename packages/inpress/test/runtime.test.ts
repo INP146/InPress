@@ -70,6 +70,14 @@ test('preserves the light spread appearance transition mode', () => {
   )
 })
 
+test('includes the route progress setting in playground overrides', () => {
+  const state = createThemePlaygroundState({ routeProgress: false })
+
+  assert.equal(state.routeProgress, false)
+  assert.equal(normalizeThemePlaygroundState({}, {}).routeProgress, true)
+  assert.equal(createThemePlaygroundOverrides(state).routeProgress, false)
+})
+
 test('restores global playground settings and resolves locale config dynamically', () => {
   const storage = new MemoryStorage()
   const baseTheme = ref(createBaseTheme())
