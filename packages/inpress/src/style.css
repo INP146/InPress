@@ -142,6 +142,40 @@ mark.highlight {
   padding-inline-start: var(--inpress-sidebar-indent, 4px);
 }
 
+.VPLocalNavOutlineDropdown > .items {
+  gap: 0;
+  border-color: var(--vp-c-divider);
+  border-radius: 12px;
+  background-color: var(--vp-c-bg-elv);
+  box-shadow: var(--vp-shadow-3);
+}
+
+.VPLocalNavOutlineDropdown > .items > .header {
+  border-bottom: 1px solid var(--vp-c-divider);
+  background-color: var(--vp-c-bg-elv);
+}
+
+.VPLocalNavOutlineDropdown > .items .top-link {
+  padding: 0 20px;
+}
+
+.VPLocalNavOutlineDropdown > .items > .outline {
+  padding: 8px 0 12px;
+  background-color: var(--vp-c-bg-elv);
+}
+
+.VPLocalNavOutlineDropdown > .items .outline-link {
+  padding-inline: 20px;
+}
+
+.VPLocalNavOutlineDropdown > .items .outline-link:is(
+    :hover,
+    :focus-visible,
+    .active
+  ) {
+  color: var(--vp-c-brand-1);
+}
+
 .inpress-giscus {
   margin-top: 48px;
 }

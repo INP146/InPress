@@ -192,6 +192,14 @@ function toggleAppearance(
   void transition.finished.then(finishTransition, finishTransition)
 }
 
+function removeLocalOutlineTooltip(event: Event): void {
+  if (!(event.target instanceof Element)) return
+
+  event.target
+    .closest('.VPLocalNavOutlineDropdown .outline-link[title]')
+    ?.removeAttribute('title')
+}
+
 const Layout = defineComponent({
   name: 'InPressLayout',
   setup() {
@@ -229,9 +237,13 @@ const Layout = defineComponent({
         document.body,
         () => effectiveTheme.value.autoLinkText !== false
       )
+      document.addEventListener('mouseover', removeLocalOutlineTooltip)
     })
 
-    onUnmounted(() => autoLinkTextObserver?.disconnect())
+    onUnmounted(() => {
+      autoLinkTextObserver?.disconnect()
+      document.removeEventListener('mouseover', removeLocalOutlineTooltip)
+    })
 
     onUnmounted(() => applyFavicon(undefined))
 
