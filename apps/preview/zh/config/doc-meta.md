@@ -7,17 +7,26 @@
 
 ```ts
 export default defineConfig({
+  lastUpdated: true,
   themeConfig: {
+    lastUpdated: {
+      formatOptions: {
+        dateStyle: "long",
+        timeStyle: "short",
+        hourCycle: "h23",
+        timeZone: "Asia/Shanghai",
+        forceLocale: true,
+      },
+    },
     docMeta: {
       author: "文档团队",
       readingSpeed: 220,
-      timeZone: "Asia/Shanghai",
     },
   },
 });
 ```
 
-面包屑根据当前生效的 VitePress sidebar 自动生成。当前文档不在 sidebar 中时，InPress 会使用页面标题。未在页面中提供明确数值时，字数和阅读时长会根据渲染后的正文自动计算。启用 VitePress [`lastUpdated`](https://vitepress.dev/zh/reference/site-config#lastupdated) 后，页面时间来自当前 Markdown 文件的最后一次 Git 提交。
+面包屑根据当前生效的 VitePress sidebar 自动生成。当前文档不在 sidebar 中时，InPress 会使用页面标题。未在页面中提供明确数值时，字数和阅读时长会根据渲染后的正文自动计算。启用 VitePress [`lastUpdated`](https://vitepress.dev/zh/reference/site-config#lastupdated) 后，页面时间来自当前 Markdown 文件的最后一次 Git 提交。语言和格式与 VitePress 的 `lastUpdated.formatOptions` 行为一致，包括 `forceLocale` 和 `timeZone`。
 
 可以在页面 frontmatter 中设置数据：
 

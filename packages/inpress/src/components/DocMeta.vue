@@ -7,7 +7,7 @@ import {
   House,
   UserRound,
 } from "@lucide/vue";
-import { computed, nextTick, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref, watchEffect } from "vue";
 import { useData, useRoute, withBase, type DefaultTheme } from "vitepress";
 import {
   countDocWords,
@@ -62,11 +62,20 @@ const dateUsesGit = computed(
   () =>
     configuredDate.value === undefined && page.value.lastUpdated !== undefined,
 );
+const dateValue = computed(() =>
+  configuredDate.value ?? page.value.lastUpdated,
+);
+const formattedNumericDate = ref<string>();
 const date = computed(() => {
-  const value = configuredDate.value ?? page.value.lastUpdated;
-  return value === undefined
-    ? undefined
-    : formatDocMetaDate(value, props.config.timeZone);
+  const value = dateValue.value;
+  return typeof value === "string"
+    ? value.trim() || undefined
+    : formattedNumericDate.value;
+});
+const dateTime = computed(() => {
+  if (typeof dateValue.value !== "number") return undefined;
+  const value = new Date(dateValue.value);
+  return Number.isNaN(value.getTime()) ? undefined : value.toISOString();
 });
 const wordCount = computed(() => {
   const configured = pageConfig.value.wordCount ?? frontmatter.value.wordCount;
@@ -105,6 +114,26 @@ const labels = computed(() =>
         wordCount: "Word count",
       },
 );
+
+onMounted(() => {
+  watchEffect(() => {
+    const value = dateValue.value;
+    if (typeof value !== "number") {
+      formattedNumericDate.value = undefined;
+      return;
+    }
+
+    const formatOptions = theme.value.lastUpdated?.formatOptions;
+    const locale = formatOptions?.forceLocale
+      ? lang.value
+      : navigator.language || lang.value;
+    formattedNumericDate.value = formatDocMetaDate(
+      value,
+      locale,
+      formatOptions,
+    );
+  });
+});
 
 onMounted(async () => {
   if (pageConfig.value.wordCount !== undefined) return;
@@ -145,7 +174,7 @@ onMounted(async () => {
       <li v-if="date" :title="labels.date">
         <CalendarDays aria-hidden="true" />
         <span class="sr-only">{{ labels.date }}:</span>
-        <time>{{ date }}</time>
+        <time :datetime="dateTime">{{ date }}</time>
       </li>
       <li v-if="wordCount > 0" :title="labels.wordCount">
         <BookOpen aria-hidden="true" />

@@ -7,17 +7,26 @@ Adds a responsive breadcrumb and document statistics row above regular document 
 
 ```ts
 export default defineConfig({
+  lastUpdated: true,
   themeConfig: {
+    lastUpdated: {
+      formatOptions: {
+        dateStyle: 'long',
+        timeStyle: 'short',
+        hourCycle: 'h23',
+        timeZone: 'Asia/Shanghai',
+        forceLocale: true
+      }
+    },
     docMeta: {
       author: 'Documentation team',
-      readingSpeed: 220,
-      timeZone: 'Asia/Shanghai'
+      readingSpeed: 220
     }
   }
 })
 ```
 
-The breadcrumb is derived from the active VitePress sidebar. InPress uses the page title when the current document is not in the sidebar. Word count and reading time are calculated from the rendered article unless the page provides explicit values. When VitePress [`lastUpdated`](https://vitepress.dev/reference/site-config#lastupdated) is enabled, the displayed time comes from the document's latest Git commit.
+The breadcrumb is derived from the active VitePress sidebar. InPress uses the page title when the current document is not in the sidebar. Word count and reading time are calculated from the rendered article unless the page provides explicit values. When VitePress [`lastUpdated`](https://vitepress.dev/reference/site-config#lastupdated) is enabled, the displayed time comes from the document's latest Git commit. Its locale and format follow VitePress's `lastUpdated.formatOptions` behavior, including `forceLocale` and `timeZone`.
 
 Set per-page values in frontmatter:
 

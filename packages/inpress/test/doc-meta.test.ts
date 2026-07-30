@@ -46,12 +46,34 @@ test('calculates stable reading times and formats dates', () => {
   assert.equal(resolveReadingTime(891), 4.1)
   assert.equal(resolveReadingTime(1), 0.1)
   assert.equal(formatDocMetaDate('2025-03-05 23:59:25'), '2025-03-05 23:59:25')
-  assert.equal(formatDocMetaDate(Date.UTC(2025, 2, 5, 23, 59, 25)), '2025-03-05 23:59:25')
   assert.equal(
     formatDocMetaDate(
       Date.parse('2026-07-18T14:35:41Z'),
-      'Asia/Shanghai'
+      'en-US',
+      { dateStyle: 'medium', timeStyle: 'medium', timeZone: 'Asia/Shanghai' }
     ),
-    '2026-07-18 22:35:41'
+    'Jul 18, 2026, 10:35:41 PM'
+  )
+  assert.equal(
+    formatDocMetaDate(
+      Date.parse('2026-07-18T14:35:41Z'),
+      'zh-CN',
+      { dateStyle: 'medium', timeStyle: 'medium', timeZone: 'Asia/Shanghai' }
+    ),
+    '2026年7月18日 22:35:41'
+  )
+  assert.equal(
+    formatDocMetaDate(
+      Date.parse('2026-07-18T14:35:41Z'),
+      'en-GB',
+      {
+        dateStyle: 'long',
+        timeStyle: 'short',
+        hourCycle: 'h23',
+        timeZone: 'Asia/Shanghai',
+        forceLocale: true
+      }
+    ),
+    '18 July 2026 at 22:35'
   )
 })

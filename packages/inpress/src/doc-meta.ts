@@ -4,7 +4,6 @@ export interface DocMetaConfig {
   author?: string
   homeLabel?: string
   readingSpeed?: number
-  timeZone?: string
 }
 
 export interface DocMetaPageConfig {
@@ -151,9 +150,19 @@ export function resolveReadingTime(
   return Math.max(0.1, Math.round((wordCount / speed) * 10) / 10)
 }
 
+type DocMetaDateTimeFormatOptions = NonNullable<
+  DefaultTheme.LastUpdatedOptions['formatOptions']
+>
+
+const defaultDateTimeFormatOptions = {
+  dateStyle: 'medium',
+  timeStyle: 'medium'
+} satisfies Intl.DateTimeFormatOptions
+
 export function formatDocMetaDate(
   value: string | number,
-  timeZone = 'UTC'
+  locale = 'en-US',
+  formatOptions?: DocMetaDateTimeFormatOptions
 ): string | undefined {
   if (typeof value === 'string') return value.trim() || undefined
   if (!Number.isFinite(value)) return undefined
@@ -161,33 +170,13 @@ export function formatDocMetaDate(
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return undefined
 
-  let formatter: Intl.DateTimeFormat
+  const resolvedOptions = formatOptions
+    ? { ...formatOptions }
+    : { ...defaultDateTimeFormatOptions }
+  delete resolvedOptions.forceLocale
 
-  try {
-    formatter = createDateFormatter(timeZone.trim() || 'UTC')
-  } catch {
-    formatter = createDateFormatter('UTC')
-  }
-
-  const parts = Object.fromEntries(
-    formatter
-      .formatToParts(date)
-      .filter(({ type }) => type !== 'literal')
-      .map(({ type, value: part }) => [type, part])
-  )
-
-  return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second}`
-}
-
-function createDateFormatter(timeZone: string): Intl.DateTimeFormat {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hourCycle: 'h23',
-    timeZone
-  })
+  return new Intl.DateTimeFormat(
+    locale.trim() || 'en-US',
+    resolvedOptions
+  ).format(date)
 }

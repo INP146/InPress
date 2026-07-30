@@ -11,7 +11,6 @@ const sharedThemeConfig = {
   homeLogoMonochrome: true,
   docMeta: {
     author: "INP146",
-    timeZone: "Asia/Shanghai",
   },
   socialLinks: [
     { icon: "github" as const, link: "https://github.com/INP146/inpress" },
@@ -20,6 +19,11 @@ const sharedThemeConfig = {
 } satisfies DefaultTheme.Config;
 const editLinkPattern =
   "https://github.com/INP146/inpress/edit/main/apps/preview/:path";
+const lastUpdatedFormatOptions = {
+  dateStyle: "short",
+  timeStyle: "short",
+  forceLocale: true,
+} satisfies NonNullable<DefaultTheme.LastUpdatedOptions["formatOptions"]>;
 const useBuiltPackage = process.env.INPRESS_USE_DIST === "1";
 
 export default defineConfig({
@@ -40,6 +44,10 @@ export default defineConfig({
       themeConfig: {
         ...themeI18n.en,
         ...sharedThemeConfig,
+        lastUpdated: {
+          ...themeI18n.en.lastUpdated,
+          formatOptions: lastUpdatedFormatOptions,
+        },
         editLink: {
           pattern: editLinkPattern,
           text: "Edit this page on GitHub",
@@ -84,6 +92,10 @@ export default defineConfig({
       themeConfig: {
         ...themeI18n.zh,
         ...sharedThemeConfig,
+        lastUpdated: {
+          ...themeI18n.zh.lastUpdated,
+          formatOptions: lastUpdatedFormatOptions,
+        },
         editLink: {
           pattern: editLinkPattern,
           text: "在 GitHub 上编辑此页",
