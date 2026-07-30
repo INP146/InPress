@@ -337,7 +337,7 @@ const Layout = defineComponent({
             }
           },
           {
-            'doc-top': () => {
+            'doc-before': () => {
               const docMeta = effectiveTheme.value.docMeta
 
               return docMeta && frontmatter.value.docMeta !== false
