@@ -2,7 +2,8 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   createAdaptiveGiscusTheme,
-  createInPressGiscusTheme,
+  createInPressGiscusThemes,
+  requiresExplicitWebKitGiscusTheme,
   resolveGiscusTheme
 } from '../src/giscus-theme'
 
@@ -51,7 +52,7 @@ test('falls back to built-in themes when custom CSS uses plain HTTP', () => {
   )
 })
 
-test('creates one adaptive Giscus theme from both VitePress palettes', () => {
+test('creates adaptive and explicit InPress themes from both palettes', () => {
   const lightTokens = new Map([
     ['--vp-c-bg', '#ffffff'],
     ['--vp-c-bg-alt', '#f6f6f7'],
@@ -72,27 +73,67 @@ test('creates one adaptive Giscus theme from both VitePress palettes', () => {
     ['--vp-button-brand-bg', '#d6396f'],
     ['--vp-button-brand-text', '#ffffff']
   ])
-  const theme = createInPressGiscusTheme(
+  const themes = createInPressGiscusThemes(
     (name) => lightTokens.get(name) ?? '',
     (name) => darkTokens.get(name) ?? ''
   )
-  const css = decodeURIComponent(theme.slice(theme.indexOf(',') + 1))
+  const adaptiveCss = decodeURIComponent(
+    themes.adaptive.slice(themes.adaptive.indexOf(',') + 1)
+  )
+  const lightCss = decodeURIComponent(
+    themes.light.slice(themes.light.indexOf(',') + 1)
+  )
+  const darkCss = decodeURIComponent(
+    themes.dark.slice(themes.dark.indexOf(',') + 1)
+  )
 
-  assert.match(theme, /^data:text\/css;charset=utf-8,/)
-  assert.match(css, /giscus\.app\/themes\/preferred_color_scheme\.css/)
-  assert.match(css, /--color-canvas-default:#ffffff/)
-  assert.match(css, /--color-canvas-default:oklch\(20% 0\.01 270\)/)
-  assert.match(css, /--color-fg-default:#dfdfd6/)
-  assert.match(css, /--color-accent-fg:#ff6090/)
-  assert.match(css, /--color-btn-primary-bg:#d6396f/)
-  assert.match(css, /--color-btn-primary-disabled-bg:color-mix/)
-  assert.match(css, /--color-scale-gray-7:rgb\(101 117 133 \/ 16%\)/)
-  assert.match(css, /--color-scale-blue-8:rgb\(255 96 144 \/ 16%\)/)
-  assert.match(css, /@media \(prefers-color-scheme:dark\)/)
-  assert.match(css, /\.gsc-comment-box-textarea:disabled\{opacity:1\}/)
+  assert.match(themes.adaptive, /^data:text\/css;charset=utf-8,/)
+  assert.match(adaptiveCss, /giscus\.app\/themes\/preferred_color_scheme\.css/)
+  assert.match(
+    adaptiveCss,
+    /:root\{color-scheme:light dark;background:transparent\}/
+  )
+  assert.match(adaptiveCss, /body\{background:transparent\}/)
+  assert.match(adaptiveCss, /--color-canvas-default:#ffffff/)
+  assert.match(
+    adaptiveCss,
+    /--color-canvas-default:oklch\(20% 0\.01 270\)/
+  )
+  assert.match(adaptiveCss, /@media \(prefers-color-scheme:dark\)/)
+
+  assert.match(lightCss, /giscus\.app\/themes\/light\.css/)
+  assert.match(
+    lightCss,
+    /:root\{color-scheme:only light;background:transparent\}/
+  )
+  assert.match(lightCss, /body\{background:transparent\}/)
+  assert.match(lightCss, /--color-canvas-default:#ffffff/)
+  assert.match(lightCss, /--color-fg-default:#3c3c43/)
+  assert.match(lightCss, /--color-accent-fg:#d6396f/)
+  assert.doesNotMatch(lightCss, /preferred_color_scheme/)
+  assert.doesNotMatch(lightCss, /oklch\(20% 0\.01 270\)/)
+
+  assert.match(darkCss, /giscus\.app\/themes\/dark\.css/)
+  assert.match(
+    darkCss,
+    /:root\{color-scheme:only dark;background:transparent\}/
+  )
+  assert.match(darkCss, /body\{background:transparent\}/)
+  assert.match(darkCss, /--color-canvas-default:oklch\(20% 0\.01 270\)/)
+  assert.match(darkCss, /--color-fg-default:#dfdfd6/)
+  assert.match(darkCss, /--color-accent-fg:#ff6090/)
+  assert.match(darkCss, /--color-btn-primary-bg:#d6396f/)
+  assert.match(darkCss, /--color-btn-primary-disabled-bg:color-mix/)
+  assert.match(darkCss, /--color-scale-gray-7:rgb\(101 117 133 \/ 16%\)/)
+  assert.match(darkCss, /--color-scale-blue-8:rgb\(255 96 144 \/ 16%\)/)
+  assert.doesNotMatch(darkCss, /preferred_color_scheme/)
+  assert.match(
+    darkCss,
+    /\.gsc-comment-box-textarea:disabled\{opacity:1\}/
+  )
 })
 
-test('keeps a stable adaptive theme URL across appearance changes', () => {
+test('keeps configured adaptive themes stable across page switches', () => {
   assert.equal(createAdaptiveGiscusTheme(undefined), 'preferred_color_scheme')
   assert.equal(createAdaptiveGiscusTheme('dark_dimmed'), 'dark_dimmed')
 
@@ -106,4 +147,26 @@ test('keeps a stable adaptive theme URL across appearance changes', () => {
   assert.match(css, /giscus\.app\/themes\/dark_dimmed\.css/)
   assert.match(css, /prefers-color-scheme:light/)
   assert.match(css, /prefers-color-scheme:dark/)
+  assert.match(css, /:root\{color-scheme:light dark;background:transparent\}/)
+  assert.match(css, /body\{background:transparent\}/)
+})
+
+test('uses explicit themes only for WebKit without desktop Chromium', () => {
+  const safari =
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ' +
+    'AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.1 Safari/605.1.15'
+  const chrome =
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) ' +
+    'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36'
+  const iosChrome =
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 26_0 like Mac OS X) ' +
+    'AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/140.0 Mobile/15E148 Safari/604.1'
+  const firefox =
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) ' +
+    'Gecko/20100101 Firefox/141.0'
+
+  assert.equal(requiresExplicitWebKitGiscusTheme(safari), true)
+  assert.equal(requiresExplicitWebKitGiscusTheme(iosChrome), true)
+  assert.equal(requiresExplicitWebKitGiscusTheme(chrome), false)
+  assert.equal(requiresExplicitWebKitGiscusTheme(firefox), false)
 })

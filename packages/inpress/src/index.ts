@@ -29,7 +29,11 @@ import {
   resolveFaviconSource,
   type FaviconConfig
 } from './favicon'
-import { Giscus, type GiscusConfig } from './giscus'
+import {
+  Giscus,
+  syncGiscusAppearance,
+  type GiscusConfig
+} from './giscus'
 import { applyHomeLogoMonochrome } from './home-logo'
 import { createLinkIconStyle } from './link-icons'
 import { applyNavLogoMonochrome } from './nav-logo'
@@ -218,12 +222,20 @@ function toggleAppearance(
               : '::view-transition-old(root)'
           })
         } finally {
+          // WebKit switches the cross-origin iframe after both transition layers exist.
+          syncGiscusAppearance(isDark.value)
           releaseGiscusSchemeLock()
         }
       },
-      releaseGiscusSchemeLock
+      () => {
+        syncGiscusAppearance(isDark.value)
+        releaseGiscusSchemeLock()
+      }
     )
-    .catch(releaseGiscusSchemeLock)
+    .catch(() => {
+      syncGiscusAppearance(isDark.value)
+      releaseGiscusSchemeLock()
+    })
 
   const finishTransition = async () => {
     appearanceAnimation?.cancel()

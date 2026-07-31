@@ -7,6 +7,15 @@ export type GiscusThemeValue = string | GiscusTheme
 
 export const inPressGiscusTheme = 'inpress'
 
+export interface InPressGiscusThemes extends GiscusTheme {
+  adaptive: string
+}
+
+export const inPressGiscusBaseThemes = {
+  light: 'https://giscus.app/themes/light.css',
+  dark: 'https://giscus.app/themes/dark.css'
+} as const
+
 const giscusThemeTokens = {
   '--color-btn-text': '--vp-c-text-1',
   '--color-btn-bg': '--vp-c-bg-soft',
@@ -116,10 +125,26 @@ function createDataTheme(css: string): string {
   return `data:text/css;charset=utf-8,${encodeURIComponent(css)}`
 }
 
-export function createInPressGiscusTheme(
+function createExplicitInPressGiscusTheme(
+  isDark: boolean,
+  declarations: string
+): string {
+  const appearance = isDark ? 'dark' : 'light'
+  const css = [
+    `@import url('${inPressGiscusBaseThemes[appearance]}');`,
+    `:root{color-scheme:only ${appearance};background:transparent}`,
+    'body{background:transparent}',
+    `main{${declarations}}`,
+    'main .gsc-comment-box-textarea:disabled{opacity:1}'
+  ].join('')
+
+  return createDataTheme(css)
+}
+
+export function createInPressGiscusThemes(
   readLightCssVariable: ReadCssVariable,
   readDarkCssVariable: ReadCssVariable
-): string {
+): InPressGiscusThemes {
   const light = createInPressGiscusDeclarations(
     false,
     readLightCssVariable
@@ -130,12 +155,18 @@ export function createInPressGiscusTheme(
   ).join(';')
   const css = [
     "@import url('https://giscus.app/themes/preferred_color_scheme.css');",
+    ':root{color-scheme:light dark;background:transparent}',
+    'body{background:transparent}',
     `main{${light}}`,
     `@media (prefers-color-scheme:dark){main{${dark}}}`,
     'main .gsc-comment-box-textarea:disabled{opacity:1}'
   ].join('')
 
-  return createDataTheme(css)
+  return {
+    adaptive: createDataTheme(css),
+    light: createExplicitInPressGiscusTheme(false, light),
+    dark: createExplicitInPressGiscusTheme(true, dark)
+  }
 }
 
 export function resolveGiscusTheme(
@@ -168,10 +199,19 @@ export function resolveGiscusTheme(
   return resolvedUrl.protocol === 'https:' ? resolvedUrl.href : fallback
 }
 
-function resolveGiscusThemeStylesheet(theme: string): string {
+export function resolveGiscusThemeStylesheet(theme: string): string {
   return theme.startsWith('https://')
     ? theme
     : `https://giscus.app/themes/${theme}.css`
+}
+
+export function requiresExplicitWebKitGiscusTheme(
+  userAgent: string
+): boolean {
+  return (
+    /\bAppleWebKit\//.test(userAgent) &&
+    !/\b(?:Chrome|Chromium|Edg|OPR)\//.test(userAgent)
+  )
 }
 
 export function createAdaptiveGiscusTheme(
@@ -189,7 +229,9 @@ export function createAdaptiveGiscusTheme(
   const darkUrl = JSON.stringify(resolveGiscusThemeStylesheet(dark))
   const css = [
     `@import url(${lightUrl}) (prefers-color-scheme:light);`,
-    `@import url(${darkUrl}) (prefers-color-scheme:dark);`
+    `@import url(${darkUrl}) (prefers-color-scheme:dark);`,
+    ':root{color-scheme:light dark;background:transparent}',
+    'body{background:transparent}'
   ].join('')
 
   return createDataTheme(css)
