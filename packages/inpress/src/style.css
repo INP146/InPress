@@ -248,6 +248,22 @@ mark.highlight {
   width: 100%;
 }
 
+.inpress-giscus .giscus-frame {
+  color-scheme: light;
+}
+
+:root.dark .inpress-giscus .giscus-frame {
+  color-scheme: dark;
+}
+
+:root.inpress-appearance-giscus-light .inpress-giscus .giscus-frame {
+  color-scheme: light;
+}
+
+:root.inpress-appearance-giscus-dark .inpress-giscus .giscus-frame {
+  color-scheme: dark;
+}
+
 .VPFlyout.inpress-appearance-transition .menu {
   opacity: 1 !important;
   visibility: visible !important;

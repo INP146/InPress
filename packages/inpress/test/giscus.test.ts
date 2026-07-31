@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
+  createAdaptiveGiscusTheme,
   createInPressGiscusTheme,
   resolveGiscusTheme
 } from '../src/giscus-theme'
@@ -50,8 +51,18 @@ test('falls back to built-in themes when custom CSS uses plain HTTP', () => {
   )
 })
 
-test('creates a Giscus data theme from runtime VitePress tokens', () => {
-  const tokens = new Map([
+test('creates one adaptive Giscus theme from both VitePress palettes', () => {
+  const lightTokens = new Map([
+    ['--vp-c-bg', '#ffffff'],
+    ['--vp-c-bg-alt', '#f6f6f7'],
+    ['--vp-c-text-1', '#3c3c43'],
+    ['--vp-c-brand-1', '#d6396f'],
+    ['--vp-c-brand-soft', 'rgb(214 57 111 / 14%)'],
+    ['--vp-c-default-soft', 'rgb(142 150 170 / 14%)'],
+    ['--vp-button-brand-bg', '#d6396f'],
+    ['--vp-button-brand-text', '#ffffff']
+  ])
+  const darkTokens = new Map([
     ['--vp-c-bg', 'oklch(20% 0.01 270)'],
     ['--vp-c-bg-alt', '#161618'],
     ['--vp-c-text-1', '#dfdfd6'],
@@ -62,13 +73,14 @@ test('creates a Giscus data theme from runtime VitePress tokens', () => {
     ['--vp-button-brand-text', '#ffffff']
   ])
   const theme = createInPressGiscusTheme(
-    true,
-    (name) => tokens.get(name) ?? ''
+    (name) => lightTokens.get(name) ?? '',
+    (name) => darkTokens.get(name) ?? ''
   )
   const css = decodeURIComponent(theme.slice(theme.indexOf(',') + 1))
 
   assert.match(theme, /^data:text\/css;charset=utf-8,/)
-  assert.match(css, /giscus\.app\/themes\/dark\.css/)
+  assert.match(css, /giscus\.app\/themes\/preferred_color_scheme\.css/)
+  assert.match(css, /--color-canvas-default:#ffffff/)
   assert.match(css, /--color-canvas-default:oklch\(20% 0\.01 270\)/)
   assert.match(css, /--color-fg-default:#dfdfd6/)
   assert.match(css, /--color-accent-fg:#ff6090/)
@@ -76,5 +88,22 @@ test('creates a Giscus data theme from runtime VitePress tokens', () => {
   assert.match(css, /--color-btn-primary-disabled-bg:color-mix/)
   assert.match(css, /--color-scale-gray-7:rgb\(101 117 133 \/ 16%\)/)
   assert.match(css, /--color-scale-blue-8:rgb\(255 96 144 \/ 16%\)/)
+  assert.match(css, /@media \(prefers-color-scheme:dark\)/)
   assert.match(css, /\.gsc-comment-box-textarea:disabled\{opacity:1\}/)
+})
+
+test('keeps a stable adaptive theme URL across appearance changes', () => {
+  assert.equal(createAdaptiveGiscusTheme(undefined), 'preferred_color_scheme')
+  assert.equal(createAdaptiveGiscusTheme('dark_dimmed'), 'dark_dimmed')
+
+  const theme = createAdaptiveGiscusTheme({
+    light: 'light',
+    dark: 'dark_dimmed'
+  })
+  const css = decodeURIComponent(theme.slice(theme.indexOf(',') + 1))
+
+  assert.match(css, /giscus\.app\/themes\/light\.css/)
+  assert.match(css, /giscus\.app\/themes\/dark_dimmed\.css/)
+  assert.match(css, /prefers-color-scheme:light/)
+  assert.match(css, /prefers-color-scheme:dark/)
 })

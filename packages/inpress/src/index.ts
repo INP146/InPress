@@ -122,73 +122,113 @@ function toggleAppearance(
     'startViewTransition' in document &&
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+  if (
+    typeof document !== 'undefined' &&
+    document.documentElement.classList.contains(
+      'inpress-appearance-transition-running'
+    )
+  ) {
+    return
+  }
+
   if (!canAnimate) {
     void updateAppearance()
     return
   }
 
+  const root = document.documentElement
+
   const pointerEvent = event instanceof MouseEvent && event.detail > 0
   const fallbackX = pointerEvent ? event.clientX : window.innerWidth / 2
   const fallbackY = pointerEvent ? event.clientY : window.innerHeight / 2
-  document.documentElement.classList.add('inpress-appearance-transition-running')
+  const giscusSchemeLockClass = startsDark
+    ? 'inpress-appearance-giscus-dark'
+    : 'inpress-appearance-giscus-light'
+  const releaseGiscusSchemeLock = () => {
+    root.classList.remove(giscusSchemeLockClass)
+  }
+  root.classList.add(
+    'inpress-appearance-transition-running',
+    giscusSchemeLockClass
+  )
   if (mode === 'spread-light') {
-    document.documentElement.classList.add(
-      'inpress-appearance-transition-light'
-    )
+    root.classList.add('inpress-appearance-transition-light')
   }
   flyout?.classList.add('inpress-appearance-transition')
-  const transition = document.startViewTransition(updateAppearance)
+  let transition: ReturnType<Document['startViewTransition']>
+
+  try {
+    transition = document.startViewTransition(updateAppearance)
+  } catch {
+    releaseGiscusSchemeLock()
+    root.classList.remove(
+      'inpress-appearance-transition-running',
+      'inpress-appearance-transition-light'
+    )
+    flyout?.classList.remove('inpress-appearance-transition')
+    void updateAppearance()
+    return
+  }
+
   let appearanceAnimation: Animation | undefined
 
-  void transition.ready.then(() => {
-    const anchorsDarkThumb = mode === 'spread-light'
-    const anchorThumbStartsAtInitialPosition = anchorsDarkThumb === startsDark
-    const anchorThumbBounds = anchorThumbStartsAtInitialPosition
-      ? initialThumbBounds
-      : thumb?.getBoundingClientRect()
-    const x = anchorThumbBounds
-      ? anchorThumbBounds.left + anchorThumbBounds.width / 2
-      : (initialThumbCenter?.x ?? fallbackX)
-    const y = anchorThumbBounds
-      ? anchorThumbBounds.top + anchorThumbBounds.height / 2
-      : (initialThumbCenter?.y ?? fallbackY)
-    const radius = Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y)
-    )
-    const revealsAnimatedTheme =
-      mode === 'spread-light' ? !isDark.value : isDark.value
-    const keyframes =
-      mode === 'fade'
-        ? { opacity: revealsAnimatedTheme ? [0, 1] : [1, 0] }
-        : {
-            clipPath: revealsAnimatedTheme
-              ? [
-                  `circle(0px at ${x}px ${y}px)`,
-                  `circle(${radius}px at ${x}px ${y}px)`
-                ]
-              : [
-                  `circle(${radius}px at ${x}px ${y}px)`,
-                  `circle(0px at ${x}px ${y}px)`
-                ]
-          }
+  void transition.ready
+    .then(
+      () => {
+        try {
+          const anchorsDarkThumb = mode === 'spread-light'
+          const anchorThumbStartsAtInitialPosition =
+            anchorsDarkThumb === startsDark
+          const anchorThumbBounds = anchorThumbStartsAtInitialPosition
+            ? initialThumbBounds
+            : thumb?.getBoundingClientRect()
+          const x = anchorThumbBounds
+            ? anchorThumbBounds.left + anchorThumbBounds.width / 2
+            : (initialThumbCenter?.x ?? fallbackX)
+          const y = anchorThumbBounds
+            ? anchorThumbBounds.top + anchorThumbBounds.height / 2
+            : (initialThumbCenter?.y ?? fallbackY)
+          const radius = Math.hypot(
+            Math.max(x, window.innerWidth - x),
+            Math.max(y, window.innerHeight - y)
+          )
+          const revealsAnimatedTheme =
+            mode === 'spread-light' ? !isDark.value : isDark.value
+          const keyframes =
+            mode === 'fade'
+              ? { opacity: revealsAnimatedTheme ? [0, 1] : [1, 0] }
+              : {
+                  clipPath: revealsAnimatedTheme
+                    ? [
+                        `circle(0px at ${x}px ${y}px)`,
+                        `circle(${radius}px at ${x}px ${y}px)`
+                      ]
+                    : [
+                        `circle(${radius}px at ${x}px ${y}px)`,
+                        `circle(0px at ${x}px ${y}px)`
+                      ]
+                }
 
-    appearanceAnimation = document.documentElement.animate(
-      keyframes,
-      {
-        duration: 420,
-        easing: 'ease-in-out',
-        fill: 'forwards',
-        pseudoElement: revealsAnimatedTheme
-          ? '::view-transition-new(root)'
-          : '::view-transition-old(root)'
-      }
+          appearanceAnimation = root.animate(keyframes, {
+            duration: 420,
+            easing: 'ease-in-out',
+            fill: 'both',
+            pseudoElement: revealsAnimatedTheme
+              ? '::view-transition-new(root)'
+              : '::view-transition-old(root)'
+          })
+        } finally {
+          releaseGiscusSchemeLock()
+        }
+      },
+      releaseGiscusSchemeLock
     )
-  })
+    .catch(releaseGiscusSchemeLock)
 
   const finishTransition = async () => {
     appearanceAnimation?.cancel()
-    document.documentElement.classList.remove(
+    releaseGiscusSchemeLock()
+    root.classList.remove(
       'inpress-appearance-transition-running',
       'inpress-appearance-transition-light'
     )

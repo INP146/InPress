@@ -46,16 +46,20 @@ const giscusThemeTokens = {
   '--color-danger-subtle': '--vp-c-danger-soft'
 } as const
 
+export const inPressGiscusCssVariables = [
+  ...new Set(Object.values(giscusThemeTokens))
+]
+
 type ReadCssVariable = (name: string) => string
 
 function mixWithTransparent(color: string, amount: number): string {
   return `color-mix(in srgb, ${color} ${amount}%, transparent)`
 }
 
-export function createInPressGiscusTheme(
+function createInPressGiscusDeclarations(
   isDark: boolean,
   readCssVariable: ReadCssVariable
-): string {
+): string[] {
   const declarations = Object.entries(giscusThemeTokens).flatMap(
     ([giscusToken, vitePressToken]) => {
       const value = readCssVariable(vitePressToken).trim()
@@ -105,10 +109,33 @@ export function createInPressGiscusTheme(
     `--color-social-reaction-bg-reacted-hover:var(${accentScale})`
   )
 
-  const baseTheme = isDark ? 'dark' : 'light'
-  const css = `@import url('https://giscus.app/themes/${baseTheme}.css');main{${declarations.join(';')}}main .gsc-comment-box-textarea:disabled{opacity:1}`
+  return declarations
+}
 
+function createDataTheme(css: string): string {
   return `data:text/css;charset=utf-8,${encodeURIComponent(css)}`
+}
+
+export function createInPressGiscusTheme(
+  readLightCssVariable: ReadCssVariable,
+  readDarkCssVariable: ReadCssVariable
+): string {
+  const light = createInPressGiscusDeclarations(
+    false,
+    readLightCssVariable
+  ).join(';')
+  const dark = createInPressGiscusDeclarations(
+    true,
+    readDarkCssVariable
+  ).join(';')
+  const css = [
+    "@import url('https://giscus.app/themes/preferred_color_scheme.css');",
+    `main{${light}}`,
+    `@media (prefers-color-scheme:dark){main{${dark}}}`,
+    'main .gsc-comment-box-textarea:disabled{opacity:1}'
+  ].join('')
+
+  return createDataTheme(css)
 }
 
 export function resolveGiscusTheme(
@@ -139,4 +166,31 @@ export function resolveGiscusTheme(
   const resolvedUrl = new URL(value, baseUrl)
 
   return resolvedUrl.protocol === 'https:' ? resolvedUrl.href : fallback
+}
+
+function resolveGiscusThemeStylesheet(theme: string): string {
+  return theme.startsWith('https://')
+    ? theme
+    : `https://giscus.app/themes/${theme}.css`
+}
+
+export function createAdaptiveGiscusTheme(
+  theme: GiscusThemeValue | undefined,
+  pageUrl?: string
+): string {
+  if (!theme) return 'preferred_color_scheme'
+  if (typeof theme === 'string') return theme
+
+  const light = resolveGiscusTheme(theme, false, pageUrl)
+  const dark = resolveGiscusTheme(theme, true, pageUrl)
+  if (light === dark) return light
+
+  const lightUrl = JSON.stringify(resolveGiscusThemeStylesheet(light))
+  const darkUrl = JSON.stringify(resolveGiscusThemeStylesheet(dark))
+  const css = [
+    `@import url(${lightUrl}) (prefers-color-scheme:light);`,
+    `@import url(${darkUrl}) (prefers-color-scheme:dark);`
+  ].join('')
+
+  return createDataTheme(css)
 }

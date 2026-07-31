@@ -1,18 +1,17 @@
 import {
   defineComponent,
   h,
-  nextTick,
   onMounted,
   onUnmounted,
   ref,
-  watch,
   type PropType
 } from 'vue'
 import { useData } from 'vitepress'
 import {
+  createAdaptiveGiscusTheme,
   createInPressGiscusTheme,
   inPressGiscusTheme,
-  resolveGiscusTheme,
+  inPressGiscusCssVariables,
   type GiscusThemeValue
 } from './giscus-theme'
 
@@ -51,21 +50,50 @@ export const Giscus = defineComponent({
     }
   },
   setup(props) {
-    const { isDark, lang } = useData()
+    const { lang } = useData()
     const container = ref<HTMLDivElement>()
     let themeObserver: MutationObserver | undefined
     let updateFrame: number | undefined
 
-    function currentTheme(): string {
-      if (props.config.theme !== inPressGiscusTheme) {
-        return resolveGiscusTheme(props.config.theme, isDark.value)
+    function captureCssVariables(targetDark: boolean): Map<string, string> {
+      const root = document.documentElement
+      root.classList.toggle('dark', targetDark)
+      const styles = getComputedStyle(root)
+      const values = new Map<string, string>()
+
+      for (const name of inPressGiscusCssVariables) {
+        values.set(name, styles.getPropertyValue(name).trim())
       }
 
-      const styles = getComputedStyle(document.documentElement)
-      return createInPressGiscusTheme(isDark.value, (name) => {
-        const value = styles.getPropertyValue(name).trim()
+      return values
+    }
+
+    function currentTheme(): string {
+      if (props.config.theme !== inPressGiscusTheme) {
+        return createAdaptiveGiscusTheme(props.config.theme)
+      }
+
+      const root = document.documentElement
+      const startsDark = root.classList.contains('dark')
+      let light = new Map<string, string>()
+      let dark = new Map<string, string>()
+
+      try {
+        light = captureCssVariables(false)
+        dark = captureCssVariables(true)
+      } finally {
+        root.classList.toggle('dark', startsDark)
+      }
+
+      const read = (values: Map<string, string>, name: string) => {
+        const value = values.get(name) ?? ''
         return value && CSS.supports('color', value) ? value : ''
-      })
+      }
+
+      return createInPressGiscusTheme(
+        (name) => read(light, name),
+        (name) => read(dark, name)
+      )
     }
 
     function updateTheme(): void {
@@ -108,12 +136,6 @@ export const Giscus = defineComponent({
         )
       })
     }
-
-    watch(
-      isDark,
-      () => void nextTick(scheduleThemeUpdate),
-      { flush: 'post' }
-    )
 
     onMounted(() => {
       const target = container.value
@@ -161,7 +183,7 @@ export const Giscus = defineComponent({
         })
         themeObserver.observe(document.documentElement, {
           attributes: true,
-          attributeFilter: ['class', 'style']
+          attributeFilter: ['style']
         })
       }
     })
