@@ -12,7 +12,7 @@ test('uses the active navigation image as a current-color mask', () => {
     classList: {
       contains: (value: string) => maskClasses.has(value)
     },
-    parentNode: {},
+    parentNode: {} as object | null,
     remove: () => {
       insertedMask = undefined
       mask.parentNode = null
