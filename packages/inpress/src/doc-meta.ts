@@ -38,6 +38,13 @@ function ensureLeadingSlash(path: string): string {
   return path.startsWith('/') ? path : `/${path}`
 }
 
+function matchesSidebarPrefix(path: string, prefix: string): boolean {
+  const normalizedPrefix = ensureLeadingSlash(prefix).replace(/\/+$/, '') || '/'
+  return normalizedPrefix === '/'
+    ? path.startsWith('/')
+    : path === normalizedPrefix || path.startsWith(`${normalizedPrefix}/`)
+}
+
 function resolveSidebarLink(link: string, base?: string): string {
   if (/^(?:[a-z]+:)?\/\//i.test(link)) return link
   if (!base) return ensureLeadingSlash(link)
@@ -54,9 +61,7 @@ function resolveSidebar(
   const normalizedPath = ensureLeadingSlash(path)
   const key = Object.keys(sidebar)
     .sort((left, right) => right.split('/').length - left.split('/').length)
-    .find((candidate) =>
-      normalizedPath.startsWith(ensureLeadingSlash(candidate))
-    )
+    .find((candidate) => matchesSidebarPrefix(normalizedPath, candidate))
   const resolved = key ? sidebar[key] : undefined
 
   if (!resolved) return { items: [] }

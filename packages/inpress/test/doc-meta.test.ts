@@ -36,6 +36,18 @@ test('falls back to the page title when no sidebar item matches', () => {
   )
 })
 
+test('does not match sidebar prefixes across a path segment boundary', () => {
+  const mappedSidebar: DefaultTheme.Sidebar = {
+    '/guide': [{ text: 'Guide', link: '/guide' }],
+    '/guides': [{ text: 'Guides', link: '/guides' }]
+  }
+
+  assert.deepEqual(
+    resolveDocMetaBreadcrumbs(mappedSidebar, '/guides', 'Guides'),
+    [{ text: 'Guides', link: undefined }]
+  )
+})
+
 test('counts Latin words and CJK characters', () => {
   assert.equal(countDocWords('Build clear docs with InPress.'), 5)
   assert.equal(countDocWords('清晰文档'), 4)
