@@ -41,6 +41,21 @@ test('omits npm package subpages from generated labels', () => {
   assert.equal(resolveProviderLinkText('https://www.npmjs.com/package'), undefined)
 })
 
+test('handles encoded and malformed provider path segments', () => {
+  assert.equal(
+    resolveProviderLinkText('https://github.com/vuejs/vitepress%20plugin'),
+    'vuejs/vitepress plugin'
+  )
+  assert.equal(
+    resolveProviderLinkText('https://www.npmjs.com/package/%40vueuse/core'),
+    '@vueuse/core'
+  )
+  assert.equal(
+    resolveProviderLinkText('https://github.com/vuejs/%E0%A4%A'),
+    'vuejs/%E0%A4%A'
+  )
+})
+
 test('updates and restores bare provider links', () => {
   const link = createLink(
     'https://github.com/vuejs/vitepress',
