@@ -35,10 +35,10 @@ function getNpmPackageLinkText(url: URL): string | undefined {
   const path = url.pathname.split('/').filter(Boolean).map(decodePathSegment)
 
   if (path[0] !== 'package' || !path[1]) return undefined
-
-  return path[1].startsWith('@') && path[2]
-    ? `${path[1]}/${path[2]}`
-    : path[1]
+  if (path[1].startsWith('@')) {
+    return path[2] ? `${path[1]}/${path[2]}` : undefined
+  }
+  return path[1]
 }
 
 const linkTextRules = [

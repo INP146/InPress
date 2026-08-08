@@ -39,6 +39,7 @@ test('omits npm package subpages from generated labels', () => {
     '@vueuse/core'
   )
   assert.equal(resolveProviderLinkText('https://www.npmjs.com/package'), undefined)
+  assert.equal(resolveProviderLinkText('https://www.npmjs.com/package/@vueuse'), undefined)
 })
 
 test('handles encoded and malformed provider path segments', () => {
