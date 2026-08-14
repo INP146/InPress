@@ -48,6 +48,28 @@ test('does not match sidebar prefixes across a path segment boundary', () => {
   )
 })
 
+test('joins sidebar bases that omit a trailing slash', () => {
+  const sidebarWithoutTrailingSlash: DefaultTheme.Sidebar = [
+    {
+      text: 'Guide',
+      base: '/guide',
+      items: [{ text: 'Introduction', link: 'introduction' }]
+    }
+  ]
+
+  assert.deepEqual(
+    resolveDocMetaBreadcrumbs(
+      sidebarWithoutTrailingSlash,
+      '/guide/introduction',
+      'Introduction'
+    ),
+    [
+      { text: 'Guide', link: '/guide/introduction' },
+      { text: 'Introduction', link: undefined }
+    ]
+  )
+})
+
 test('counts Latin words and CJK characters', () => {
   assert.equal(countDocWords('Build clear docs with InPress.'), 5)
   assert.equal(countDocWords('清晰文档'), 4)

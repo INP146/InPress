@@ -48,7 +48,7 @@ function matchesSidebarPrefix(path: string, prefix: string): boolean {
 function resolveSidebarLink(link: string, base?: string): string {
   if (/^(?:[a-z]+:)?\/\//i.test(link)) return link
   if (!base) return ensureLeadingSlash(link)
-  return `${base}${link.replace(/^\//, base.endsWith('/') ? '' : '/')}`
+  return `${base.replace(/\/+$/, '')}/${link.replace(/^\/+/, '')}`
 }
 
 function resolveSidebar(
