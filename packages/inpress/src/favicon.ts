@@ -64,9 +64,15 @@ export function createAlignedFaviconDataUrl(
   embeddedSource: string,
   transform: FaviconTransform = DEFAULT_FAVICON_TRANSFORM
 ): string {
-  const size = Math.max(10, Math.min(transform.size, 200))
-  const offsetX = Math.max(-100, Math.min(transform.offsetX, 100))
-  const offsetY = Math.max(-100, Math.min(transform.offsetY, 100))
+  const size = Number.isFinite(transform.size)
+    ? Math.max(10, Math.min(transform.size, 200))
+    : DEFAULT_FAVICON_TRANSFORM.size
+  const offsetX = Number.isFinite(transform.offsetX)
+    ? Math.max(-100, Math.min(transform.offsetX, 100))
+    : DEFAULT_FAVICON_TRANSFORM.offsetX
+  const offsetY = Number.isFinite(transform.offsetY)
+    ? Math.max(-100, Math.min(transform.offsetY, 100))
+    : DEFAULT_FAVICON_TRANSFORM.offsetY
   const x = (100 - size) / 2 + offsetX
   const y = (100 - size) / 2 + offsetY
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><image href="${escapeAttribute(embeddedSource)}" x="${x}" y="${y}" width="${size}" height="${size}" preserveAspectRatio="xMidYMid meet"/></svg>`

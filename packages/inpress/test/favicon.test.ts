@@ -81,6 +81,19 @@ test('optically aligns an automatically derived favicon without scaling it', () 
   assert.match(svg, /preserveAspectRatio="xMidYMid meet"/)
 })
 
+test('falls back to default favicon geometry for non-finite values', () => {
+  const dataUrl = createAlignedFaviconDataUrl('data:image/png;base64,AA==', {
+    size: Number.NaN,
+    offsetX: Number.POSITIVE_INFINITY,
+    offsetY: Number.NEGATIVE_INFINITY
+  })
+  const svg = decodeURIComponent(dataUrl.slice(dataUrl.indexOf(',') + 1))
+
+  assert.match(svg, /x="0" y="0"/)
+  assert.match(svg, /width="100" height="100"/)
+  assert.doesNotMatch(svg, /(?:NaN|Infinity)/)
+})
+
 test('reads favicon geometry from CSS custom properties', () => {
   const originalDocument = globalThis.document
   const originalGetComputedStyle = globalThis.getComputedStyle
