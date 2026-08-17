@@ -57,6 +57,21 @@ test('handles encoded and malformed provider path segments', () => {
   )
 })
 
+test('matches provider hosts without accepting lookalike domains', () => {
+  assert.equal(
+    resolveProviderLinkText('https://GITHUB.COM/vuejs/vitepress'),
+    'vuejs/vitepress'
+  )
+  assert.equal(
+    resolveProviderLinkText('https://github.com.example.com/vuejs/vitepress'),
+    undefined
+  )
+  assert.equal(
+    resolveProviderLinkText('https://github.com@evil.example/vuejs/vitepress'),
+    undefined
+  )
+})
+
 test('updates and restores bare provider links', () => {
   const link = createLink(
     'https://github.com/vuejs/vitepress',
