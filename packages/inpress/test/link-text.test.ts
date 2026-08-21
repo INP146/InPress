@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { updateAutoLinkText } from '../src/auto-link-text'
+import {
+  observeAutoLinkText,
+  updateAutoLinkText
+} from '../src/auto-link-text'
 import { resolveProviderLinkText } from '../src/link-text'
 
 function createLink(href: string, text: string): HTMLAnchorElement {
@@ -96,4 +99,53 @@ test('keeps explicit link labels unchanged', () => {
   updateAutoLinkText(link, true)
   assert.equal(link.textContent, 'VitePress')
   assert.equal(link.dataset.inpressAutoLinkText, undefined)
+})
+
+test('does not update href mutations outside document content', () => {
+  const originalAnchor = globalThis.HTMLAnchorElement
+  const originalObserver = globalThis.MutationObserver
+  let callback: MutationCallback | undefined
+
+  class TestAnchor {
+    baseURI = 'https://docs.example.com/'
+    childElementCount = 0
+    dataset: DOMStringMap = {}
+    href = 'https://github.com/vuejs/vitepress'
+    textContent = this.href
+    matches = () => false
+  }
+
+  class TestMutationObserver implements MutationObserver {
+    constructor(observerCallback: MutationCallback) {
+      callback = observerCallback
+    }
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): MutationRecord[] {
+      return []
+    }
+  }
+
+  Object.assign(globalThis, {
+    HTMLAnchorElement: TestAnchor,
+    MutationObserver: TestMutationObserver
+  })
+
+  try {
+    const observer = observeAutoLinkText({} as Node, () => true)
+    const link = new TestAnchor()
+    callback?.(
+      [{ type: 'attributes', target: link } as unknown as MutationRecord],
+      observer
+    )
+
+    assert.equal(link.textContent, 'https://github.com/vuejs/vitepress')
+    assert.equal(link.dataset.inpressAutoLinkText, undefined)
+  } finally {
+    Object.assign(globalThis, {
+      HTMLAnchorElement: originalAnchor,
+      MutationObserver: originalObserver
+    })
+  }
 })

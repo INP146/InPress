@@ -62,7 +62,9 @@ export function observeAutoLinkText(
             record.target.textContent = originalText
             delete record.target.dataset.inpressAutoLinkText
           }
-          updateAutoLinkText(record.target, enabled())
+          if (record.target.matches('.vp-doc a[href]')) {
+            updateAutoLinkText(record.target, enabled())
+          }
         }
         return
       }
