@@ -79,6 +79,8 @@ test('counts Latin words and CJK characters', () => {
 test('calculates stable reading times and formats dates', () => {
   assert.equal(resolveReadingTime(891), 4.1)
   assert.equal(resolveReadingTime(1), 0.1)
+  assert.equal(resolveReadingTime(Number.NaN), 0)
+  assert.equal(resolveReadingTime(Number.POSITIVE_INFINITY), 0)
   assert.equal(formatDocMetaDate('2025-03-05 23:59:25'), '2025-03-05 23:59:25')
   assert.equal(
     formatDocMetaDate(

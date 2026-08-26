@@ -148,7 +148,7 @@ export function resolveReadingTime(
   wordCount: number,
   readingSpeed = 220
 ): number {
-  if (wordCount <= 0) return 0
+  if (!Number.isFinite(wordCount) || wordCount <= 0) return 0
   const speed = Number.isFinite(readingSpeed) && readingSpeed > 0
     ? readingSpeed
     : 220
