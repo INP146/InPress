@@ -32,6 +32,17 @@ test('resolves repository and npm package labels', () => {
   assert.equal(resolveProviderLinkText('https://example.com/package/test'), undefined)
 })
 
+test('omits the Git clone suffix from repository labels', () => {
+  assert.equal(
+    resolveProviderLinkText('https://github.com/vuejs/vitepress.git'),
+    'vuejs/vitepress'
+  )
+  assert.equal(
+    resolveProviderLinkText('https://gitlab.com/gitlab-org/gitlab.git'),
+    'gitlab-org/gitlab'
+  )
+})
+
 test('omits npm package subpages from generated labels', () => {
   assert.equal(
     resolveProviderLinkText('https://www.npmjs.com/package/vite/v/7.0.0'),

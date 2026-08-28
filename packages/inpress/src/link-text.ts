@@ -28,7 +28,8 @@ function getRepositoryLinkText(url: URL): string | undefined {
     .map(decodePathSegment)
 
   if (!owner) return undefined
-  return repository ? `${owner}/${repository}` : owner
+  const repositoryName = repository?.replace(/\.git$/, '')
+  return repositoryName ? `${owner}/${repositoryName}` : owner
 }
 
 function getNpmPackageLinkText(url: URL): string | undefined {
