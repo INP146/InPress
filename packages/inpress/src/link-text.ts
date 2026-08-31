@@ -32,6 +32,20 @@ function getRepositoryLinkText(url: URL): string | undefined {
   return repositoryName ? `${owner}/${repositoryName}` : owner
 }
 
+function getGitLabRepositoryLinkText(url: URL): string | undefined {
+  const path = url.pathname.split('/').filter(Boolean).map(decodePathSegment)
+  const subpageMarker = path.indexOf('-')
+  const repositoryPath =
+    subpageMarker >= 0 ? path.slice(0, subpageMarker) : path
+
+  if (!repositoryPath.length) return undefined
+  repositoryPath[repositoryPath.length - 1] = repositoryPath.at(-1)!.replace(
+    /\.git$/,
+    ''
+  )
+  return repositoryPath.filter(Boolean).join('/') || undefined
+}
+
 function getNpmPackageLinkText(url: URL): string | undefined {
   const path = url.pathname.split('/').filter(Boolean).map(decodePathSegment)
 
@@ -44,7 +58,7 @@ function getNpmPackageLinkText(url: URL): string | undefined {
 
 const linkTextRules = [
   { prefixes: githubLinkPrefixes, resolve: getRepositoryLinkText },
-  { prefixes: gitlabLinkPrefixes, resolve: getRepositoryLinkText },
+  { prefixes: gitlabLinkPrefixes, resolve: getGitLabRepositoryLinkText },
   { prefixes: npmLinkPrefixes, resolve: getNpmPackageLinkText }
 ] as const
 

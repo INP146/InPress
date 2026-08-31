@@ -43,6 +43,19 @@ test('omits the Git clone suffix from repository labels', () => {
   )
 })
 
+test('preserves GitLab subgroup paths without including project subpages', () => {
+  assert.equal(
+    resolveProviderLinkText('https://gitlab.com/group/subgroup/project'),
+    'group/subgroup/project'
+  )
+  assert.equal(
+    resolveProviderLinkText(
+      'https://gitlab.com/group/subgroup/project/-/issues/123'
+    ),
+    'group/subgroup/project'
+  )
+})
+
 test('omits npm package subpages from generated labels', () => {
   assert.equal(
     resolveProviderLinkText('https://www.npmjs.com/package/vite/v/7.0.0'),
