@@ -25,6 +25,22 @@ test('tracks concurrent routes and completes before becoming idle', async () => 
   assert.equal(routeProgressPhase.value, 'idle')
 })
 
+test('waits for duplicate starts of the same route to finish', async () => {
+  startRouteProgress('/guide')
+  startRouteProgress('/guide')
+
+  finishRouteProgress('/guide')
+  await wait(140)
+  assert.equal(routeProgressPhase.value, 'loading')
+
+  finishRouteProgress('/guide')
+  await wait(140)
+  assert.equal(routeProgressPhase.value, 'finishing')
+
+  await wait(330)
+  assert.equal(routeProgressPhase.value, 'idle')
+})
+
 test('ignores unmatched completions and cancels a pending finish', async () => {
   finishRouteProgress('/same-page#heading')
   assert.equal(routeProgressPhase.value, 'idle')
