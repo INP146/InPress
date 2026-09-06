@@ -51,6 +51,13 @@ function getNpmPackageLinkText(url: URL): string | undefined {
 
   if (path[0] !== 'package' || !path[1]) return undefined
   if (path[1].startsWith('@')) {
+    const encodedScopedPackage = path[1].split('/')
+    if (
+      encodedScopedPackage.length === 2 &&
+      encodedScopedPackage.every(Boolean)
+    ) {
+      return path[2] ? undefined : path[1]
+    }
     return path[2] ? `${path[1]}/${path[2]}` : undefined
   }
   return path[1]

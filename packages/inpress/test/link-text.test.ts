@@ -79,6 +79,10 @@ test('handles encoded and malformed provider path segments', () => {
     '@vueuse/core'
   )
   assert.equal(
+    resolveProviderLinkText('https://www.npmjs.com/package/%40vueuse%2Fcore'),
+    '@vueuse/core'
+  )
+  assert.equal(
     resolveProviderLinkText('https://github.com/vuejs/%E0%A4%A'),
     'vuejs/%E0%A4%A'
   )
