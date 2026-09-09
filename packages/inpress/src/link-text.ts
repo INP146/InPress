@@ -56,7 +56,7 @@ function getNpmPackageLinkText(url: URL): string | undefined {
       encodedScopedPackage.length === 2 &&
       encodedScopedPackage.every(Boolean)
     ) {
-      return path[2] ? undefined : path[1]
+      return path[1]
     }
     return path[2] ? `${path[1]}/${path[2]}` : undefined
   }
