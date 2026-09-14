@@ -6,8 +6,13 @@ Giscus comments, and optional configuration tools.
 
 ## Install
 
-After configuring the `@inp146` scope for GitHub Packages, install InPress and
-its peer dependencies:
+Configure the `@inp146` scope for GitHub Packages in your project's `.npmrc`:
+
+```ini
+@inp146:registry=https://npm.pkg.github.com
+```
+
+Then install InPress and its peer dependencies:
 
 ```sh
 pnpm add @inp146/inpress vitepress vue
