@@ -73,6 +73,7 @@ test('joins sidebar bases that omit a trailing slash', () => {
 test('counts Latin words and CJK characters', () => {
   assert.equal(countDocWords('Build clear docs with InPress.'), 5)
   assert.equal(countDocWords('清晰文档'), 4)
+  assert.equal(countDocWords('한글 문서'), 4)
   assert.equal(countDocWords('InPress 构建 docs'), 4)
 })
 

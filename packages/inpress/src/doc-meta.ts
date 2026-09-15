@@ -135,10 +135,13 @@ export function resolveDocMetaBreadcrumbs(
 
 export function countDocWords(text: string): number {
   const cjkCharacters = text.match(
-    /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu
+    /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu
   )
   const nonCjkWords = text
-    .replace(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu, ' ')
+    .replace(
+      /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu,
+      ' '
+    )
     .match(/[\p{L}\p{N}]+(?:['-][\p{L}\p{N}]+)*/gu)
 
   return (cjkCharacters?.length ?? 0) + (nonCjkWords?.length ?? 0)
