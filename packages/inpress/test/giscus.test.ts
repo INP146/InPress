@@ -4,7 +4,8 @@ import {
   createAdaptiveGiscusTheme,
   createInPressGiscusThemes,
   requiresExplicitWebKitGiscusTheme,
-  resolveGiscusTheme
+  resolveGiscusTheme,
+  resolveGiscusThemeStylesheet
 } from '../src/giscus-theme'
 
 test('resolves the default Giscus theme from the current appearance', () => {
@@ -16,6 +17,17 @@ test('preserves built-in Giscus themes and absolute theme URLs', () => {
   assert.equal(resolveGiscusTheme('dark_dimmed', true), 'dark_dimmed')
   assert.equal(
     resolveGiscusTheme('https://example.com/giscus.css', false),
+    'https://example.com/giscus.css'
+  )
+})
+
+test('encodes built-in Giscus theme names before creating stylesheet URLs', () => {
+  assert.equal(
+    resolveGiscusThemeStylesheet('dark dimmed'),
+    'https://giscus.app/themes/dark%20dimmed.css'
+  )
+  assert.equal(
+    resolveGiscusThemeStylesheet('https://example.com/giscus.css'),
     'https://example.com/giscus.css'
   )
 })
@@ -49,6 +61,14 @@ test('falls back to built-in themes when custom CSS uses plain HTTP', () => {
   assert.equal(
     resolveGiscusTheme('http://example.com/giscus.css', false, pageUrl),
     'light'
+  )
+  assert.equal(
+    resolveGiscusTheme('//example.com/giscus.css', false, pageUrl),
+    'light'
+  )
+  assert.equal(
+    resolveGiscusTheme('HTTP://example.com/giscus.css', true, pageUrl),
+    'dark'
   )
 })
 

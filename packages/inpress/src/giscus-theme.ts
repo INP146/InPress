@@ -184,7 +184,7 @@ export function resolveGiscusTheme(
           : theme.light
         : fallback
 
-  if (value.startsWith('http://')) return fallback
+  if (/^http:\/\//i.test(value) || value.startsWith('//')) return fallback
 
   if (!value.startsWith('/')) return value
 
@@ -200,9 +200,11 @@ export function resolveGiscusTheme(
 }
 
 export function resolveGiscusThemeStylesheet(theme: string): string {
-  return theme.startsWith('https://')
-    ? theme
-    : `https://giscus.app/themes/${theme}.css`
+  if (theme.startsWith('https://')) return theme
+
+  const themeUrl = new URL('https://giscus.app/themes/')
+  themeUrl.pathname += `${theme}.css`
+  return themeUrl.href
 }
 
 export function requiresExplicitWebKitGiscusTheme(
