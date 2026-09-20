@@ -28,7 +28,7 @@ function getRepositoryLinkText(url: URL): string | undefined {
     .map(decodePathSegment)
 
   if (!owner) return undefined
-  const repositoryName = repository?.replace(/\.git$/, '')
+  const repositoryName = repository?.replace(/\.git$/i, '')
   return repositoryName ? `${owner}/${repositoryName}` : owner
 }
 
@@ -40,7 +40,7 @@ function getGitLabRepositoryLinkText(url: URL): string | undefined {
 
   if (!repositoryPath.length) return undefined
   repositoryPath[repositoryPath.length - 1] = repositoryPath.at(-1)!.replace(
-    /\.git$/,
+    /\.git$/i,
     ''
   )
   return repositoryPath.filter(Boolean).join('/') || undefined

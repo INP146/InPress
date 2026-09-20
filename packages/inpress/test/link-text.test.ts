@@ -41,6 +41,14 @@ test('omits the Git clone suffix from repository labels', () => {
     resolveProviderLinkText('https://gitlab.com/gitlab-org/gitlab.git'),
     'gitlab-org/gitlab'
   )
+  assert.equal(
+    resolveProviderLinkText('https://github.com/vuejs/vitepress.GIT'),
+    'vuejs/vitepress'
+  )
+  assert.equal(
+    resolveProviderLinkText('https://gitlab.com/gitlab-org/gitlab.GIT'),
+    'gitlab-org/gitlab'
+  )
 })
 
 test('preserves GitLab subgroup paths without including project subpages', () => {
