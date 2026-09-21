@@ -200,7 +200,7 @@ export function resolveGiscusTheme(
 }
 
 export function resolveGiscusThemeStylesheet(theme: string): string {
-  if (theme.startsWith('https://')) return theme
+  if (/^https:\/\//i.test(theme)) return new URL(theme).href
 
   const themeUrl = new URL('https://giscus.app/themes/')
   themeUrl.pathname += `${theme}.css`

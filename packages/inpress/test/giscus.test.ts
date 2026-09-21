@@ -30,6 +30,10 @@ test('encodes built-in Giscus theme names before creating stylesheet URLs', () =
     resolveGiscusThemeStylesheet('https://example.com/giscus.css'),
     'https://example.com/giscus.css'
   )
+  assert.equal(
+    resolveGiscusThemeStylesheet('HTTPS://example.com/giscus.css'),
+    'https://example.com/giscus.css'
+  )
 })
 
 test('resolves root-relative CSS themes against the current site', () => {
