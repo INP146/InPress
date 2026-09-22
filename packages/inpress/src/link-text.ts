@@ -22,14 +22,14 @@ function decodePathSegment(segment: string): string {
 }
 
 function getRepositoryLinkText(url: URL): string | undefined {
-  const [owner, repository] = url.pathname
+  const [owner, repository, ...subpage] = url.pathname
     .split('/')
     .filter(Boolean)
     .map(decodePathSegment)
 
-  if (!owner) return undefined
+  if (!owner || !repository || subpage.length > 0) return undefined
   const repositoryName = repository?.replace(/\.git$/i, '')
-  return repositoryName ? `${owner}/${repositoryName}` : owner
+  return repositoryName ? `${owner}/${repositoryName}` : undefined
 }
 
 function getGitLabRepositoryLinkText(url: URL): string | undefined {

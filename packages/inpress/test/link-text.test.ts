@@ -51,6 +51,14 @@ test('omits the Git clone suffix from repository labels', () => {
   )
 })
 
+test('does not shorten GitHub profile or repository subpage links', () => {
+  assert.equal(resolveProviderLinkText('https://github.com/vuejs'), undefined)
+  assert.equal(
+    resolveProviderLinkText('https://github.com/vuejs/vitepress/issues/1'),
+    undefined
+  )
+})
+
 test('preserves GitLab subgroup paths without including project subpages', () => {
   assert.equal(
     resolveProviderLinkText('https://gitlab.com/group/subgroup/project'),
