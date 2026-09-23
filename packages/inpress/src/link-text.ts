@@ -38,7 +38,7 @@ function getGitLabRepositoryLinkText(url: URL): string | undefined {
   const repositoryPath =
     subpageMarker >= 0 ? path.slice(0, subpageMarker) : path
 
-  if (!repositoryPath.length) return undefined
+  if (repositoryPath.length < 2) return undefined
   repositoryPath[repositoryPath.length - 1] = repositoryPath.at(-1)!.replace(
     /\.git$/i,
     ''

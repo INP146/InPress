@@ -59,6 +59,10 @@ test('does not shorten GitHub profile or repository subpage links', () => {
   )
 })
 
+test('does not shorten GitLab profile links', () => {
+  assert.equal(resolveProviderLinkText('https://gitlab.com/gitlab-org'), undefined)
+})
+
 test('preserves GitLab subgroup paths without including project subpages', () => {
   assert.equal(
     resolveProviderLinkText('https://gitlab.com/group/subgroup/project'),
