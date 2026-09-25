@@ -70,6 +70,16 @@ test('joins sidebar bases that omit a trailing slash', () => {
   )
 })
 
+test('matches clean paths against VitePress index output URLs', () => {
+  const indexSidebar: DefaultTheme.Sidebar = [
+    { text: 'Guide', link: '/guide/index.html' }
+  ]
+
+  assert.deepEqual(resolveDocMetaBreadcrumbs(indexSidebar, '/guide/', 'Guide'), [
+    { text: 'Guide', link: undefined }
+  ])
+})
+
 test('counts Latin words and CJK characters', () => {
   assert.equal(countDocWords('Build clear docs with InPress.'), 5)
   assert.equal(countDocWords("It's a state-of-the-art theme."), 4)

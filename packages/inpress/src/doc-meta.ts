@@ -27,8 +27,8 @@ type ResolvedSidebar = {
 function normalizePath(path: string): string {
   const resolved = path
     .split(/[?#]/, 1)[0]
-    .replace(/\.html$/, '')
-    .replace(/\/index$/, '/')
+    .replace(/\/index\.html$/i, '')
+    .replace(/\.html$/i, '')
     .replace(/\/+$/, '')
 
   return resolved || '/'
