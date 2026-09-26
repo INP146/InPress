@@ -74,10 +74,17 @@ test('matches clean paths against VitePress index output URLs', () => {
   const indexSidebar: DefaultTheme.Sidebar = [
     { text: 'Guide', link: '/guide/index.html' }
   ]
+  const cleanIndexSidebar: DefaultTheme.Sidebar = [
+    { text: 'Guide', link: '/guide/index' }
+  ]
 
   assert.deepEqual(resolveDocMetaBreadcrumbs(indexSidebar, '/guide/', 'Guide'), [
     { text: 'Guide', link: undefined }
   ])
+  assert.deepEqual(
+    resolveDocMetaBreadcrumbs(cleanIndexSidebar, '/guide/', 'Guide'),
+    [{ text: 'Guide', link: undefined }]
+  )
 })
 
 test('counts Latin words and CJK characters', () => {
