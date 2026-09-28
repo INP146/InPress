@@ -17,6 +17,7 @@ import youtubeIcon from './assets/youtube.svg?url'
 import zhihuIcon from './assets/zhihu.svg?url'
 import juejinIcon from './assets/juejin.svg?url'
 import type { LinkIconProvider } from './link-icon-providers'
+import { createProviderLinkSelectors } from './link-icon-selectors'
 import {
   githubLinkPrefixes,
   gitlabLinkPrefixes,
@@ -136,9 +137,7 @@ export function createLinkIconStyle(
     .map((provider) => {
       const providerIcon = providerIcons[provider]
       const { icon, urls } = providerIcon
-      const selectors = urls
-        .map((url) => `.vp-doc a[href^="${url}"]::before`)
-        .join(',')
+      const selectors = createProviderLinkSelectors(urls)
 
       const iconStyle =
         'monochrome' in providerIcons[provider]
