@@ -133,3 +133,13 @@ test('calculates stable reading times and formats dates', () => {
     '18 July 2026 at 22:35'
   )
 })
+
+test('rejects invalid date formatting options without breaking rendering', () => {
+  const timestamp = Date.parse('2026-07-18T14:35:41Z')
+
+  assert.equal(formatDocMetaDate(timestamp, 'not_a_locale'), undefined)
+  assert.equal(
+    formatDocMetaDate(timestamp, 'en-US', { timeZone: 'Not/A_Time_Zone' }),
+    undefined
+  )
+})

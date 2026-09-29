@@ -183,8 +183,13 @@ export function formatDocMetaDate(
     : { ...defaultDateTimeFormatOptions }
   delete resolvedOptions.forceLocale
 
-  return new Intl.DateTimeFormat(
-    locale.trim() || 'en-US',
-    resolvedOptions
-  ).format(date)
+  try {
+    return new Intl.DateTimeFormat(
+      locale.trim() || 'en-US',
+      resolvedOptions
+    ).format(date)
+  } catch (error) {
+    if (error instanceof RangeError) return undefined
+    throw error
+  }
 }
