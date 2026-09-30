@@ -70,6 +70,26 @@ test('joins sidebar bases that omit a trailing slash', () => {
   )
 })
 
+test('preserves non-HTTP URL schemes in parent breadcrumb links', () => {
+  const contactSidebar: DefaultTheme.Sidebar = [
+    {
+      text: 'Contact',
+      items: [
+        { text: 'Email', link: 'mailto:hello@example.com' },
+        { text: 'About', link: '/about' }
+      ]
+    }
+  ]
+
+  assert.deepEqual(
+    resolveDocMetaBreadcrumbs(contactSidebar, '/about', 'About'),
+    [
+      { text: 'Contact', link: 'mailto:hello@example.com' },
+      { text: 'About', link: undefined }
+    ]
+  )
+})
+
 test('matches clean paths against VitePress index output URLs', () => {
   const indexSidebar: DefaultTheme.Sidebar = [
     { text: 'Guide', link: '/guide/index.html' }
