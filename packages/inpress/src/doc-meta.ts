@@ -142,7 +142,9 @@ export function countDocWords(text: string): number {
       /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu,
       ' '
     )
-    .match(/[\p{L}\p{N}]+(?:['’\-‐‑][\p{L}\p{N}]+)*/gu)
+    .match(
+      /[\p{L}\p{N}][\p{L}\p{N}\p{M}]*(?:['’\-‐‑][\p{L}\p{N}][\p{L}\p{N}\p{M}]*)*/gu
+    )
 
   return (cjkCharacters?.length ?? 0) + (nonCjkWords?.length ?? 0)
 }

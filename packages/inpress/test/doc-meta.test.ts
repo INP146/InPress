@@ -114,6 +114,7 @@ test('counts Latin words and CJK characters', () => {
   assert.equal(countDocWords('清晰文档'), 4)
   assert.equal(countDocWords('한글 문서'), 4)
   assert.equal(countDocWords('InPress 构建 docs'), 4)
+  assert.equal(countDocWords('हिन्दी दस्तावेज़'), 2)
 })
 
 test('calculates stable reading times and formats dates', () => {
