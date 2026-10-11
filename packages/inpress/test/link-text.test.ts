@@ -155,6 +155,30 @@ test('keeps explicit link labels unchanged', () => {
   assert.equal(link.dataset.inpressAutoLinkText, undefined)
 })
 
+test('keeps links with child markup unchanged even when their text is a URL', () => {
+  const href = 'https://github.com/vuejs/vitepress'
+  const link = createLink(href, href)
+  Object.defineProperty(link, 'childElementCount', { value: 1 })
+
+  updateAutoLinkText(link, true)
+  assert.equal(link.textContent, href)
+  assert.equal(link.dataset.inpressAutoLinkText, undefined)
+})
+
+test('restores the exact original whitespace when auto link text is disabled', () => {
+  const href = 'https://github.com/vuejs/vitepress'
+  const originalText = ` \n${href}\t `
+  const link = createLink(href, originalText)
+
+  updateAutoLinkText(link, true)
+  assert.equal(link.textContent, 'vuejs/vitepress')
+  assert.equal(link.dataset.inpressAutoLinkText, originalText)
+
+  updateAutoLinkText(link, false)
+  assert.equal(link.textContent, originalText)
+  assert.equal(link.dataset.inpressAutoLinkText, undefined)
+})
+
 test('does not update href mutations outside document content', () => {
   const originalAnchor = globalThis.HTMLAnchorElement
   const originalObserver = globalThis.MutationObserver
