@@ -129,6 +129,32 @@ test('matches provider hosts without accepting lookalike domains', () => {
   )
 })
 
+test('does not shorten invalid URLs or non-HTTPS provider links', () => {
+  for (const href of [
+    '',
+    'not a URL',
+    '/vuejs/vitepress',
+    'https://',
+    'http://github.com/vuejs/vitepress',
+    'http://gitlab.com/gitlab-org/gitlab',
+    'http://www.npmjs.com/package/vite',
+    'ftp://github.com/vuejs/vitepress'
+  ]) {
+    assert.equal(resolveProviderLinkText(href), undefined, href)
+  }
+})
+
+test('does not shorten npm pages outside the package route', () => {
+  for (const href of [
+    'https://www.npmjs.com/',
+    'https://www.npmjs.com/~vueuse',
+    'https://www.npmjs.com/org/vueuse',
+    'https://www.npmjs.com/search?q=vite'
+  ]) {
+    assert.equal(resolveProviderLinkText(href), undefined, href)
+  }
+})
+
 test('updates and restores bare provider links', () => {
   const link = createLink(
     'https://github.com/vuejs/vitepress',
