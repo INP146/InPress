@@ -94,6 +94,29 @@ test('falls back to default favicon geometry for non-finite values', () => {
   assert.doesNotMatch(svg, /(?:NaN|Infinity)/)
 })
 
+test('clamps finite favicon geometry at both ends of the supported ranges', () => {
+  const cases = [
+    {
+      transform: { size: 500, offsetX: -500, offsetY: 500 },
+      geometry: 'x="-150" y="50" width="200" height="200"'
+    },
+    {
+      transform: { size: -1, offsetX: 500, offsetY: -500 },
+      geometry: 'x="145" y="-55" width="10" height="10"'
+    }
+  ]
+
+  for (const { transform, geometry } of cases) {
+    const dataUrl = createAlignedFaviconDataUrl(
+      'data:image/png;base64,AA==',
+      transform
+    )
+    const svg = decodeURIComponent(dataUrl.slice(dataUrl.indexOf(',') + 1))
+
+    assert.ok(svg.includes(geometry), svg)
+  }
+})
+
 test('reads favicon geometry from CSS custom properties', () => {
   const originalDocument = globalThis.document
   const originalGetComputedStyle = globalThis.getComputedStyle
