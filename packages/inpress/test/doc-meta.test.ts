@@ -155,6 +155,20 @@ test('calculates stable reading times and formats dates', () => {
   )
 })
 
+test('falls back to the default reading speed only for invalid speeds', () => {
+  for (const speed of [
+    0,
+    -1,
+    Number.NaN,
+    Number.POSITIVE_INFINITY,
+    Number.NEGATIVE_INFINITY
+  ]) {
+    assert.equal(resolveReadingTime(440, speed), 2, `readingSpeed: ${speed}`)
+  }
+
+  assert.equal(resolveReadingTime(440, 110), 4)
+})
+
 test('rejects invalid date formatting options without breaking rendering', () => {
   const timestamp = Date.parse('2026-07-18T14:35:41Z')
 
