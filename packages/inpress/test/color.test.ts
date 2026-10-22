@@ -97,6 +97,17 @@ test('accepts short hex and rejects arbitrary CSS input', () => {
   }
 })
 
+test('normalizes mixed-case shorthand to the same palette and styles as full hex', () => {
+  const palette = createColorPalette('#aabbcc')
+  const style = createColorStyle('#aabbcc')
+  assert(palette)
+
+  for (const seed of ['#AbC', '#AABBCC']) {
+    assert.deepEqual(createColorPalette(seed), palette)
+    assert.equal(createColorStyle(seed), style)
+  }
+})
+
 test('emits config styles above ordinary root declarations', () => {
   const style = createColorStyle('#14b8a6')
 
