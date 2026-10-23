@@ -169,6 +169,28 @@ test('falls back to the default reading speed only for invalid speeds', () => {
   assert.equal(resolveReadingTime(440, 110), 4)
 })
 
+test('formats epoch zero and rejects invalid or out-of-range numeric dates', () => {
+  assert.equal(
+    formatDocMetaDate(0, 'en-GB', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: 'UTC'
+    }),
+    '01/01/1970'
+  )
+
+  for (const value of [
+    Number.NaN,
+    Number.POSITIVE_INFINITY,
+    Number.NEGATIVE_INFINITY,
+    Number.MAX_SAFE_INTEGER,
+    Number.MIN_SAFE_INTEGER
+  ]) {
+    assert.equal(formatDocMetaDate(value), undefined, `date: ${value}`)
+  }
+})
+
 test('rejects invalid date formatting options without breaking rendering', () => {
   const timestamp = Date.parse('2026-07-18T14:35:41Z')
 
