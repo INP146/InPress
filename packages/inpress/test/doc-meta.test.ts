@@ -48,6 +48,29 @@ test('does not match sidebar prefixes across a path segment boundary', () => {
   )
 })
 
+test('prefers the most specific sidebar prefix and applies its base', () => {
+  const mappedSidebar: DefaultTheme.Sidebar = {
+    '/guide/': [{ text: 'General setup', link: '/guide/advanced/setup' }],
+    '/guide/advanced/': {
+      base: '/guide/advanced/',
+      items: [
+        {
+          text: 'Advanced',
+          items: [{ text: 'Setup', link: 'setup' }]
+        }
+      ]
+    }
+  }
+
+  assert.deepEqual(
+    resolveDocMetaBreadcrumbs(mappedSidebar, '/guide/advanced/setup', 'Setup'),
+    [
+      { text: 'Advanced', link: '/guide/advanced/setup' },
+      { text: 'Setup', link: undefined }
+    ]
+  )
+})
+
 test('joins sidebar bases that omit a trailing slash', () => {
   const sidebarWithoutTrailingSlash: DefaultTheme.Sidebar = [
     {
