@@ -130,6 +130,33 @@ test('matches clean paths against VitePress index output URLs', () => {
   )
 })
 
+test('matches HTML sidebar links with queries and fragments to clean page paths', () => {
+  const linkedSidebar: DefaultTheme.Sidebar = [
+    {
+      text: 'Guide',
+      base: '/guide/',
+      items: [
+        { text: 'Configuration', link: 'configuration.html?mode=advanced#options' }
+      ]
+    }
+  ]
+
+  for (const path of [
+    '/guide/configuration',
+    '/guide/configuration.html',
+    '/guide/configuration/?mode=basic#overview'
+  ]) {
+    assert.deepEqual(
+      resolveDocMetaBreadcrumbs(linkedSidebar, path, 'Page title fallback'),
+      [
+        { text: 'Guide', link: '/guide/configuration.html?mode=advanced#options' },
+        { text: 'Configuration', link: undefined }
+      ],
+      path
+    )
+  }
+})
+
 test('counts Latin words and CJK characters', () => {
   assert.equal(countDocWords('Build clear docs with InPress.'), 5)
   assert.equal(countDocWords("It's a state-of-the-art theme."), 4)
