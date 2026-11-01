@@ -205,6 +205,62 @@ test('restores the exact original whitespace when auto link text is disabled', (
   assert.equal(link.dataset.inpressAutoLinkText, undefined)
 })
 
+test('restores managed link text when href changes to an unsupported provider', () => {
+  const originalAnchor = globalThis.HTMLAnchorElement
+  const originalObserver = globalThis.MutationObserver
+  const originalHref = 'https://github.com/vuejs/vitepress'
+  let callback: MutationCallback | undefined
+
+  class TestAnchor {
+    baseURI = 'https://docs.example.com/'
+    childElementCount = 0
+    dataset: DOMStringMap = {}
+    href = originalHref
+    textContent = originalHref
+    matches = () => true
+  }
+
+  class TestMutationObserver implements MutationObserver {
+    constructor(observerCallback: MutationCallback) {
+      callback = observerCallback
+    }
+
+    disconnect(): void {}
+    observe(): void {}
+    takeRecords(): MutationRecord[] {
+      return []
+    }
+  }
+
+  Object.assign(globalThis, {
+    HTMLAnchorElement: TestAnchor,
+    MutationObserver: TestMutationObserver
+  })
+
+  try {
+    const observer = observeAutoLinkText({} as Node, () => true)
+    const link = new TestAnchor()
+    updateAutoLinkText(link as unknown as HTMLAnchorElement, true)
+    assert.equal(link.textContent, 'vuejs/vitepress')
+    assert.equal(link.dataset.inpressAutoLinkText, originalHref)
+
+    link.href = 'https://example.com/guide'
+    callback!(
+      [{ type: 'attributes', target: link } as unknown as MutationRecord],
+      observer
+    )
+
+    assert.equal(link.href, 'https://example.com/guide')
+    assert.equal(link.textContent, originalHref)
+    assert.equal(link.dataset.inpressAutoLinkText, undefined)
+  } finally {
+    Object.assign(globalThis, {
+      HTMLAnchorElement: originalAnchor,
+      MutationObserver: originalObserver
+    })
+  }
+})
+
 test('does not update href mutations outside document content', () => {
   const originalAnchor = globalThis.HTMLAnchorElement
   const originalObserver = globalThis.MutationObserver
