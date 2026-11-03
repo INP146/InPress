@@ -51,6 +51,17 @@ test('omits the Git clone suffix from repository labels', () => {
   )
 })
 
+test('ignores trailing slashes, queries, and fragments in repository labels', () => {
+  for (const href of [
+    'https://github.com/vuejs/vitepress/?tab=readme-ov-file#readme',
+    'https://github.com/vuejs/vitepress.git/?tab=readme-ov-file#readme',
+    'https://gitlab.com/vuejs/vitepress/?ref_type=heads#readme',
+    'https://gitlab.com/vuejs/vitepress.git/?ref_type=heads#readme'
+  ]) {
+    assert.equal(resolveProviderLinkText(href), 'vuejs/vitepress', href)
+  }
+})
+
 test('does not shorten GitHub profile or repository subpage links', () => {
   assert.equal(resolveProviderLinkText('https://github.com/vuejs'), undefined)
   assert.equal(
