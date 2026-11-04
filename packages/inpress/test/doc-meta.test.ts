@@ -167,6 +167,19 @@ test('counts Latin words and CJK characters', () => {
   assert.equal(countDocWords('हिन्दी दस्तावेज़'), 2)
 })
 
+test('does not count empty content, punctuation, emoji, or standalone combining marks', () => {
+  for (const text of ['', ' \t\r\n ', '... — !!!', '😀 🚀 🎉', '\u0301\u0308']) {
+    assert.equal(countDocWords(text), 0, JSON.stringify(text))
+  }
+})
+
+test('counts composed and decomposed accented words consistently', () => {
+  const text = 'Café déjà vu résumé'
+
+  assert.equal(countDocWords(text), 4)
+  assert.equal(countDocWords(text.normalize('NFD')), 4)
+})
+
 test('calculates stable reading times and formats dates', () => {
   assert.equal(resolveReadingTime(891), 4.1)
   assert.equal(resolveReadingTime(1), 0.1)
