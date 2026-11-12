@@ -218,6 +218,36 @@ test('calculates stable reading times and formats dates', () => {
   )
 })
 
+test('returns zero reading time for empty or negative word counts', () => {
+  for (const wordCount of [0, -1, -220, Number.NEGATIVE_INFINITY]) {
+    for (const speed of [100, 0, Number.NaN]) {
+      assert.equal(
+        resolveReadingTime(wordCount, speed),
+        0,
+        `wordCount: ${wordCount}, readingSpeed: ${speed}`
+      )
+    }
+  }
+})
+
+test('keeps positive reading times above zero and rounds to the nearest tenth', () => {
+  const cases = [
+    [1, 0.1],
+    [14, 0.1],
+    [15, 0.2],
+    [24, 0.2],
+    [25, 0.3]
+  ]
+
+  for (const [wordCount, expected] of cases) {
+    assert.equal(
+      resolveReadingTime(wordCount, 100),
+      expected,
+      `wordCount: ${wordCount}`
+    )
+  }
+})
+
 test('falls back to the default reading speed only for invalid speeds', () => {
   for (const speed of [
     0,
