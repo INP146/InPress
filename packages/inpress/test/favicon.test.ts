@@ -117,6 +117,32 @@ test('clamps finite favicon geometry at both ends of the supported ranges', () =
   }
 })
 
+test('uses default favicon geometry for missing or invalid CSS values', () => {
+  const originalDocument = globalThis.document
+  const originalGetComputedStyle = globalThis.getComputedStyle
+  let value = ''
+
+  Object.assign(globalThis, {
+    document: { documentElement: {} },
+    getComputedStyle: () => ({ getPropertyValue: () => value })
+  })
+
+  try {
+    for (value of ['', '   ', 'auto', 'NaN', 'Infinity', '-Infinity']) {
+      assert.deepEqual(
+        readFaviconTransform(),
+        { size: 100, offsetX: 0, offsetY: 0 },
+        JSON.stringify(value)
+      )
+    }
+  } finally {
+    Object.assign(globalThis, {
+      document: originalDocument,
+      getComputedStyle: originalGetComputedStyle
+    })
+  }
+})
+
 test('reads favicon geometry from CSS custom properties', () => {
   const originalDocument = globalThis.document
   const originalGetComputedStyle = globalThis.getComputedStyle
